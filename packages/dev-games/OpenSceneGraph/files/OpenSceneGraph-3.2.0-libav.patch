@@ -1,0 +1,17 @@
+Author: Thomas Witt
+Upstream: pending
+Reason: compile fails due to deprecated symbol
+
+
+diff -ur a/OpenSceneGraph-3.2.0/src/osgPlugins/ffmpeg/FFmpegDecoder.cpp b/OpenSceneGraph-3.2.0/src/osgPlugins/ffmpeg/FFmpegDecoder.cpp
+--- a/OpenSceneGraph-3.2.0/src/osgPlugins/ffmpeg/FFmpegDecoder.cpp	2013-02-06 13:46:03.000000000 +0100
++++ b/OpenSceneGraph-3.2.0/src/osgPlugins/ffmpeg/FFmpegDecoder.cpp	2013-08-27 19:58:41.802656964 +0200
+@@ -279,7 +279,7 @@
+         int error = av_read_frame(m_format_context.get(), &packet);
+         if (error < 0)
+         {
+-            if (error == AVERROR_EOF || url_feof(m_format_context.get()->pb))
++            if (error == AVERROR_EOF || m_format_context.get()->pb->eof_reached)
+                 end_of_stream = true;
+             else {
+                 OSG_FATAL << "av_read_frame() returned " << AvStrError(error) << std::endl;
