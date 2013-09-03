@@ -30,9 +30,9 @@ DEPENDENCIES="
     build+run:
         app-text/poppler[cairo]
         dev-libs/boost
-        dev-libs/libxml2
-        gnome-desktop/librsvg
-        media-libs/freetype
+        dev-libs/libxml2:*
+        gnome-desktop/librsvg:*
+        media-libs/freetype:*
         media-libs/giflib
         media-libs/jpeg
         media-libs/libpng
