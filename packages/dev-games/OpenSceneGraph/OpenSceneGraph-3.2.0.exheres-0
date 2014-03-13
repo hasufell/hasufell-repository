@@ -48,3 +48,6 @@ BUGS_TO="pyromaniac@thwitt.de"
 
 DEFAULT_SRC_PREPARE_PATCHES=( -p2 "${FILES}"/${PNV}-libav.patch )
 
+# Building against Qt5 fails atm, would need qtbase and cmake[>=2.8.8]
+CMAKE_SRC_CONFIGURE_PARAMS+=( -DDESIRED_QT_VERSION=4 )
+
