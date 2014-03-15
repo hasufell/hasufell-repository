@@ -41,7 +41,7 @@ DEPENDENCIES="
         sys-libs/zlib
         x11-dri/mesa
         x11-libs/gtk+:2
-        x11-libs/qt:4
+        x11-libs/qt:4[opengl]
 "
 
 BUGS_TO="pyromaniac@thwitt.de"
