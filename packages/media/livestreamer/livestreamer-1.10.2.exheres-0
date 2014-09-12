@@ -1,7 +1,7 @@
 # Copyright 2014 Benedikt Morbach <moben@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require pypi setup-py [ import=setuptools blacklist='3.1 3.2' ]
+require pypi setup-py [ import=setuptools blacklist='3.2' ]
 
 SUMMARY="extract live and vod streams from various services and pipe them into a video player"
 DESCRIPTION="
@@ -9,10 +9,15 @@ Livestreamer is a Command Line Interface that pipes video streams from various s
 player, such as VLC. The main purpose of Livestreamer is to allow the user to avoid buggy and CPU
 heavy flash plugins but still be able to enjoy various streamed content.
 Supported services are:
-AfreecaTV Aliez.tv Azubu.tv Be-at.tv Bambuser.com Cast3D.tv Chaturbate Crunchyroll Cybergame Dailymotion
-DMCloud.net Euronews.com Filmon.com Freedocast Furstream GOMeXP Hashd.tv Hitbox.tv ILive Livestation
-Livestream Mips MLG.tv NRK TV Picarto SpeedRunsLive.com SVT Play Twitch/Justin.tv UStream TV Veetle.com 
-Viasat Play Weeb.tv YouTube ZDFmediathek
+afreecatv.com aftonbladet.se aliez.tv live.daserste.de ardmediathek.de arte.tv azubu.tv be-at.tv
+bambuser.com chaturbate.com connectcast.tv crunchyroll.com cybergame.tv dailymotion.com dommune.com
+douyutv.com api.dmcloud.net dr.dk euronews.com filmon.com filmon.us furstre.am gamlinglive.tv
+gomexp.com goodgame.ru hitbox.tv ilive.to leton.tv livestation.com new.livestream.com mips.tv mlg.tv
+nhk.or.jp/nhkworld tv.nrk.no radio.nrk.no livestream.com picarto.tv rtve.es seemeplay.ru
+speedrunslive.com streamingvideoprovider.co.uk K-S-V svtplay.se svtflow.se oppetarkiv.se tv4play
+fotbollskanalen.se twitch.tv subscription ustream.tv vaughnlive.tv breakers.tv instagib.tv vapers.tv
+veetle.com vgtv.no tv3play.se tv3play.no tv3play.dk tv3play.ee tv3play.lt tv3play.lv tv6play.se
+tv6play.no tv8play.se tv10play.se viagame.com viasat4play.no weeb.tv youtube.com youtu.be zdf.de
 "
 HOMEPAGE="livestreamer.tanuki.se"
 
@@ -23,7 +28,10 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        python_abis:2.7? ( dev-python/singledispatch[python_abis:2.7] )
+        python_abis:2.7? (
+            dev-python/futures[python_abis:2.7]
+            dev-python/singledispatch[python_abis:2.7]
+        )
         python_abis:3.3? ( dev-python/singledispatch[python_abis:3.3] )
         dev-python/requests[>=1.0&<3.0][python_abis:*(-)?]
     suggestion:
