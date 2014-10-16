@@ -1,4 +1,4 @@
-# Copyright 2013 Thomas Witt
+# Copyright 2013-2014 Thomas Witt
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake [ api=2 ]
@@ -14,7 +14,7 @@ is now well established as the world leading scene graph technology, used
 widely in the vis-sim, space, scientific, oil-gas, games and virtual reality
 industries.
 "
-HOMEPAGE="http://www.openscenegraph.org"
+HOMEPAGE="http://${PN}.org"
 DOWNLOADS="${HOMEPAGE}/downloads/developer_releases/${PNV}.zip"
 
 LICENCES="OpenSceneGraph"
@@ -44,10 +44,5 @@ DEPENDENCIES="
         x11-libs/qt:4[opengl]
 "
 
-BUGS_TO="pyromaniac@thwitt.de"
-
-DEFAULT_SRC_PREPARE_PATCHES=( -p2 "${FILES}"/${PNV}-libav.patch )
-
-# Building against Qt5 fails atm, would need qtbase and cmake[>=2.8.8]
-CMAKE_SRC_CONFIGURE_PARAMS+=( -DDESIRED_QT_VERSION=4 )
+BUGS_TO="pyromaniac@exherbo.org"
 
