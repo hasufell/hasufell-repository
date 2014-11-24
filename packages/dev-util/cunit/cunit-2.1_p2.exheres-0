@@ -1,0 +1,36 @@
+# Copyright 2014 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 1.10 ] ]
+
+MY_PN='CUnit'
+MY_PV="${PV/_p/-}"
+MY_P="${MY_PN}-${MY_PV}"
+
+SUMMARY="CUnit - C Unit Test Framework"
+DOWNLOADS="mirror://sourceforge/cunit/${MY_P}-src.tar.bz2"
+HOMEPAGE="http://cunit.sourceforge.net"
+
+SLOT="0"
+LICENCES="LGPL-2"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="ncurses"
+
+DEPENDENCIES="
+    build+run:
+        ncurses? ( sys-libs/ncurses )
+"
+
+WORK=${WORKBASE}/${MY_P}
+
+DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'ncurses curses'
+)
+
+src_prepare() {
+	edo sed -e "/^docdir/d" -i doc/Makefile.am
+	edo sed -e '/^dochdrdir/{s:$(prefix)/doc/@PACKAGE@:$(docdir):}' -i doc/headers/Makefile.am
+	edo sed -e "s/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/" -i configure.in
+	eautoreconf
+}

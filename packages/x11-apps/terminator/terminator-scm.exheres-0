@@ -1,0 +1,36 @@
+# Copyright 2014 Julian Ospald <hasufell@hasufell.de>
+# Distributed under the terms of the GNU General Public License v2
+
+if ever is_scm; then
+    SCM_REPOSITORY="http://bazaar.launchpad.net/~gnome-terminator/terminator/"
+    require scm-bzr
+fi
+
+require gtk-icon-cache freedesktop-desktop distutils
+
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    run:
+        dev-libs/keybinder[python]
+        dev-libs/vte:0[python]
+        dev-python/notify-python
+        gnome-bindings/pygobject:2
+        gnome-bindings/pygtk:2
+    build:
+        dev-util/intltool
+"
+
+pkg_preinst() {
+    gtk-icon-cache_pkg_preinst
+}
+
+pkg_postinst() {
+    gtk-icon-cache_pkg_postinst
+    freedesktop-desktop_pkg_postinst
+}
+
+pkg_postrm() {
+    gtk-icon-cache_pkg_postrm
+    freedesktop-desktop_pkg_postrm
+}

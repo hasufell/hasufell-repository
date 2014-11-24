@@ -1,0 +1,40 @@
+# Copyright 2014 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Fast Library for Number Theory"
+HOMEPAGE="http://www.flintlib.org/"
+DOWNLOADS="http://www.flintlib.org/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/gmp
+	    dev-libs/mpfr
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-2.4.4-libdir.patch
+    "${FILES}"/${PN}-2.4.4-whitespaces.patch
+    "${FILES}"/${PN}-2.4.4-cflags-ldflags.patch
+    "${FILES}"/${PN}-2.4.4-test.patch
+)
+
+DEFAULT_SRC_COMPILE_PARAMS=( verbose )
+DEFAULT_SRC_TEST_PARAMS=( AT= QUIET_CC= QUIET_CXX= QUIET_AR= )
+DEFAULT_SRC_INSTALL_PARAMS=( DESTDIR="${IMAGE}" LIBDIR="${LIBDIR}" )
+
+src_configure() {
+    # NOT an autotools script
+	edo ./configure \
+		--prefix="/usr" \
+		--with-gmp="/usr" \
+		--with-mpfr="/usr" \
+		--disable-static \
+		CC=${CC} \
+		CXX=${CXX} \
+		AR=${AR}
+}
+
