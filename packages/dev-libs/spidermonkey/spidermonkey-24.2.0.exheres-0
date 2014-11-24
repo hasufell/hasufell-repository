@@ -1,0 +1,58 @@
+# Copyright 2009 Richard Brown
+# Copyright 2011 Mike Kazantsev
+# Copyright 2012 Wouter van Kesteren <woutershep@gmail.com>
+# Copyright 2013 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.1 ] supported_automake=[ 1.13 ] ]
+require spidermonkey python
+
+DOWNLOADS="http://ftp.mozilla.org/pub/mozilla.org/js/mozjs-${PV}.tar.bz2"
+
+LICENCES="|| ( MPL-1.1 MPL-2.0 GPL-2 GPL-3 LGPL-2.1 LGPL-3 )"
+SLOT="24.0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="icu"
+
+DEPENDENCIES="
+    build:
+        app-arch/zip
+        dev-lang/perl:*[>=5.6]
+        dev-lang/python:*[>=2.7]
+        virtual/pkg-config
+    build+run:
+        dev-libs/icu[>=50.1.2][multibuild_c:*(-)?]
+        dev-libs/libffi[>=3.0.9][multibuild_c:*(-)?]
+        dev-libs/nspr[>=4.9.2][multibuild_c:*(-)?]
+        sys-libs/readline[multibuild_c:*(-)?]
+"
+
+WORK=${WORKBASE}/mozjs-${PV}/js/src
+
+DEFAULT_SRC_PREPARE_PATCHES=( -p3 "${FILES}"/${PN}-24-system-icu.patch )
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --hates=docdir
+    --enable-jemalloc
+    --enable-readline
+    --enable-system-ffi
+    --enable-threadsafe
+    --enable-ui-locale=en_US
+    --disable-static
+    --with-system-icu
+    --with-system-nspr
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'icu intl-api'
+)
+
+# spidermonkey build system requires that SHELL is always set.
+# It's missing sometimes in chroot environments, so force it here.
+export SHELL=/bin/sh
+
+test_one_multibuild() {
+    esandbox allow_net "unix:${TEMP%/}/pymp-*/listener-*"
+    default
+    esandbox disallow_net "unix:${TEMP%/}/pymp-*/listener-*"
+}
+
