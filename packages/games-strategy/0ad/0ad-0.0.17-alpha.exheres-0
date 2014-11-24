@@ -39,6 +39,7 @@ MYOPTIONS="
 "
 
 # nvtt (optional, mostly for 3rd party mods)
+# regarding spidermonkeys weird dep http://trac.wildfiregames.com/ticket/2943
 DEPENDENCIES="
     editor? (
         build+run:
