@@ -1,0 +1,150 @@
+# Copyright 2014 Bernd Steinhauser <berniyh@exherbo.org>
+# Copyright 2014 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+SUMMARY="A free, real-time strategy game"
+HOMEPAGE="http://play0ad.com"
+DOWNLOADS="
+    mirror://sourceforge/zero-ad/${PNV}-unix-build.tar.xz
+    mirror://sourceforge/zero-ad/${PNV}-unix-data.tar.xz
+"
+
+LICENCES="
+    Arev [[ note = [ Included DejaVu Fonts ] ]]
+    Bitstream-Vera [[ note = [ Included DejaVu Fonts ] ]]
+    BSD-3 [[ note = [ build/premake/premake4 ] ]]
+    CCPL-Attribution-ShareAlike-3.0 [[ note = [ binaries/data/mods/{art,audio} ] ]]
+    GPL-2 [[ note = [
+        source/tools/atlas
+        Rest of binaries/data
+        ] ]]
+    GUST [[ note = [ Included TeXGyrePagella Fonts ] ]]
+    ISC [[ note = [ source/lobby/pkcs5_pbkdf2.cpp ] ]]
+    MIT [[ note = [
+        build/premake/*.lua
+        libraries/source/{fcollada,nvtt}
+        source/lib
+        source/third_party/mongoose
+        ] ]]
+    ZLIB [[ note = [ source/third_party/mikktspace ] ]]
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    editor [[ description = [ Include Atlas scenario editor projects ] ]]
+    lobby [[ description = [ Enable the multiplayer lobby ] ]]
+    sound
+"
+
+# nvtt (optional, mostly for 3rd party mods)
+DEPENDENCIES="
+    editor? (
+        build+run:
+            x11-libs/wxGTK:3.0
+    )
+    lobby? (
+        build+run:
+            net-libs/gloox
+    )
+    sound? (
+        build+run:
+            media-libs/libvorbis
+            media-libs/openal
+    )
+    build:
+        virtual/pkg-config
+    build+run:
+        dev-libs/boost
+        dev-libs/spidermonkey:24.0[-icu(+)]
+        dev-libs/libxml2:2.0
+        media-libs/jpeg
+        media-libs/libogg
+        media-libs/libpng:=
+        media-libs/SDL:2[X]
+        net-libs/enet
+        net-libs/miniupnpc
+        net-misc/curl
+        x11-dri/mesa
+        x11-libs/libX11
+        x11-libs/libXcursor
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PNV}-respect-flags.patch
+    -p1 "${FILES}"/${PNV}-paths.patch
+)
+
+src_configure() {
+    edo pushd "${WORK}"/build/premake/premake4
+
+    # The project uses an included version of premake (version 4.3.1),
+    # which doesn't seem available on premakes website.
+    # 4.3 does not work, 4.4 (b5) should be tested. So here we build
+    # premakes included version for now.
+    emake -C build/gmake.unix
+
+	# regenerate scripts.c so our patch applies
+	edo ./bin/release/premake4 embed
+
+    edo popd
+
+	# rebuild premake again...
+	emake -C "${WORK}"/build/premake/premake4/build/gmake.unix clean
+	emake -C "${WORK}"/build/premake/premake4/build/gmake.unix
+
+	# run premake to create build scripts
+    edo pushd "${WORK}"/build/premake
+	edo ./premake4/bin/release/premake4 \
+		--bindir=/usr/bin \
+		--libdir=/usr/${LIBDIR} \
+		--datadir=/usr/share/${PN} \
+		--file=premake4.lua \
+		--outpath=../workspaces/gcc/ \
+		--minimal-flags \
+		--sdl2 \
+        --without-nvtt \
+		$(option sound "" "--without-audio") \
+		$(option editor "--atlas" "") \
+		$(option lobby "" "--without-lobby") \
+		--with-system-miniupnpc \
+		--with-system-mozjs24 \
+		--collada \
+        --without-tests \
+        --with-c++11 \
+        --without-pch \
+		gmake
+    edo popd
+}
+
+src_compile() {
+	# build 3rd party fcollada
+	emake -C libraries/source/fcollada/src
+
+	# build 0ad
+	emake -C build/workspaces/gcc verbose=1
+}
+
+src_install() {
+    if optionq editor ; then
+        dobin binaries/system/ActorEditor
+        dolib binaries/system/libAtlasUI.so
+    fi
+
+    # TODO: Use system fonts
+    newbin binaries/system/pyrogenesis 0ad
+    dolib binaries/system/libCollada.so
+
+    insinto /usr/share/${PN}
+    doins -r binaries/data/*
+
+    insinto /usr/share/icons/hicolor/128x128/apps/
+    doins build/resources/${PN}.png
+
+    insinto /usr/share/applications
+    doins build/resources/0ad.desktop
+
+    dodoc README.txt binaries/system/readme.txt
+}
+
