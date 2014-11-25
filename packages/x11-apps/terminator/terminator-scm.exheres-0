@@ -6,17 +6,23 @@ if ever is_scm; then
     require scm-bzr
 fi
 
-require gtk-icon-cache freedesktop-desktop distutils
+require gtk-icon-cache freedesktop-desktop
+require setup-py [ blacklist="3" import=distutils multibuild=false ]
 
+DESCRIPTION="Multiple GNOME terminals in one window"
+HOMEPAGE="http://www.tenshu.net/p/terminator.html"
+
+LICENCES="GPL-2"
+SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
     run:
-        dev-libs/keybinder[python]
-        dev-libs/vte:0[python]
-        dev-python/notify-python
-        gnome-bindings/pygobject:2
-        gnome-bindings/pygtk:2
+        dev-libs/keybinder
+        dev-libs/vte:0
+        dev-python/notify-python[python_abis:*(-)?]
+        gnome-bindings/pygobject:2[python_abis:*(-)?]
+        gnome-bindings/pygtk:2[python_abis:*(-)?]
     build:
         dev-util/intltool
 "
