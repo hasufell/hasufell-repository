@@ -10,7 +10,7 @@ require gtk-icon-cache freedesktop-desktop
 require setup-py [ blacklist="3" import=distutils multibuild=false ]
 
 DESCRIPTION="Multiple GNOME terminals in one window"
-HOMEPAGE="http://www.tenshu.net/p/terminator.html"
+HOMEPAGE="http://gnometerminator.blogspot.de/p/introduction.html"
 
 LICENCES="GPL-2"
 SLOT="0"
