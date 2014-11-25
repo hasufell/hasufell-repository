@@ -1,0 +1,68 @@
+# Copyright 2014 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache freedesktop-desktop
+require cmake [ api=2 ]
+
+MY_PNV=ValyriaTear-${PV}
+
+SUMMARY="A free 2D J-RPG based on the Hero of Allacrost engine"
+HOMEPAGE="http://valyriatear.blogspot.de/
+	https://github.com/Bertram25/ValyriaTear"
+DOWNLOADS="https://github.com/Bertram25/ValyriaTear/archive/${PV}/${PNV}.tar.gz"
+
+LICENCES="GPL-2 GPL-3 CCPL-Attribution-ShareAlike-3.0 CCPL-Attribution-3.0 CC0 OFL-1.1"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    debug
+    editor
+"
+
+DEPENDENCIES="
+    editor? (
+        build+run:
+            x11-libs/qt:4[opengl]
+    )
+    build:
+        dev-libs/boost
+        sys-devel/gettext
+    build+run:
+        dev-lang/lua:5.1
+        media-libs/libpng:=[>=1.5]
+        media-libs/libvorbis
+        media-libs/openal
+        media-libs/SDL:0[X]
+        media-libs/SDL_image:0
+        media-libs/SDL_ttf:0
+        x11-dri/mesa
+        x11-libs/libX11
+"
+
+CMAKE_SOURCE=${WORKBASE}/${MY_PNV}
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DPKG_BINDIR=/usr/bin
+    -DPKG_DATADIR=/usr/share/${PN}
+    -DUSE_PCH_COMPILATION=OFF
+)
+
+CMAKE_SRC_CONFIGURE_OPTIONS=(
+    'debug DEBUG_FEATURES'
+    'editor EDITOR_SUPPORT'
+)
+
+pkg_preinst() {
+    gtk-icon-cache_pkg_preinst
+}
+
+pkg_postinst() {
+    gtk-icon-cache_pkg_postinst
+    freedesktop-desktop_pkg_postinst
+}
+
+pkg_postrm() {
+    gtk-icon-cache_pkg_postrm
+    freedesktop-desktop_pkg_postrm
+}
+
