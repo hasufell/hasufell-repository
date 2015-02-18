@@ -1,0 +1,30 @@
+Source: https://github.com/openscenegraph/osg/commit/afb442fccd182cfe8608f43394af016f6723f97a
+Upstream: Fixed in trunk
+Reason: Fix build with giflib 5.0
+
+From afb442fccd182cfe8608f43394af016f6723f97a Mon Sep 17 00:00:00 2001
+From: Robert OSFIELD <robert.osfield@gmail.com>
+Date: Wed, 19 Nov 2014 17:10:21 +0000
+Subject: [PATCH] From Clement Boesch, "Fix remaining bit of Giflib5 usage"
+
+git-svn-id: http://svn.openscenegraph.org/osg/OpenSceneGraph/trunk@14485 16af8721-9629-0410-8352-f15c8da7e697
+---
+ src/osgPlugins/gif/ReaderWriterGIF.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/osgPlugins/gif/ReaderWriterGIF.cpp b/src/osgPlugins/gif/ReaderWriterGIF.cpp
+index 4b5cd22..12f46e1 100644
+--- a/src/osgPlugins/gif/ReaderWriterGIF.cpp
++++ b/src/osgPlugins/gif/ReaderWriterGIF.cpp
+@@ -560,7 +560,11 @@ GifImageStream** obj)
+     *width_ret = giffile->SWidth;
+     *height_ret = giffile->SHeight;
+     *numComponents_ret = 4;
++#if (GIFLIB_MAJOR >= 5)
++    DGifCloseFile(giffile, &Error);
++#else
+     DGifCloseFile(giffile);
++#endif
+     return buffer;
+ }
+ 

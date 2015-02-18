@@ -17,6 +17,8 @@ industries.
 HOMEPAGE="http://${PN}.org"
 DOWNLOADS="${HOMEPAGE}/downloads/developer_releases/${PNV}.zip"
 
+BUGS_TO="pyromaniac@exherbo.org"
+
 LICENCES="OpenSceneGraph"
 SLOT="0"
 PLATFORMS="~amd64"
@@ -33,9 +35,9 @@ DEPENDENCIES="
         dev-libs/libxml2:*
         gnome-desktop/librsvg:*
         media-libs/freetype:*
-        media-libs/giflib
-        media-libs/jpeg
-        media-libs/libpng
+        media-libs/giflib:=
+        media-libs/jpeg:=[<9]
+        media-libs/libpng:=
         media-libs/tiff
         net-misc/curl
         sys-libs/zlib
@@ -44,5 +46,8 @@ DEPENDENCIES="
         x11-libs/qt:4[opengl]
 "
 
-BUGS_TO="pyromaniac@exherbo.org"
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-giflib5-part1.patch
+    "${FILES}"/${PNV}-giflib5-part2.patch
+)
 

@@ -1,0 +1,27 @@
+Source: https://github.com/openscenegraph/osg/commit/18213bfb67d464715af618fd8c73549f749625b9
+Upstream: Fixed in trunk
+Reason: Fix build with giflib 5.0
+
+From 18213bfb67d464715af618fd8c73549f749625b9 Mon Sep 17 00:00:00 2001
+From: Robert OSFIELD <robert.osfield@gmail.com>
+Date: Thu, 20 Nov 2014 09:21:52 +0000
+Subject: [PATCH] From Pjotr Svetachov, fix for build breakage with giflib 5.0.
+
+git-svn-id: http://svn.openscenegraph.org/osg/OpenSceneGraph/trunk@14493 16af8721-9629-0410-8352-f15c8da7e697
+---
+ src/osgPlugins/gif/ReaderWriterGIF.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/osgPlugins/gif/ReaderWriterGIF.cpp b/src/osgPlugins/gif/ReaderWriterGIF.cpp
+index 12f46e1..6778894 100644
+--- a/src/osgPlugins/gif/ReaderWriterGIF.cpp
++++ b/src/osgPlugins/gif/ReaderWriterGIF.cpp
+@@ -560,7 +560,7 @@ GifImageStream** obj)
+     *width_ret = giffile->SWidth;
+     *height_ret = giffile->SHeight;
+     *numComponents_ret = 4;
+-#if (GIFLIB_MAJOR >= 5)
++#if (GIFLIB_MAJOR >= 5&& !(GIFLIB_MAJOR == 5 && GIFLIB_MINOR == 0))
+     DGifCloseFile(giffile, &Error);
+ #else
+     DGifCloseFile(giffile);
