@@ -2,7 +2,7 @@
 # Copyright 2014 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require gtk-icon-cache python
 
 SUMMARY="A free, real-time strategy game"
 HOMEPAGE="http://play0ad.com"
@@ -40,8 +40,6 @@ MYOPTIONS="
     platform: amd64 x86
 "
 
-# nvtt (optional, mostly for 3rd party mods)
-# regarding spidermonkeys weird dep http://trac.wildfiregames.com/ticket/2943
 DEPENDENCIES="
     editor? (
         build+run:
@@ -57,6 +55,7 @@ DEPENDENCIES="
             media-libs/openal
     )
     build:
+        dev-lang/python:*[>=2.7]
         virtual/pkg-config
     build+run:
         dev-libs/boost
@@ -79,10 +78,48 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     -p0 "${FILES}"/${PNV}-exherbo.patch
 )
 
+src_unpack() {
+    default
+
+    ###### spidermonkey #####
+    edo pushd "${WORK}"/libraries/source/spidermonkey
+    edo tar xjf mozjs-31.2.0.rc0.tar.bz2
+    edo mv mozjs-31.2.0 mozjs31
+    edo popd
+    #########################
+}
+
 src_prepare() {
     default
-    edo sed -i -e "s:pkg-config:${PKG_CONFIG}:" \
-        libraries/source/spidermonkey/build.sh
+
+    ###### fix premake #####
+    edo pushd "${WORK}"/build/premake/premake4
+
+    # The project uses an included version of premake (version 4.3.1),
+    # which doesn't seem available on premakes website.
+    # 4.3 does not work, 4.4 (b5) should be tested. So here we build
+    # premakes included version for now.
+    emake -C build/gmake.unix
+
+    # regenerate scripts.c so our patch applies
+    edo ./bin/release/premake4 embed
+
+    edo popd
+
+    # rebuild premake again...
+    emake -C "${WORK}"/build/premake/premake4/build/gmake.unix clean
+    emake -C "${WORK}"/build/premake/premake4/build/gmake.unix
+    ########################
+
+    ###### spidermonkey #####
+    edo pushd "${WORK}"/libraries/source/spidermonkey/mozjs31
+    edo . ../patch.sh
+    edo cd js/src
+    edo perl -i.bak -pe 's/(LIBRARY_NAME\s+=).*/$1 '\''mozjs31-ps-release'\''/' \
+        moz.build
+    edo mkdir -p build-release
+    edo popd
+    #########################
 }
 
 src_configure() {
@@ -101,23 +138,6 @@ src_configure() {
         --datadir="/usr/share/${PN}"
         )
 
-    edo pushd "${WORK}"/build/premake/premake4
-
-    # The project uses an included version of premake (version 4.3.1),
-    # which doesn't seem available on premakes website.
-    # 4.3 does not work, 4.4 (b5) should be tested. So here we build
-    # premakes included version for now.
-    emake -C build/gmake.unix
-
-    # regenerate scripts.c so our patch applies
-    edo ./bin/release/premake4 embed
-
-    edo popd
-
-    # rebuild premake again...
-    emake -C "${WORK}"/build/premake/premake4/build/gmake.unix clean
-    emake -C "${WORK}"/build/premake/premake4/build/gmake.unix
-
     # run premake to create build scripts
     edo pushd "${WORK}"/build/premake
     edo ./premake4/bin/release/premake4 \
@@ -128,14 +148,53 @@ src_configure() {
         "${myconf[@]}" \
         gmake
     edo popd
+
+    edo sed -i -e "s:pkg-config:${PKG_CONFIG}:" \
+        libraries/source/fcollada/src/Makefile \
+        build/workspaces/gcc/* \
+        libraries/source/spidermonkey/build.sh
+    edo sed -i -e "s:@ar:@${AR}:" \
+        -e "s:ranlib:${RANLIB}:" \
+        libraries/source/fcollada/src/Makefile
+
+
+    ###### spidermonkey #####
+	# build bundled and patched spidermonkey-31
+    #
+    # spidermonkey build system requires that SHELL is always set.
+    # It's missing sometimes in chroot environments, so force it here.
+    export SHELL=/bin/sh
+    edo pushd "${WORK}"/libraries/source/spidermonkey/mozjs31/js/src/build-release/
+    ECONF_SOURCE="${WORK}/libraries/source/spidermonkey/mozjs31/js/src/" \
+        econf \
+            --hates=docdir \
+            --hates=datarootdir \
+            --enable-shared-js \
+            --enable-gcgenerational \
+            --disable-tests \
+            --without-intl-api \
+            --enable-optimize
+    edo popd
+    #########################
 }
 
 src_compile() {
-    export AR=$(exhost --tool-prefix)ar
-
+    ###### spidermonkey #####
     edo pushd "${WORK}"/libraries/source/spidermonkey
-    JOBS="-j${EXJOBS:-1}" edo ./build.sh
+    # TARGETS= from paludis environment breaks the build
+    env -u TARGETS emake TOOLCHAIN_PREFIX="$(exhost --tool-prefix)" \
+        -C mozjs31/js/src/build-release
+    # copy headers for building
+    edo mkdir -p include-unix-release
+    edo cp -R -L mozjs31/js/src/build-release/dist/include/* \
+        include-unix-release/
+    edo mkdir -p lib/
+    edo cp -L mozjs31/js/src/build-release/dist/lib/libmozjs31-ps-release.so \
+        lib/libmozjs31-ps-release.so
+    edo cp -L mozjs31/js/src/build-release/dist/lib/libmozjs31-ps-release.so \
+        ../../../binaries/system/libmozjs31-ps-release.so
     edo popd
+    #########################
 
     # build 3rd party fcollada
     emake -C libraries/source/fcollada/src
@@ -155,7 +214,7 @@ src_install() {
     newbin binaries/system/pyrogenesis 0ad
     exeinto /usr/$(exhost --target)/lib/${PN}
     doexe binaries/system/libCollada.so
-    doexe libraries/source/spidermonkey/lib/*.so
+    doexe libraries/source/spidermonkey/mozjs31/js/src/build-release/dist/lib/*.so
 
     insinto /usr/share/${PN}
     doins -r binaries/data/*
