@@ -1,0 +1,64 @@
+# Copyright 2014 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+
+MY_PN=MyGUI
+MY_P=${MY_PN}${PV}
+WORK="${WORKBASE}/${PN}-${MY_P}"
+
+
+require cmake [ api=2 ]
+
+
+SUMMARY="A library for creating GUIs for games"
+HOMEPAGE="http://mygui.info/"
+DOWNLOADS="https://github.com/MyGUI/mygui/archive/${MY_P}.tar.gz"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+
+DEPENDENCIES="
+    build+run:
+        media-libs/freetype:2
+        media-libs/glew
+        x11-dri/mesa
+    build:
+        virtual/pkg-config
+
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PNV}-underlinking.patch
+	-p1 "${FILES}"/${PNV}-build.patch
+	-p1 "${FILES}"/${PNV}-FHS.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DMYGUI_BUILD_DEMOS=OFF
+    -DMYGUI_BUILD_DOCS=OFF
+    -DMYGUI_BUILD_PLUGINS=ON
+    -DMYGUI_BUILD_TOOLS=OFF
+    -DCMAKE_BUILD_TYPE=Release
+    -DMYGUI_BUILD_WRAPPER=OFF
+    -DMYGUI_INSTALL_DOCS=OFF
+    -DMYGUI_INSTALL_MEDIA=ON
+    -DMYGUI_INSTALL_SAMPLES=OFF
+    -DMYGUI_INSTALL_TOOLS=OFF
+    -DMYGUI_RENDERSYSTEM=4
+    -DMYGUI_STATIC=OFF
+    -DMYGUI_USE_FREETYPE=ON
+    -DMYGUI_USE_SYSTEM_GLEW=ON
+)
+
+src_install() {
+    cmake_src_install
+
+	keepdir /etc/MYGUI
+
+	# test media not needed at runtime
+	edo rm -rf "${IMAGE}"/usr/share/MYGUI/Media/UnitTests
+	# wrapper not available for linux, remove related media
+	edo rm -rf "${IMAGE}"/usr/share/MYGUI/Media/Wrapper
+}
