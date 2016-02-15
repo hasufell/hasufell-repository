@@ -6,8 +6,8 @@
 # Source: Debian, Gentoo
 # License: GPLv2 or later
 
-if [ -f /etc/chromium/default ] ; then
-  . /etc/chromium/default
+if [ -f /etc/inox/default ] ; then
+  . /etc/inox/default
 fi
 
 # Prefer user defined CHROMIUM_USER_FLAGS (fron env) over system
@@ -31,6 +31,6 @@ case ":$PATH:" in
 esac
 
 # Set the .desktop file name
-export CHROME_DESKTOP=chromium-browser.desktop
+export CHROME_DESKTOP=inox-browser.desktop
 
-exec -a "chromium-browser" "$PROGDIR/chrome" --extra-plugin-dir=/opt/netscape/plugins $CHROMIUM_FLAGS "$@"
+exec -a "inox-browser" "$PROGDIR/inox" --extra-plugin-dir=/opt/netscape/plugins $CHROMIUM_FLAGS "$@"
