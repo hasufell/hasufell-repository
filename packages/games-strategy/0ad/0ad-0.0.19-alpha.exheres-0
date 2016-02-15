@@ -36,6 +36,8 @@ MYOPTIONS="
     editor [[ description = [ Include Atlas scenario editor projects ] ]]
     lobby [[ description = [ Enable the multiplayer lobby ] ]]
     sound
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+    platform: amd64 x86
 "
 
 # nvtt (optional, mostly for 3rd party mods)
@@ -58,10 +60,11 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         dev-libs/boost
-        dev-libs/spidermonkey:24.0[-icu(+)]
+        dev-libs/icu:=
         dev-libs/libxml2:2.0
-        media-libs/jpeg
-        media-libs/libogg
+        dev-libs/nspr
+        providers:ijg-jpeg? ( media-libs/jpeg )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         media-libs/libpng:=
         media-libs/SDL:2[X]
         net-libs/enet
@@ -73,11 +76,31 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p0 "${FILES}"/${PNV}-respect-flags.patch
-    -p1 "${FILES}"/${PNV}-paths.patch
+    -p0 "${FILES}"/${PNV}-exherbo.patch
 )
 
+src_prepare() {
+    default
+    edo sed -i -e "s:pkg-config:${PKG_CONFIG}:" \
+        libraries/source/spidermonkey/build.sh
+}
+
 src_configure() {
+    local myconf=(
+        --with-system-miniupnpc
+        --minimal-flags
+        --without-nvtt
+        --without-pch
+        --without-tests
+        $(option sound "" "--without-audio")
+        $(option editor "--atlas" "")
+        $(option lobby "" "--without-lobby")
+        --collada
+        --bindir="/usr/$(exhost --target)/bin"
+        --libdir="/usr/$(exhost --target)/lib/${PN}"
+        --datadir="/usr/share/${PN}"
+        )
+
     edo pushd "${WORK}"/build/premake/premake4
 
     # The project uses an included version of premake (version 4.3.1),
@@ -86,63 +109,59 @@ src_configure() {
     # premakes included version for now.
     emake -C build/gmake.unix
 
-	# regenerate scripts.c so our patch applies
-	edo ./bin/release/premake4 embed
+    # regenerate scripts.c so our patch applies
+    edo ./bin/release/premake4 embed
 
     edo popd
 
-	# rebuild premake again...
-	emake -C "${WORK}"/build/premake/premake4/build/gmake.unix clean
-	emake -C "${WORK}"/build/premake/premake4/build/gmake.unix
+    # rebuild premake again...
+    emake -C "${WORK}"/build/premake/premake4/build/gmake.unix clean
+    emake -C "${WORK}"/build/premake/premake4/build/gmake.unix
 
-	# run premake to create build scripts
+    # run premake to create build scripts
     edo pushd "${WORK}"/build/premake
-	edo ./premake4/bin/release/premake4 \
-		--bindir=/usr/bin \
-		--libdir=/usr/${LIBDIR} \
-		--datadir=/usr/share/${PN} \
-		--file=premake4.lua \
-		--outpath=../workspaces/gcc/ \
-		--minimal-flags \
-		--sdl2 \
-        --without-nvtt \
-		$(option sound "" "--without-audio") \
-		$(option editor "--atlas" "") \
-		$(option lobby "" "--without-lobby") \
-		--with-system-miniupnpc \
-		--with-system-mozjs24 \
-		--collada \
-        --without-tests \
-        --with-c++11 \
-        --without-pch \
-		gmake
+    edo ./premake4/bin/release/premake4 \
+        --file="premake4.lua" \
+        --outpath="../workspaces/gcc/" \
+        --platform=$(option platform:amd64 "x64" "x32") \
+        --os=linux \
+        "${myconf[@]}" \
+        gmake
     edo popd
 }
 
 src_compile() {
-	# build 3rd party fcollada
-	emake -C libraries/source/fcollada/src
+    export AR=$(exhost --tool-prefix)ar
 
-	# build 0ad
-	emake -C build/workspaces/gcc verbose=1
+    edo pushd "${WORK}"/libraries/source/spidermonkey
+    edo ./build.sh
+    edo popd
+
+    # build 3rd party fcollada
+    emake -C libraries/source/fcollada/src
+
+    # build 0ad
+    emake -C build/workspaces/gcc verbose=1
 }
 
 src_install() {
     if optionq editor ; then
-        dobin binaries/system/ActorEditor
-        dolib binaries/system/libAtlasUI.so
+        newbin binaries/system/ActorEditor 0ad-ActorEditor
+        exeinto /usr/$(exhost --target)/lib/${PN}
+        doexe binaries/system/libAtlasUI.so
     fi
 
     # TODO: Use system fonts
     newbin binaries/system/pyrogenesis 0ad
-    dolib binaries/system/libCollada.so
+    exeinto /usr/$(exhost --target)/lib/${PN}
+    doexe binaries/system/libCollada.so
+    doexe libraries/source/spidermonkey/lib/*.so
 
     insinto /usr/share/${PN}
     doins -r binaries/data/*
 
     insinto /usr/share/icons/hicolor/128x128/apps/
     doins build/resources/${PN}.png
-
     insinto /usr/share/applications
     doins build/resources/0ad.desktop
 
