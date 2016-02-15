@@ -1,0 +1,28 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+#
+# Based in part upon 'gentoo-functions-0.10.ebuild' from Gentoo, which is:
+#     Copyright 1999-2015 Gentoo Foundation
+#     Distributed under the terms of the GNU General Public License v2
+
+require flag-o-matic
+
+
+HOMEPAGE="https://www.gentoo.org"
+DOWNLOADS="https://github.com/gentoo/${PN}/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
+
+SUMMARY="Base functions required by all gentoo systems"
+LICENCES="GPL-2"
+SLOT="0"
+
+PLATFORMS="~amd64 ~x86"
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    ROOTSBINDIR=/usr/$(exhost --target)/bin
+    ROOTLIBEXECDIR=/usr/$(exhost --target)/libexec/gentoo
+)
+
+src_prepare() {
+    export CC=$(exhost --tool-prefix)cc
+    append-cppflags -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+}
