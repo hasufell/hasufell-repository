@@ -134,7 +134,7 @@ src_compile() {
     export AR=$(exhost --tool-prefix)ar
 
     edo pushd "${WORK}"/libraries/source/spidermonkey
-    edo ./build.sh
+    JOBS="-j${EXJOBS:-1}" edo ./build.sh
     edo popd
 
     # build 3rd party fcollada
