@@ -15,13 +15,11 @@ DEPENDENCIES="
         media-libs/SDL:0[X]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-makefile.patch )
+
 src_unpack() {
     default
     edo mv gennady-ja2-stracciatella-* ${PNV}
-}
-
-src_prepare() {
-	expatch "${FILES}"/${PNV}-makefile.patch
 }
 
 src_configure() {
