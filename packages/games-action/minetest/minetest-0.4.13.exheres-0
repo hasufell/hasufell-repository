@@ -1,0 +1,80 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+require cmake gtk-icon-cache
+
+SUMMARY="An InfiniMiner/Minecraft inspired game"
+HOMEPAGE="http://minetest.net/"
+DOWNLOADS="http://github.com/minetest/minetest/tarball/${PV} -> ${PNV}.tar.gz
+    http://github.com/minetest/minetest_game/tarball/${PV} -> minetest_game-${PV}.tar.gz"
+
+LICENCES="LGPL-2.1+ CC-BY-SA-3.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    run:
+        user/minetest
+        group/minetest
+    build+run:
+        app-arch/bzip2
+        dev-db/leveldb
+        dev-db/sqlite:3
+        dev-games/irrlicht[>=1.8]
+        dev-libs/gmp:0
+        dev-libs/hiredis
+        media-libs/freetype:2
+        providers:ijg-jpeg? ( media-libs/jpeg )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+        media-libs/libogg
+        media-libs/libpng:=
+        media-libs/libvorbis
+        media-libs/openal
+        net-misc/curl
+        sys-libs/zlib
+        x11-dri/mesa
+        x11-libs/libX11
+        x11-libs/libXxf86vm
+    build:
+        sys-devel/gettext
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBUILD_SERVER=ON
+    -DBUILD_CLIENT=ON
+    -DCUSTOM_BINDIR="/usr/$(exhost --target)/bin"
+    -DCUSTOM_DOCDIR="/usr/share/doc/${PNVR}"
+    -DCUSTOM_LOCALEDIR="/usr/share/locale"
+    -DCUSTOM_SHAREDIR="/usr/share/${PN}"
+    -DENABLE_CURL=ON
+    -DENABLE_FREETYPE=ON
+    -DENABLE_GETTEXT=ON
+    -DENABLE_GLES=0
+    -DENABLE_LEVELDB=ON
+    -DENABLE_REDIS=ON
+    -DENABLE_SPATIAL=OFF
+    -DENABLE_SOUND=ON
+    -DENABLE_LUAJIT=OFF
+    -DRUN_IN_PLACE=0
+    -DIRRLICHT_INCLUDE_DIR=/usr/$(exhost --target)/include/irrlicht
+    -DCUSTOM_EXAMPLE_CONF_DIR=/usr/share/doc/${PNVR}
+)
+
+src_unpack() {
+    default
+    edo mv minetest-minetest-* ${PNV}
+    edo mv minetest-minetest_game-* minetest_game-${PV}
+}
+
+src_install() {
+    cmake_src_install
+
+    edo cd "${WORKBASE}"/minetest_game-${PV}
+	insinto /usr/share/minetest/games/${PN}
+	doins -r mods menu
+	doins game.conf minetest.conf
+}
