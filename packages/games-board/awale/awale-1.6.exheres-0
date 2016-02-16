@@ -1,0 +1,38 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+
+SUMMARY="Free Awale - The game of all Africa"
+HOMEPAGE="http://www.nongnu.org/awale/"
+DOWNLOADS="http://mirror.unicorncloud.org/savannah-nongnu/awale/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    run:
+        dev-lang/tcl
+        dev-lang/tk
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-build.patch )
+DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-tk )
+
+src_prepare() {
+    default
+
+	edo mv src/xawale.tcl src/xawale.tcl.in
+	edo mv configure.in configure.ac
+
+    eautoreconf
+}
+
+src_install() {
+    default
+	dodoc AUTHORS ChangeLog NEWS README THANKS
+	edo chmod +x "${IMAGE}"/usr/share/${PN}/xawale.tcl
+}
+
