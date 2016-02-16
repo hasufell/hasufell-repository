@@ -43,7 +43,7 @@ DEPENDENCIES="
 CMAKE_SOURCE=${WORKBASE}/${MY_PNV}
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DPKG_BINDIR=/usr/bin
+    -DPKG_BINDIR=/usr/$(exhost --target)/bin
     -DPKG_DATADIR=/usr/share/${PN}
     -DUSE_PCH_COMPILATION=OFF
 )
