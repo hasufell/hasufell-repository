@@ -1,0 +1,61 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake
+
+SUMMARY="Cryptographic library for embedded systems"
+HOMEPAGE="https://tls.mbed.org/"
+DOWNLOADS="https://github.com/ARMmbed/mbedtls/archive/mbedtls-${PV}.tar.gz"
+
+LICENCES="Apache-2.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+MYOPTIONS="
+    havege [[ description = [ Enable the HAVEGE random generator,
+                              not suitable for virtualized environments! ] ]]
+    threads
+"
+
+DEPENDENCIES="
+    build+run:
+        sys-libs/zlib
+    test:
+        dev-lang/perl
+"
+
+WORK=${WORKBASE}/${PN}-${PNV}
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DENABLE_PROGRAMS=OFF
+    -DUSE_SHARED_MBEDTLS_LIBRARY=ON
+    -DINSTALL_MBEDTLS_HEADERS=ON
+    -DLIB_INSTALL_DIR="/usr/$(exhost --target)/lib"
+    -DUSE_STATIC_MBEDTLS_LIBRARY=OFF
+    -DENABLE_ZLIB_SUPPORT=ON
+)
+
+CMAKE_SRC_CONFIGURE_TESTS=(
+    '-DENABLE_TESTING=ON'
+)
+
+enable_mbedtls_option() {
+	local myopt="$@"
+	# check that config.h syntax is the same at version bump
+	sed -i \
+		-e "s://#define ${myopt}:#define ${myopt}:" \
+		include/mbedtls/config.h || die
+}
+
+src_prepare() {
+	enable_mbedtls_option MBEDTLS_ZLIB_SUPPORT
+	option havege && enable_mbedtls_option MBEDTLS_HAVEGE_C
+	option threads && enable_mbedtls_option MBEDTLS_THREADING_C
+	option threads && enable_mbedtls_option MBEDTLS_THREADING_PTHREAD
+}
+
+src_test() {
+	LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${ECMAKE_BUILD_DIR}/library" \
+		cmake_src_test
+}
+
