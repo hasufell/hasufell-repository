@@ -1,0 +1,75 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+MY_P=zod_linux-${PV:0:4}-${PV:4:2}-${PV:6:2}
+DESCRIPTION="Zod engine is a remake of the 1996 classic game by Bitmap Brothers called Z"
+HOMEPAGE="http://zod.sourceforge.net/"
+DOWNLOADS="mirror://sourceforge/zod/linux_releases/${MY_P}.tar.gz"
+
+LICENCES="all-rights-reserved GPL-3 LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/SDL_image:1
+        media-libs/SDL_ttf:0
+        media-libs/SDL_mixer:0[midi][ogg]
+        virtual/mysql
+        x11-libs/wxGTK:2.8
+"
+
+WORK=${WORKBASE}/zod_engine
+
+# patches are upstreamed
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-build.patch
+    "${FILES}"/${PNV}-proper-linux-support.patch
+)
+
+src_prepare() {
+    default
+
+	# remove unused files
+	edo find "${WORK}" -type f \( -name Thumbs.db -o -name "*.xcf" -o -name "*.ico" \) -delete
+	edo rm assets/{splash.png,WebCamScene.icescene}
+
+    # fix some tool invocations
+    eval $(eclectic wxwidgets script 2.8-gtk2)
+    edo sed -i -e "s#-lmysqlclient#\$\(shell /usr/$(exhost --target)/bin/mysql_config \-\-libs\)#" \
+        zod_src/makefile
+}
+
+src_compile() {
+	emake -C zod_src DATA_PATH="\"/usr/share/${PN}\"" main map_editor
+	emake -C zod_launcher_src DATA_PATH="\"/usr/share/${PN}\""
+}
+
+src_install() {
+	dobin zod_src/zod
+	dodoc zod_engine_help.txt
+
+    dobin zod_src/zod_map_editor
+    dodoc map_editor_help.txt
+
+    dobin zod_launcher_src/zod_launcher
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Zod Engine
+Type=Application
+Comment=Zod engine is a remake of the 1996 classic game by Bitmap Brothers called Z
+Exec=zod_launcher
+TryExec=zod_launcher
+Icon=zod-engine
+Categories=Game;StrategyGame;
+EOF
+
+	insinto /usr/share/zod-engine
+	doins -r assets blank_maps *.map default_settings.txt *map_list.txt
+}
+
