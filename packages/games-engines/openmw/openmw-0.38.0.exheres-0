@@ -1,0 +1,60 @@
+# Copyright 2014 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+
+WORK=${WORKBASE}/${PN}-${PNV}
+
+require gtk-icon-cache
+require cmake [ api=2 ]
+
+SUMMARY="An open source reimplementation of TES III: Morrowind"
+HOMEPAGE="http://openmw.org/"
+DOWNLOADS="https://github.com/OpenMW/openmw/archive/${PNV}.tar.gz"
+
+LICENCES="GPL-3 MIT BitstreamVera OFL-1.1"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        app-arch/unshield
+        dev-games/mygui[>=3.2.1]
+        dev-games/OpenSceneGraph
+        dev-libs/boost
+        dev-libs/tinyxml
+        media-libs/freeimage
+        media-libs/freetype:2
+        media-libs/openal
+        media-libs/SDL:2[X]
+        sci-physics/bullet[>=2.80]
+        x11-libs/qtbase:5
+"
+
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBUILD_OPENMW=ON
+    -DBSATOOL=ON
+    -DESMTOOL=ON
+    -DOPENCS=ON
+    -DBUILD_UNITTESTS=OFF
+    -DBINDIR="/usr/$(exhost --target)/bin"
+    -DLIBDIR="/usr/$(exhost --target)/lib"
+    -DDATADIR="/usr/share/${PN}"
+    -DICONDIR="/usr/share/icons/hicolor/256x256/apps"
+    -DMORROWIND_DATA_FILES="/usr/share/${PN}/data"
+    -DOPENMW_RESOURCE_FILES="/usr/share/${PN}/resources"
+    -DGLOBAL_CONFIG_PATH="/etc"
+    -DUSE_SYSTEM_TINYXML=ON
+    -DDESIRED_QT_VERSION=5
+)
+
+src_install() {
+    default
+    keepdir /usr/share/openmw/data
+}
