@@ -23,18 +23,24 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
     -DDATADIR=/usr/share/${PN}
 )
 
-src_prepare() {
-	edo sed -i \
-		-e "/Exec/s#@FLARE_EXECUTABLE_PATH@#flare#" \
-		distribution/flare.desktop.in
-}
-
 src_install() {
 	cmake_src_install
 
     herebin ${PN}-game <<EOF
 #!/bin/sh
 exec flare --game=flare-game "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Flare (game)
+Type=Application
+Comment=Free/Libre Action Roleplaying game
+Exec=flare-game
+TryExec=flare-game
+Icon=flare
+Categories=Game;RolePlaying;
 EOF
 
 	dodoc README
