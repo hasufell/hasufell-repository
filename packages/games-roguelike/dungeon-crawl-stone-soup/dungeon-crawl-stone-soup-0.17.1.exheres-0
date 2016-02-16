@@ -5,6 +5,24 @@ require gtk-icon-cache
 
 MY_P="stone_soup-${PV}"
 SUMMARY="Dungeon Crawl Stone Soup is a role-playing roguelike game of exploration and treasure-hunting in dungeons"
+DESCRIPTION="
+    Dungeon Crawl Stone Soup is a free roguelike game of exploration
+    and treasure-hunting in dungeons filled with dangerous and
+    unfriendly monsters in a quest for the mystifyingly fabulous Orb
+    of Zot.
+
+    Dungeon Crawl Stone Soup has diverse species and many different
+    character backgrounds to choose from, deep tactical game-play,
+    sophisticated magic, religion and skill systems, and a grand
+    variety of monsters to fight and run from, making each game
+    unique and challenging.
+
+    Dungeon Crawl Stone Soup can be played offline, or online on a
+    public telnet/ssh server thanks to the good folks at
+    crawl.akrasiac.org (CAO) and crawl.develz.org (CDO). These public
+    servers allow you to meet other players’ ghosts, watch other people
+    playing, and, in general, have a blast!
+"
 HOMEPAGE="http://crawl.develz.org/wordpress/"
 DOWNLOADS="https://crawl.develz.org/release/stone_soup-${PV}-nodeps.tar.xz"
 
