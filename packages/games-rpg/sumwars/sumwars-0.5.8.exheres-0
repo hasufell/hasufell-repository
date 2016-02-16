@@ -1,0 +1,78 @@
+# Copyright 1999-2013 Gentoo Foundation
+# Copyright 2014-2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+
+require cmake gtk-icon-cache flag-o-matic
+
+SUMMARY="A multi-player, 3D action role-playing game"
+HOMEPAGE="http://sumwars.org"
+DOWNLOADS="mirror://sourceforge/sumwars/${PNV//_/-}-src.tar.bz2"
+
+LICENCES="GPL-3 CC-BY-SA-3.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        dev-games/cegui[>=0.8][ogre]
+        dev-games/ois
+        dev-games/physfs
+        dev-lang/lua:5.1
+        dev-libs/boost
+        dev-libs/ogre[freeimage][opengl]
+        dev-libs/tinyxml
+        media-libs/freealut
+        media-libs/openal
+        media-libs/libogg
+        media-libs/libvorbis
+        net-libs/enet
+        x11-libs/libX11
+        x11-libs/libXrandr
+"
+
+WORK=${WORKBASE}/${PN}-${PV%_*}
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DCMAKE_INSTALL_PREFIX=""
+    -DSUMWARS_NO_TINYXML=ON
+    -DSUMWARS_NO_ENET=ON
+    -DSUMWARS_DOC_DIR="/usr/share/doc/${PNVR}"
+    -DSUMWARS_EXECUTABLE_DIR=/usr/$(exhost --target)/bin
+    -DSUMWARS_SHARE_DIR=/usr/share/${PN}
+    -DSUMWARS_STANDALONE_MODE=OFF
+    -DSUMWARS_POST_BUILD_COPY=OFF
+    -DSUMWARS_PORTABLE_MODE=OFF
+    -DSUMWARS_RANDOM_REGIONS=ON
+    -DSUMWARS_BUILD_TOOLS=ON
+)
+
+src_configure() {
+	# QA
+	append-flags -fno-strict-aliasing
+
+	cmake_src_configure
+}
+
+src_install() {
+	cmake_src_install
+
+    # cleanup empty directories
+    edo rm -r "${IMAGE}"/usr/share/sumwars/translation/{potfiles,extract}
+
+    insinto /usr/share/icons/hicolor/128x128/apps
+	newins share/icon/SumWarsIcon_128x128.png ${PN}.png
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Summoning Wars
+Type=Application
+Comment=a multi-player, 3D action role-playing game
+Exec=sumwars
+TryExec=sumwars
+Icon=sumwars
+Categories=Game;RolePlaying;
+EOF
+}
+
