@@ -35,6 +35,7 @@ DEPENDENCIES="
         media-libs/SDL:0[X]
         media-libs/SDL_image:1
         media-libs/SDL_ttf:0
+        x11-dri/glu
         x11-dri/mesa
         x11-libs/libX11
 "
