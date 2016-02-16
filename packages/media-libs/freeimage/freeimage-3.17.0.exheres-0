@@ -16,10 +16,6 @@ LICENCES="|| ( GPL-2 FIPL-1.0 )"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
-MYOPTIONS="
-    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
-"
-
 DEPENDENCIES="
     build:
         virtual/unzip
