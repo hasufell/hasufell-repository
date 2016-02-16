@@ -1,0 +1,28 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake
+
+SUMMARY="Free/Libre Action Roleplaying game engine"
+HOMEPAGE="https://github.com/clintbellanger/flare-engine"
+DOWNLOADS="https://github.com/clintbellanger/flare-engine/archive/v${PV}.tar.gz -> ${PNV}-engine.tar.gz"
+
+LICENCES="CC-BY-SA-3.0 GPL-3 OFL-1.1"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/SDL_image:1
+        media-libs/SDL_mixer:0
+        media-libs/SDL_ttf:0
+"
+
+WORK=${WORKBASE}/flare-engine-${PV}
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBINDIR="/usr/$(exhost --target)/bin"
+    -DDATADIR=/usr/share/${PN}
+)
+
