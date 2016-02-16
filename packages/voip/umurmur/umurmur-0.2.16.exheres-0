@@ -1,0 +1,58 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+
+require systemd-service
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
+DESCRIPTION="Minimalistic Murmur (Mumble server)"
+HOMEPAGE="https://github.com/fatbob313/umurmur"
+DOWNLOADS="https://github.com/fatbob313/${PN}/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
+
+LICENCES="BSD"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+MYOPTIONS="
+    ( providers: libressl openssl ) [[
+        number-selected = exactly-one
+    ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/protobuf-c
+        dev-libs/libconfig
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
+    run:
+        group/umurmur
+        user/umurmur
+"
+
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-ssl=openssl
+)
+
+src_install() {
+    default
+
+    insinto /etc/init.d
+	newins "${FILES}"/umurmurd.initd umurmurd
+    insinto /etc/conf.d
+	newins "${FILES}"/umurmurd.confd umurmurd
+    install_systemd_files
+
+	local confdir="/etc/umurmur"
+	insinto "${confdir}"
+	doins "${FILES}"/umurmur.conf
+
+	# Some permissions are adjusted as the config may contain a server
+	# password, and /etc/umurmur will typically contain the cert and the
+	# key used to sign it, which are read after priveleges are dropped.
+	chmod 0750 "${IMAGE%/}/${confdir}"
+	chown -R root:umurmur "${IMAGE%/}/${confdir}"
+	chmod 0640 "${IMAGE%/}/${confdir}"/umurmur.conf
+}
+
