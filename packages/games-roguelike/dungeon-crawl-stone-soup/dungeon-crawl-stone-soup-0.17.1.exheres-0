@@ -23,7 +23,7 @@ DESCRIPTION="
     servers allow you to meet other players’ ghosts, watch other people
     playing, and, in general, have a blast!
 "
-HOMEPAGE="http://crawl.develz.org/wordpress/"
+HOMEPAGE="https://crawl.develz.org/wordpress/"
 DOWNLOADS="https://crawl.develz.org/release/stone_soup-${PV}-nodeps.tar.xz"
 
 LICENCES="
