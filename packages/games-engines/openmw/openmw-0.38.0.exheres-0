@@ -28,7 +28,7 @@ DEPENDENCIES="
         dev-games/OpenSceneGraph
         dev-libs/boost
         dev-libs/tinyxml
-        media-libs/freeimage
+        media-libs/FreeImage
         media-libs/freetype:2
         media-libs/openal
         media-libs/SDL:2[X]
