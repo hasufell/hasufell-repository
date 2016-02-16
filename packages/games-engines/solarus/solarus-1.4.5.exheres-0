@@ -1,0 +1,35 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake
+
+SUMMARY="An open-source Zelda-like 2D game engine"
+HOMEPAGE="http://www.solarus-games.org/"
+DOWNLOADS="http://www.solarus-games.org/downloads/solarus/${PNV}-src.tar.gz"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        dev-games/physfs
+        dev-lang/lua:5.1
+        media-libs/libmodplug
+        media-libs/libvorbis
+        media-libs/openal
+        media-libs/SDL:2[X]
+        media-libs/SDL_image:2
+        media-libs/SDL_ttf:2
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DSOLARUS_INSTALL_DESTINATION="/usr/$(exhost --target)/bin"
+    -DSOLARUS_USE_LUAJIT=OFF
+)
+
+src_install() {
+	cmake_src_install
+	doman solarus.6
+}
+
