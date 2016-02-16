@@ -1,0 +1,53 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake
+
+SUMMARY="A free 2D Zelda fangame parody"
+HOMEPAGE="http://www.solarus-games.org/"
+DOWNLOADS="http://www.zelda-solarus.com/downloads/${PN}/${PNV}.tar.gz"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    run:
+        games-engines/solarus[~>1.4.0]
+    build:
+        app-arch/zip
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DSOLARUS_INSTALL_DATAROOTDIR=/usr/share
+    -DSOLARUS_INSTALL_BINDIR="/usr/$(exhost --target)/bin"
+)
+
+src_install() {
+	cmake_src_install
+
+    insinto /usr/share/icons/hicolor/256x256/apps
+    newins build/icons/${PN}_icon_256.png ${PN}.png
+    insinto /usr/share/icons/hicolor/48x48/apps
+    newins build/icons/${PN}_icon_48.png ${PN}.png
+
+	# install proper wrapper script
+	edo rm -f "${IMAGE%/}"/usr/share/${PN}
+    herebin ${PN} <<EOF
+#!/bin/sh
+exec solarus_run "/usr/share/solarus/${PN}" "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Zelda: Mystery of Solarus XD
+Type=Application
+Comment=A free 2D Zelda fangame parody
+Exec=zsxd
+TryExec=zsxd
+Icon=zsxd
+Categories=Game;RolePlaying;
+EOF
+}
+
