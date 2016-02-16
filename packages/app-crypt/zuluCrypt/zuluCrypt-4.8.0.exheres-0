@@ -1,0 +1,59 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake
+
+SUMMARY="Front end to cryptsetup"
+HOMEPAGE="http://mhogomchungu.github.io/zuluCrypt/"
+DOWNLOADS="https://github.com/mhogomchungu/zuluCrypt/releases/download/${PV}/zuluCrypt-${PV}.tar.bz2"
+
+LICENCES="GPL-2+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    gnome [[ description = [ Enable support for the freedesktop.org
+                             Secret Service API via libsecret ] ]]
+    gui [[ description = [ Whether to build the QT gui ] ]]
+    kde [[ requires = [ gui ]
+           description = [ Enable support for KDE, e.g. via kwallet ] ]]
+    udev [[ description = [ Whether udev will be consulted when deciding
+                            if a volume is system or not ] ]]
+   ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/libgcrypt
+        sys-apps/util-linux
+        sys-fs/cryptsetup
+        gnome? ( dev-libs/libsecret:1 )
+        gui? (
+            dev-libs/libpwquality
+            x11-libs/qtbase:5
+        )
+        kde? (
+            kde/kdelibs:4
+            kde/kde-runtime:4
+        )
+    run:
+        udev? (
+            providers:eudev? ( sys-apps/eudev )
+            providers:systemd? ( sys-apps/systemd )
+        )
+    build:
+        virtual/pkg-config
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DLIB_SUFFIX=lib
+    -DQT5=ON
+)
+
+CMAKE_SRC_CONFIGURE_OPTIONS=(
+    'udev   UDEVSUPPORT'
+    '!gnome NOGNOME'
+    '!gui   NOGUI'
+    'gui    WITH_PWQUALITY'
+    '!kde   NOKDE'
+)
+
