@@ -1,0 +1,76 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+
+require gtk-icon-cache
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
+SUMMARY="Updated clone of Westood Studios' Dune2"
+HOMEPAGE="http://dunelegacy.sourceforge.net"
+DOWNLOADS="mirror://sourceforge/${PN}/${PNV}-src.tar.bz2"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:0[X]
+	    media-libs/SDL_mixer:0[midi]
+    build:
+        virtual/pkg-config
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PNV}-build.patch
+)
+
+src_install() {
+	default
+
+    insinto /usr/share/icons/hicolor/scalable
+    doins ${PN}.svg
+    insinto /usr/share/icons/hicolor/48x48
+    doins ${PN}.png
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Dune Legacy
+Type=Application
+Comment=Updated clone of Westood Studios' Dune2
+Exec=dunelegacy
+TryExec=dunelegacy
+Icon=dunelegacy
+Categories=Game;StrategyGame;
+EOF
+}
+
+pkg_postinst() {
+    gtk-icon-cache_pkg_postinst
+
+	elog "You will need to copy all Dune 2 PAK files to one of these"
+	elog "directories:"
+	elog "  /usr/share/${PN}"
+	elog "  ~/.config/${PN}/data"
+	elog
+	elog "At least the following files are needed:"
+	elog " - ATRE.PAK"
+	elog " - DUNE.PAK"
+	elog " - ENGLISH.PAK"
+	elog " - FINALE.PAK"
+	elog " - HARK.PAK"
+	elog " - INTRO.PAK"
+	elog " - INTROVOC.PAK"
+	elog " - MENTAT.PAK"
+	elog " - MERC.PAK"
+	elog " - ORDOS.PAK"
+	elog " - SCENARIO.PAK"
+	elog " - SOUND.PAK"
+	elog " - VOC.PAK"
+	elog
+	elog "For playing in german or french you need additionally"
+	elog "GERMAN.PAK or FRENCH.PAK."
+}
+
