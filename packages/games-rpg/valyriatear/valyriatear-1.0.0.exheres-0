@@ -33,7 +33,7 @@ DEPENDENCIES="
         media-libs/libvorbis
         media-libs/openal
         media-libs/SDL:0[X]
-        media-libs/SDL_image:0
+        media-libs/SDL_image:1
         media-libs/SDL_ttf:0
         x11-dri/mesa
         x11-libs/libX11
