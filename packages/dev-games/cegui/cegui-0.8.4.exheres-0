@@ -1,0 +1,96 @@
+# Copyright 2009 Maxime Coste <frrrwww@gmail.com>
+# Copyright 2012 Wouter van Kesteren <woutershep@gmail.com>
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+
+require sourceforge [ project=crayzedsgui suffix=tar.bz2 ]
+require cmake
+
+SUMMARY="Crazy Eddie's video games GUI library"
+HOMEPAGE="http://www.cegui.org.uk"
+
+LICENCES="LGPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    devil [[ requires = opengl description = [ Image loading via DevIL ] ]]
+    freeimage [[ description = [ Build the FreeImage based ImageCodec module ] ]]
+    irrlicht
+    lua
+    ogre
+    opengl
+    (
+        expat   [[ description = [ Build expat XML parser module ] ]]
+        libxml  [[ description = [ Build libxml XML parser module ] ]]
+        tinyxml [[ description = [ Build tinyXML XML parser module ] ]]
+        xerces  [[ description = [ Build Xerces-C++ XML parser module ] ]]
+    ) [[ number-selected = at-least-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/pcre[>=5.0]
+        sys-libs/zlib
+        media-libs/freetype:2[>=0.15.0]
+        devil? ( media-libs/DevIL )
+        expat? ( dev-libs/expat )
+        freeimage? ( media-libs/FreeImage )
+        irrlicht? ( dev-games/irrlicht )
+        libxml? ( dev-libs/libxml2[>=2.6] )
+        lua? ( dev-lang/lua:5.1 )
+        ogre? ( dev-libs/ogre[>=1.7] )
+        opengl? (
+            media-libs/glew
+            x11-dri/freeglut
+            x11-dri/glu
+            x11-dri/mesa[>=9]
+        )
+        tinyxml? ( dev-libs/tinyxml )
+        xerces? ( dev-libs/xerces-c )
+    build:
+        dev-libs/glm
+        virtual/pkg-config
+"
+
+# TODO: python
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DCEGUI_BUILD_IMAGECODEC_CORONA=OFF
+    -DCEGUI_BUILD_IMAGECODEC_PVR=OFF
+    -DCEGUI_BUILD_IMAGECODEC_SILLY=OFF
+    -DCEGUI_BUILD_IMAGECODEC_STB=ON
+    -DCEGUI_BUILD_IMAGECODEC_TGA=ON
+    -DCEGUI_BUILD_PYTHON_MODULES=OFF
+    -DCEGUI_BUILD_RENDERER_DIRECTFB=OFF
+    -DCEGUI_BUILD_RENDERER_NULL=ON
+    -DCEGUI_BUILD_RENDERER_OPENGLES=OFF
+    -DCEGUI_BUILD_STATIC_CONFIGURATION=OFF
+    -DCEGUI_BUILD_TESTS=OFF
+    -DCEGUI_BUILD_XMLPARSER_RAPIDXML=OFF
+    -DCEGUI_HAS_MINIZIP_RESOURCE_PROVIDER=ON
+    -DCEGUI_HAS_PCRE_REGEX=ON
+    -DCEGUI_SAMPLES_ENABLED=OFF
+    -DCEGUI_USE_FRIBIDI=OFF
+    -DCEGUI_USE_MINIBIDI=OFF
+    -DCEGUI_HAS_FREETYPE=ON
+    -DCEGUI_LIB_INSTALL_DIR=lib
+)
+
+CMAKE_SRC_CONFIGURE_OPTIONS=(
+    'devil CEGUI_BUILD_IMAGECODEC_DEVIL'
+    'freeimage CEGUI_BUILD_IMAGECODEC_FREEIMAGE'
+    'lua CEGUI_BUILD_LUA_GENERATOR'
+    'lua CEGUI_BUILD_LUA_MODULE'
+    'irrlicht CEGUI_BUILD_RENDERER_IRRLICHT'
+    'ogre CEGUI_BUILD_RENDERER_OGRE'
+    'opengl CEGUI_BUILD_RENDERER_OPENGL'
+    'opengl CEGUI_BUILD_RENDERER_OPENGL3'
+    'expat CEGUI_BUILD_XMLPARSER_EXPAT'
+    'libxml CEGUI_BUILD_XMLPARSER_LIBXML2'
+    'tinyxml CEGUI_BUILD_XMLPARSER_TINYXML'
+    'xerces CEGUI_BUILD_XMLPARSER_XERCES'
+)
+
+src_prepare() {
+    edo sed -i -e '/CEGUI_LIB_INSTALL_DIR/s#lib64#lib#' CMakeLists.txt
+}
