@@ -1,0 +1,88 @@
+# Copyright 2013-2014 Thomas Witt
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake [ api=2 ]
+
+SUMMARY="High performance 3D graphics toolkit"
+DESCRIPTION="
+The OpenSceneGraph is an open source high performance 3D graphics toolkit,
+used by application developers in fields such as visual simulation, games,
+virtual reality, scientific visualization and modelling. Written entirely
+in Standard C++ and OpenGL it runs on all Windows platforms, OSX, GNU/Linux,
+IRIX, Solaris, HP-Ux, AIX and FreeBSD operating systems. The OpenSceneGraph
+is now well established as the world leading scene graph technology, used
+widely in the vis-sim, space, scientific, oil-gas, games and virtual reality
+industries.
+"
+
+MY_PN="OpenSceneGraph"
+MY_P=${MY_PN}-${PV}
+HOMEPAGE="http://${PN}.org"
+DOWNLOADS="http://trac.openscenegraph.org/downloads/developer_releases/${MY_P}.zip"
+
+LICENCES="OpenSceneGraph"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+# TODO Some of these may be optional
+# TODO SDL gtkglxext
+DEPENDENCIES="
+    build:
+        app-arch/zip
+    build+run:
+        media-libs/freetype:2
+        media-libs/jasper
+        media-libs/openexr
+        sys-libs/zlib
+        net-misc/curl
+        media/ffmpeg
+        media-libs/gstreamer:1.0
+        media-plugins/gst-plugins-base:1.0
+        app-text/poppler[cairo]
+        dev-libs/glib:2
+        media-libs/SDL:0
+        x11-libs/gtkglext
+        x11-libs/wxGTK:3.0
+        x11-dri/mesa
+        providers:ijg-jpeg? ( media-libs/jpeg )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+        media-libs/giflib:=
+        media-libs/libpng:=
+        media-libs/tiff
+        x11-libs/qtbase:5
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-cmake.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DWITH_Asio=FALSE
+    -DWITH_Inventor=FALSE
+    -DWITH_COLLADA=FALSE
+    -DWITH_FBX=FALSE
+    -DWITH_Xine=FALSE
+    -DWITH_OpenVRML=FALSE
+    -DWITH_Performer=FALSE
+    -DWITH_GDAL=FALSE
+    -DWITH_LibVNCServer=FALSE
+    -DWITH_OurDCMTK=FALSE
+    -DWITH_RSVG=FALSE
+    -DWITH_NVTT=FALSE
+    -DWITH_LIBLAS=FALSE
+    -DWITH_Lua51=FALSE
+    -DWITH_Lua52=FALSE
+    -DOSG_USE_LOCAL_LUA_SOURCE=OFF
+    -DWITH_ITK=FALSE
+    -DWITH_FLTK=FALSE
+    -DWITH_GLUT=FALSE
+    -DWITH_FOX=FALSE
+    -DWITH_SDL2=OFF
+    -DOSG_USE_QT=ON
+    -DDESIRED_QT_VERSION=5
+    -DOPENGL_PROFILE=GL2
+    -DDYNAMIC_OPENSCENEGRAPH=ON
+)
