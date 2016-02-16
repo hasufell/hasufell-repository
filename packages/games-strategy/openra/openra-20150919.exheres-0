@@ -119,7 +119,7 @@ install_desktop_entry() {
     local cmd=$1
     local name=$2
     insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
+    hereins "${name// /-}.desktop" <<EOF
 [Desktop Entry]
 Name=${name}
 Type=Application
