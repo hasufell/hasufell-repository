@@ -1,0 +1,99 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+require cmake gtk-icon-cache
+
+DATA_PV=${PV//./}
+ENGINE_PV=${PV//./}
+ENGINE_P=${PN}_${ENGINE_PV}_sdk
+
+DESCRIPTION="Multiplayer FPS based on the QFusion engine (evolved from Quake 2)"
+HOMEPAGE="http://www.warsow.net/"
+DOWNLOADS="http://mirror.null.one/${ENGINE_P}.tar.gz
+	http://mirror.null.one/warsow_${DATA_PV}_unified.tar.gz
+	mirror://gentoo/warsow.png"
+
+LICENCES="
+    GPL-2
+    ZLIB [[ note = [ bundled angelscript ] ]]
+    warsow
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/freetype
+        media-libs/libogg
+        media-libs/libpng:=
+        media-libs/libtheora
+        media-libs/libvorbis
+        media-libs/openal
+        media-libs/SDL:2[X]
+        net-misc/curl
+        sys-libs/zlib
+        x11-dri/mesa
+        providers:ijg-jpeg? ( media-libs/jpeg )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+"
+
+WORK=${WORKBASE}/source/source
+DATA_S=${WORKBASE}/${PN}_${DATA_PV:0:2}
+
+src_install() {
+	dobin_wrapper() {
+		local f
+
+		for f in $@ ; do
+			herebin ${f} <<EOF
+#!/bin/sh
+
+basepath="/usr/share/${PN}"
+
+cd "\${basepath}"
+
+exec "/usr/libexec/${PN}/${f}" \
++set fs_basepath \${basepath} \
++set fs_usehomedir 1 "\$@"
+EOF
+		done
+	}
+	insinto /usr/share/${PN}
+	doins -r "${DATA_S}"/basewsw
+
+	edo cd build
+
+    exeinto /usr/$(exhost --target)/libexec/${PN}/
+	doexe */*.so
+	newexe ${PN}.* ${PN}
+	newexe wsw_server.* ${PN}-ded
+	newexe wswtv_server.* ${PN}-tv
+	dobin_wrapper ${PN} ${PN}-ded ${PN}-tv
+
+	local so
+	dodir /usr/share/${PN}/libs
+	for so in basewsw/*.so libs/*.so ; do
+		dosym /usr/$(exhost --target)/libexec/${PN}/${so##*/} \
+			/usr/share/${PN}/${so}
+	done
+
+    insinto /usr/share/icons/hicolor/48x48/apps
+    doins "${FETCHEDDIR}"/${PN}.png
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Warsow
+Type=Application
+Comment=Multiplayer FPS based on the QFusion engine (evolved from Quake 2)
+Exec=warsow
+TryExec=warsow
+Icon=warsow
+Categories=Game;ActionGame;
+EOF
+}
+
