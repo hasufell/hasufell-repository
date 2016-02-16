@@ -24,7 +24,7 @@ DESCRIPTION="
     playing, and, in general, have a blast!
 "
 HOMEPAGE="https://crawl.develz.org/wordpress/"
-DOWNLOADS="https://crawl.develz.org/release/stone_soup-${PV}-nodeps.tar.xz"
+DOWNLOADS="https://crawl.develz.org/release/${MY_P}-nodeps.tar.xz"
 
 LICENCES="
     GPL-2
