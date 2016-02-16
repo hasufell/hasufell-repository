@@ -1,0 +1,96 @@
+# Copyright 2015-2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PN="t-engine4"
+MY_PV="${PV/_/}"
+MY_PV="${MY_PV/rc/RC}"
+MY_P="${MY_PN}-src-${MY_PV}"
+SUMMARY="Topdown tactical RPG roguelike game and game engine"
+HOMEPAGE="http://te4.org"
+DOWNLOADS="http://te4.org/dl/t-engine/${MY_P}.tar.bz2"
+
+LICENCES="
+    GPL-3
+    shockbolt-tileset
+    Apache-2.0 [[ note = [ fonts license ] ]]
+    BitstreamVera [[ note = [ fonts license ] ]]
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/libpng:=
+        media-libs/libvorbis
+        media-libs/openal
+        media-libs/SDL:2[X]
+        media-libs/SDL_image:2
+        media-libs/SDL_ttf:2
+        x11-dri/glu
+        x11-dri/mesa
+    build:
+        sys-devel/premake:4
+"
+
+WORK=${WORKBASE}/${MY_P}
+
+src_prepare() {
+	# fix broken sdl2 detection
+	# http://forums.te4.org/viewtopic.php?f=42&t=38714
+	edo sed -i \
+		-e "s~/usr/lib32~/usr/$(exhost --target)/lib~" \
+		-e "s~/opt/SDL-2.0~/usr/$(exhost --target)~" \
+	     premake4.lua
+}
+
+src_configure() {
+	local premake_options="--lua=default"
+	# Generate a "Makefile" with "premake4".
+	edo premake4 ${premake_options} gmake
+
+	# respect flags, remove misuse of $ARCH
+	# files are generated, cannot patch
+	edo sed -i \
+		-e 's~\(CFLAGS\s*+= \).*~\1-MMD -MP $(DEFINES) $(INCLUDES)~' \
+		-e 's~\(CXXFLAGS\s*+= \).*~\1-MMD -MP $(DEFINES) $(INCLUDES)~' \
+		-e '/LDFLAGS/s~-s~~' \
+		-e 's~$(ARCH) ~~' \
+		build/*.make
+
+	# respect LDFLAGS
+	# http://forums.te4.org/viewtopic.php?f=42&t=38715
+	edo sed -i \
+		-e 's~^[ \t]*LINKCMD[ \t]*=[ \t]*$(CC).*$~LINKCMD = $(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(LDFLAGS) $(LIBS)~' \
+		build/*.make
+
+	# FHS
+	# http://forums.te4.org/viewtopic.php?f=42&t=38716
+	edo sed -i \
+		-e "/PHYSFS_mount/s~game~/usr/share/${PN}/game~" \
+		src/main.c
+}
+
+src_compile() {
+	# parallel make broken
+	# http://forums.te4.org/viewtopic.php?f=42&t=38713
+	config='release' emake -j1 verbose=1
+}
+
+src_install() {
+	insinto "/usr/share/${PN}"
+	doins -r game
+	newbin t-engine ${PN}
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=ToME4
+Type=Application
+Comment=Topdown tactical RPG roguelike game and game engine
+Exec=tome4
+TryExec=tome4
+Icon=tome4
+Categories=Game;RolePlaying;
+EOF
+}
+
