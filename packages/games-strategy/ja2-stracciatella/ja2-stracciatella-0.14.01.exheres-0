@@ -1,0 +1,67 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="A port of Jagged Alliance 2 to SDL"
+HOMEPAGE="https://bitbucket.org/gennady/ja2-stracciatella http://tron.homeunix.org/ja2/"
+DOWNLOADS="https://bitbucket.org/gennady/ja2-stracciatella/get/v${PV}.tar.gz -> ${PNV}.tar.gz
+	mirror://gentoo/editor.slf.gz"
+
+LICENCES="SFI-SCLA"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:0[X]
+"
+
+src_unpack() {
+    default
+    edo mv gennady-ja2-stracciatella-* ${PNV}
+}
+
+src_prepare() {
+	expatch "${FILES}"/${PNV}-makefile.patch
+}
+
+src_configure() {
+    # not an autoconf script
+	./configure --prefix=/usr
+}
+
+src_compile() {
+	emake Q=""
+}
+
+src_install() {
+	emake \
+		BINARY_DIR="${IMAGE}/usr/$(exhost --target)/bin" \
+		MANPAGE_DIR="${IMAGE}/usr/share/man/man6" \
+		FULL_PATH_EXTRA_DATA_DIR="${IMAGE}/usr/share/ja2" \
+		install
+
+    insinto /usr/share/ja2/data
+    doins "${WORKBASE}"/editor.slf
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=ja2-stracciatella
+Type=Application
+Comment=A port of Jagged Alliance 2 to SDL
+Exec=ja2
+TryExec=ja2
+Icon=ja2-stracciatella
+Categories=Game;StrategyGame;
+EOF
+}
+
+pkg_postinst() {
+	elog "You need to copy all files from the Data directory of"
+	elog "Jagged Alliance 2 installation to"
+	elog "/usr/share/ja2/data "
+	elog "Make sure the filenames are lowercase. You may want to run the"
+	elog "script"
+	elog "/usr/bin/ja2-convert"
+}
+
