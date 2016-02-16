@@ -1,0 +1,95 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+MY_P="stone_soup-${PV}"
+SUMMARY="Dungeon Crawl Stone Soup is a role-playing roguelike game of exploration and treasure-hunting in dungeons"
+HOMEPAGE="http://crawl.develz.org/wordpress/"
+DOWNLOADS="https://crawl.develz.org/release/stone_soup-${PV}-nodeps.tar.xz"
+
+LICENCES="
+    GPL-2
+    BSD [[ note = [ mt19937ar.cc, MSVC/stdint.h ] ]]
+    BSD-2 [[ note = [ all contributions by Steve Noonan and Jesse Luehrs ] ]]
+    public-domain [[ note = [ most of tiles ] ]]
+    CC0-1.0 [[ note = [ most of tiles ] ]]
+    MIT [[ note = [ json.cc/json.h, some .js files in
+                    webserver/static/scripts/contrib/ ] ]]
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    (
+        ncurses [[ description = [ Enable for console (uses ncurses)
+                                   based build ] ]]
+        tiles [[ description = [ Enable for graphical (tiled) build ] ]]
+    ) [[ number-selected = exactly-one ]]
+"
+RESTRICT="test"
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/lua:5.1
+        dev-db/sqlite:3
+        sys-libs/zlib
+        ncurses? ( sys-libs/ncurses )
+        tiles? (
+            fonts/dejavu
+            media-libs/freetype:2
+            media-libs/libpng:=
+            media-libs/SDL:2[X]
+            media-libs/SDL_image:2
+            x11-dri/glu
+            x11-dri/mesa
+        )
+    build:
+        dev-lang/perl
+        sys-devel/bison
+        sys-devel/flex
+        virtual/pkg-config
+        tiles? ( sys-libs/ncurses )
+"
+
+WORK=${WORKBASE}/${MY_P}/source
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p2 "${FILES}"/${PNV}-respect-flags-and-compiler.patch
+    -p2 "${FILES}"/${PNV}-Use-pkg-config-for-linking-to-ncurses.patch
+)
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    USE_LUAJIT=
+    BUILD_LUA=
+    DATADIR="/usr/share/${PN}"
+    V=1
+    prefix="/usr"
+    SAVEDIR="~/.crawl"
+    CFOPTIMIZE="${CXXFLAGS}"
+    LDFLAGS="${LDFLAGS}"
+    AR="${AR}"
+    RANLIB="${RANLIB}"
+    CC="${CC}"
+    CXX="${CXX}"
+    PKGCONFIG="${PKG_CONFIG}"
+    STRIP=touch
+)
+
+src_compile() {
+	export HOSTCXX=${CXX}
+
+    emake "${DEFAULT_SRC_COMPILE_PARAMS[@]}" $(option tiles "TILES=y" "")
+}
+
+src_install() {
+    emake "${DEFAULT_SRC_COMPILE_PARAMS[@]}" \
+        $(option tiles "TILES=y" "") \
+        DESTDIR="${IMAGE}" \
+        prefix_fp="" \
+        bin_prefix="${IMAGE}/usr/$(exhost --target)/bin" \
+        install
+
+	# don't relocate docs, needed at runtime
+	rm -rf "${IMAGE}/usr/share/${PN}/docs/license"
+}
+
