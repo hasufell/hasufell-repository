@@ -21,6 +21,10 @@ DEPENDENCIES="
     build:
         dev-libs/boost
         virtual/pkg-config
+    suggestion:
+        app-arch/innoextract [[ description = [ For extracting game files
+                                                from CD, used by the
+                                                arx-install-data tool ] ]]
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
