@@ -38,7 +38,7 @@ src_prepare() {
     edo rm assets/{splash.png,WebCamScene.icescene}
 
     # fix some tool invocations
-    eval $(eclectic wxwidgets script 2.8-gtk2)
+    eval $(eclectic wxwidgets script 2.8-gtk2) # FIXME: this probably breaks multiarch?
     edo sed -i -e "s#-lmysqlclient#\$\(shell /usr/$(exhost --target)/bin/mysql_config \-\-libs\)#" \
         zod_src/makefile
 }
