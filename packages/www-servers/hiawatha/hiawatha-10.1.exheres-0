@@ -85,8 +85,8 @@ src_install() {
 
     edo rm -r "${IMAGE%/}${HIAWATHA_WEBROOT_DIR}"/*
 
-    insinto /etc/init.d
-    newins "${TEMP}"/hiawatha.initd hiawatha
+    exeinto /etc/init.d
+    newexe "${TEMP}"/hiawatha.initd hiawatha
     install_systemd_files
 
     local i
