@@ -1,0 +1,26 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake
+
+SUMMARY="A tool to unpack installers created by Inno Setup"
+HOMEPAGE="http://constexpr.org/innoextract/"
+DOWNLOADS="http://constexpr.org/innoextract/files/${PNV}.tar.gz"
+
+LICENCES="ZLIB"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        app-arch/xz
+        dev-libs/boost
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DUSE_LZMA=ON
+    -DSET_OPTIMIZATION_FLAGS=OFF
+    -DSTRICT_USE=ON
+    -DWITH_CONV=builtin
+)
+
