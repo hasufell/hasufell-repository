@@ -1,0 +1,106 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake systemd-service
+
+SUMMARY="Advanced and secure webserver"
+HOMEPAGE="http://www.hiawatha-webserver.org"
+DOWNLOADS="http://www.hiawatha-webserver.org/files/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    cache [[ description = [ Enable caching of content ] ]]
+    ipv6
+    monitor [[ description = [ Enabling monitoring support  ] ]]
+    rewrite [[ description = [ Enable the rewrite toolkit ] ]]
+    rproxy [[ description = [ Enable reverse proxy support ] ]]
+    ssl [[ description = [ Enable TLS support via mbedtls ] ]]
+    tomahawk [[ description = [ Enable Tomahawk control server ] ]]
+    xslt [[ description = [ Enable XSLT support.
+                            This is also needed for directory listings ] ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        sys-libs/zlib
+        ssl? ( dev-libs/mbedtls[threads] )
+        xslt? (
+            dev-libs/libxslt
+            dev-libs/libxml2:2.0
+        )
+    run:
+        group/hiawatha
+        user/hiawatha
+        monitor? ( www-apps/hiawatha-monitor )
+"
+
+HIAWATHA_CONFIG_DIR="/etc/hiawatha"
+HIAWATHA_LOG_DIR="/var/log/hiawatha"
+HIAWATHA_PID_DIR="/run"
+HIAWATHA_WEBROOT_DIR="/var/www/hiawatha"
+HIAWATHA_WORK_DIR="/var/lib/hiawatha"
+HIAWATHA_USER="hiawatha"
+HIAWATHA_GROUP="hiawatha"
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-cflags.patch )
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DCONFIG_DIR:STRING="${HIAWATHA_CONFIG_DIR}"
+    -DLOG_DIR:STRING="${HIAWATHA_LOG_DIR}"
+    -DPID_DIR:STRING="${HIAWATHA_PID_DIR}"
+    -DWEBROOT_DIR:STRING="${HIAWATHA_WEBROOT_DIR}"
+    -DWORK_DIR:STRING="${HIAWATHA_WORK_DIR}"
+    -DENABLE_LOADCHECK=YES
+    -DCMAKE_INSTALL_SBINDIR="/usr/$(exhost --target)/bin"
+)
+
+CMAKE_SRC_CONFIGURE_TESTS=(
+    'cache    ENABLE_CACHE'
+    'ipv6     ENABLE_IPV6'
+    'monitor  ENABLE_MONITOR'
+    'rprocy   ENABLE_RPROXY'
+    'ssl      ENABLE_TLS'
+    'tomahawk ENABLE_TOMAHAWK'
+    'rewrite  ENABLE_TOOLKIT'
+    'xslt     ENABLE_XSLT'
+    'ssl      USE_SYSTEM_MBEDTLS'
+)
+
+src_prepare() {
+    default
+
+	edo grep -E "^#ServerId =.*$" "config/hiawatha.conf.in" 1>/dev/null
+	edo sed -r -i -e "s|^#ServerId =.*$|ServerId = hiawatha|" \
+		config/hiawatha.conf.in
+
+	edo grep -E "@HIAWATHA_PID_DIR@" "${FILES}/hiawatha.initd" 1>/dev/null
+	edo sed -r -e "s|@HIAWATHA_PID_DIR@|${HIAWATHA_PID_DIR}|" \
+		"${FILES}/hiawatha.initd" > "${TEMP}/hiawatha.initd"
+}
+
+src_install() {
+	cmake_src_install
+
+	edo rm -r "${IMAGE%/}${HIAWATHA_WEBROOT_DIR}"/*
+
+    insinto /etc/init.d
+	newins "${TEMP}"/hiawatha.initd hiawatha
+    install_systemd_files
+
+	local i
+	for i in "${HIAWATHA_LOG_DIR}" "${HIAWATHA_WORK_DIR}" ; do
+		keepdir "${i}"
+		edo chown ${HIAWATHA_USER}:${HIAWATHA_GROUP} "${IMAGE%/}${i}"
+		edo chmod 0750 "${IMAGE%/}${i}"
+	done
+
+    # hiawatha creates empty /run dir
+    edo rm -r "${IMAGE%/}/run"
+
+	keepdir "${HIAWATHA_WEBROOT_DIR}"
+	edo chown ${HIAWATHA_USER}:${HIAWATHA_GROUP} \
+        "${IMAGE%/}${HIAWATHA_WEBROOT_DIR}"
+}
+
