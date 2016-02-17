@@ -1,0 +1,113 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 1999-2015 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+require python [ blacklist=3 has_lib=false multibuild=false ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require gtk-icon-cache freedesktop-desktop freedesktop-mime
+
+SUMMARY="Helpful utility to attack Repetitive Strain Injury (RSI)"
+DESCRIPTION="
+    Workrave is a program that assists in the recovery and prevention
+    of Repetitive Strain Injury (RSI). The program frequently alerts
+    you to take micro-pauses, rest breaks and restricts you to your
+    daily limit.
+"
+HOMEPAGE="http://www.workrave.org/"
+DOWNLOADS="https://github.com/rcaelers/${PN}/archive/v${PV//./_}.tar.gz -> ${PNV}.tar.gz"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+MYOPTIONS="
+    gnome
+    pulseaudio
+    xfce [[ description = [ Add support for XFCE panel ] ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/glib:2
+        dev-cpp/libsigc++:2
+        gnome-desktop/gobject-introspection:=
+        gnome-bindings/gtkmm:3
+        gnome-bindings/glibmm:2.4
+        media-libs/gstreamer:1.0[gobject-introspection]
+        media-plugins/gst-plugins-base:1.0[gobject-introspection]
+        media-plugins/gst-plugins-good:1.0
+        x11-libs/gtk+:3[gobject-introspection]
+        x11-libs/libXScrnSaver
+        x11-libs/libSM
+        x11-libs/libX11
+        x11-libs/libXtst
+        x11-libs/libXt
+        x11-libs/libXmu
+        gnome? ( gnome-base/gnome-shell )
+        pulseaudio? ( media-sound/pulseaudio )
+        xfce? (
+            x11-libs/gtk+:2[introspection?]
+            xfce-base/xfce4-panel
+        )
+    build:
+        dev-util/intltool
+        dev-python/Cheetah
+        x11-proto/xproto
+        x11-proto/inputproto
+        x11-proto/recordproto
+        virtual/pkg-config
+        sys-devel/autoconf-archive
+        sys-devel/gettext
+"
+
+WORK=${WORKBASE}/${PN}-${PV//./_}
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PN}-1.10.6-automagic-gstreamer.patch
+)
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-dbus
+    --disable-distribution
+    --enable-exercises
+    --disable-experimental
+    --disable-gnome2
+    --disable-static
+    --disable-xml
+    --disable-indicator
+    --disable-manual
+    --enable-gstreamer
+    --enable-introspection
+    --disable-mate
+    --enable-nls
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'gnome gnome3'
+    'pulseaudio pulse'
+    'xfce'
+)
+
+DEFAULT_SRC_CONFIGURE_TESTS=(
+    --enable-tests
+)
+
+src_prepare() {
+    edo touch config.rpath
+    edo sed -i -e "/AC_CHECK_PROG/s#python#${PYTHON}#" \
+        configure.ac
+    autotools_src_prepare
+}
+
+pkg_postinst() {
+    freedesktop-mime_pkg_postinst
+    freedesktop-desktop_pkg_postinst
+    gtk-icon-cache_pkg_postinst
+}
+
+pkg_postrm() {
+    freedesktop-mime_pkg_postrm
+    freedesktop-desktop_pkg_postrm
+    gtk-icon-cache_pkg_postrm
+}
+
