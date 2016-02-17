@@ -55,7 +55,7 @@ src_prepare() {
 }
 
 src_test() {
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${ECMAKE_BUILD_DIR}/library" \
+    LD_LIBRARY_PATH="${ECMAKE_BUILD_DIR}/library" \
         cmake_src_test
 }
 
