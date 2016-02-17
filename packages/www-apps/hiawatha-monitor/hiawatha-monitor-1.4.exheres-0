@@ -1,0 +1,24 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+MY_P="monitor"
+
+SUMMARY="Monitoring application for www-servers/hiawatha"
+HOMEPAGE="http://www.hiawatha-webserver.org/howto/monitor"
+DOWNLOADS="http://www.hiawatha-webserver.org/files/${MY_P}-${PV}.tar.gz "
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+WORK=${WORKBASE}/${MY_P}
+
+src_install () {
+	default
+
+	edo rm -f ChangeLog README LICENSE
+
+	insinto /usr/share/${PN}
+	doins -r *
+}
+
