@@ -1,0 +1,34 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require systemd-service
+
+SUMMARY="A tool for dynamically adjusting the nice-level of processes"
+HOMEPAGE="http://thermal.cnde.iastate.edu/~sdh4/verynice/"
+DOWNLOADS="mirror://gentoo/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+WORK=${WORKBASE}/${PN}
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PNV}-build.patch
+)
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    RPM_BUILD_ROOT="${IMAGE}" PREFIX=/usr
+)
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    RPM_BUILD_ROOT="${IMAGE}" BINDIR="/usr/$(exhost --target)/bin" PREFIX=/usr VERSION=${PVR}
+)
+
+src_install(){
+    default
+    exeinto /etc/init.d
+    doexe "${FILES}"/verynice
+    install_systemd_files
+}
+
