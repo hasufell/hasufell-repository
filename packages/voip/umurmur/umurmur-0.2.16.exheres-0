@@ -51,8 +51,8 @@ src_install() {
 	# Some permissions are adjusted as the config may contain a server
 	# password, and /etc/umurmur will typically contain the cert and the
 	# key used to sign it, which are read after priveleges are dropped.
-	chmod 0750 "${IMAGE%/}/${confdir}"
-	chown -R root:umurmur "${IMAGE%/}/${confdir}"
-	chmod 0640 "${IMAGE%/}/${confdir}"/umurmur.conf
+	edo chmod 0750 "${IMAGE%/}/${confdir}"
+	edo chown -R root:umurmur "${IMAGE%/}/${confdir}"
+	edo chmod 0640 "${IMAGE%/}/${confdir}"/umurmur.conf
 }
 
