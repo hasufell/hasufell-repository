@@ -1,0 +1,92 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+#
+# Partly based on badvpn-1.999.130.ebuild which is:
+#   Copyright 1999-2015 Gentoo Foundation
+#   Distributed under the terms of the GNU General Public License v2
+#   $Id$
+
+require cmake
+
+MY_P=${PN}-${PV/_rc/rc}
+SUMMARY="Peer-to-peer VPN, NCD scripting language, tun2socks proxifier"
+DESCRIPTION="
+    BadVPN is an open-source peer-to-peer VPN system. It provides a
+    Layer 2 (Ethernet) network between the peers (VPN nodes). The peers
+    connect to a central server which acts as a chat server for them to
+    establish direct connections between each other (data connections).
+    These connections are used for transferring network data (Ethernet
+    frames), and can be secured with a multitude of mechanisms.
+
+    The BadVPN package also includes other network-related software,
+    like tun2socks and NCD.
+"
+HOMEPAGE="https://github.com/ambrop72/badvpn https://code.google.com/p/badvpn/"
+DOWNLOADS="https://github.com/ambrop72/badvpn/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
+
+LICENCES="BSD-3"
+PLATFORMS="~amd64 ~x86"
+SLOT="0"
+
+MYOPTIONS="
+    ncd       [[ description = [ Build NCD, a lightweight scripting language
+                                 especially suited for network configurations ] ]]
+    tun2socks [[ description = [ Build tun2socks, a program which implements
+                                 a TUN device that forwards TCP traffic through
+                                 a SOCKS5 server ] ]]
+    udpgw     [[ description = [ Build udpgw, a small daemon which allows
+                                 tun2socks to forward UDP traffic ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+    ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/nspr
+        dev-libs/nss
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
+    run:
+        group/badvpn
+        user/badvpn
+        ncd? (
+            sys-apps/iproute2
+            providers:eudev? ( sys-apps/eudev )
+            providers:systemd? ( sys-apps/systemd )
+        )
+    build:
+        virtual/pkg-config
+"
+
+WORK=${WORKBASE}/${MY_P}
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBUILD_NOTHING_BY_DEFAULT=1
+    -DBUILD_CLIENT=ON
+    -DBUILD_SERVER=ON
+)
+
+CMAKE_SRC_CONFIGURE_OPTIONS=(
+    'ncd BUILD_NCD'
+    'tun2socks BUILD_TUN2SOCKS'
+    'udpgw BUILD_UDPGW'
+)
+
+src_install() {
+	cmake_src_install
+	dodoc ChangeLog
+
+    exeinto /etc/init.d
+    newexe "${FILES}"/${PN}-server.init ${PN}-server
+    insinto /etc/conf.d
+    newins "${FILES}"/${PN}-server.conf ${PN}-server
+
+	if option ncd; then
+        exeinto /etc/init.d
+		newexe "${FILES}"/${PN}-1.999.127-ncd.init ${PN}-ncd
+        insinto /etc/conf.d
+		newins "${FILES}"/${PN}-ncd.conf ${PN}-ncd
+        install_systemd_files
+	fi
+}
+
