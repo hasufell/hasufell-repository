@@ -1,3 +1,5 @@
+Fixes linux support
+
 diff -burN zod_engine/zod_launcher_src/common.cpp zod_engine.new/zod_launcher_src/common.cpp
 --- zod_engine/zod_launcher_src/common.cpp	2011-03-22 12:05:11.000000000 +0100
 +++ zod_engine.new/zod_launcher_src/common.cpp	2012-05-05 22:50:56.000000000 +0200

@@ -9,7 +9,7 @@ DESCRIPTION="Minimalistic Murmur (Mumble server)"
 HOMEPAGE="https://github.com/fatbob313/umurmur"
 DOWNLOADS="https://github.com/fatbob313/${PN}/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
 
-LICENCES="BSD"
+LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
@@ -39,20 +39,20 @@ src_install() {
     default
 
     insinto /etc/init.d
-	newins "${FILES}"/umurmurd.initd umurmurd
+    newins "${FILES}"/umurmurd.initd umurmurd
     insinto /etc/conf.d
-	newins "${FILES}"/umurmurd.confd umurmurd
+    newins "${FILES}"/umurmurd.confd umurmurd
     install_systemd_files
 
-	local confdir="/etc/umurmur"
-	insinto "${confdir}"
-	doins "${FILES}"/umurmur.conf
+    local confdir="/etc/umurmur"
+    insinto "${confdir}"
+    doins "${FILES}"/umurmur.conf
 
-	# Some permissions are adjusted as the config may contain a server
-	# password, and /etc/umurmur will typically contain the cert and the
-	# key used to sign it, which are read after priveleges are dropped.
-	edo chmod 0750 "${IMAGE%/}/${confdir}"
-	edo chown -R root:umurmur "${IMAGE%/}/${confdir}"
-	edo chmod 0640 "${IMAGE%/}/${confdir}"/umurmur.conf
+    # Some permissions are adjusted as the config may contain a server
+    # password, and /etc/umurmur will typically contain the cert and the
+    # key used to sign it, which are read after priveleges are dropped.
+    edo chmod 0750 "${IMAGE%/}/${confdir}"
+    edo chown -R root:umurmur "${IMAGE%/}/${confdir}"
+    edo chmod 0640 "${IMAGE%/}/${confdir}"/umurmur.conf
 }
 

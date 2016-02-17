@@ -71,36 +71,36 @@ CMAKE_SRC_CONFIGURE_TESTS=(
 src_prepare() {
     default
 
-	edo grep -E "^#ServerId =.*$" "config/hiawatha.conf.in" 1>/dev/null
-	edo sed -r -i -e "s|^#ServerId =.*$|ServerId = hiawatha|" \
-		config/hiawatha.conf.in
+    edo grep -E "^#ServerId =.*$" "config/hiawatha.conf.in" 1>/dev/null
+    edo sed -r -i -e "s|^#ServerId =.*$|ServerId = hiawatha|" \
+        config/hiawatha.conf.in
 
-	edo grep -E "@HIAWATHA_PID_DIR@" "${FILES}/hiawatha.initd" 1>/dev/null
-	edo sed -r -e "s|@HIAWATHA_PID_DIR@|${HIAWATHA_PID_DIR}|" \
-		"${FILES}/hiawatha.initd" > "${TEMP}/hiawatha.initd"
+    edo grep -E "@HIAWATHA_PID_DIR@" "${FILES}/hiawatha.initd" 1>/dev/null
+    edo sed -r -e "s|@HIAWATHA_PID_DIR@|${HIAWATHA_PID_DIR}|" \
+        "${FILES}/hiawatha.initd" > "${TEMP}/hiawatha.initd"
 }
 
 src_install() {
-	cmake_src_install
+    cmake_src_install
 
-	edo rm -r "${IMAGE%/}${HIAWATHA_WEBROOT_DIR}"/*
+    edo rm -r "${IMAGE%/}${HIAWATHA_WEBROOT_DIR}"/*
 
     insinto /etc/init.d
-	newins "${TEMP}"/hiawatha.initd hiawatha
+    newins "${TEMP}"/hiawatha.initd hiawatha
     install_systemd_files
 
-	local i
-	for i in "${HIAWATHA_LOG_DIR}" "${HIAWATHA_WORK_DIR}" ; do
-		keepdir "${i}"
-		edo chown ${HIAWATHA_USER}:${HIAWATHA_GROUP} "${IMAGE%/}${i}"
-		edo chmod 0750 "${IMAGE%/}${i}"
-	done
+    local i
+    for i in "${HIAWATHA_LOG_DIR}" "${HIAWATHA_WORK_DIR}" ; do
+        keepdir "${i}"
+        edo chown ${HIAWATHA_USER}:${HIAWATHA_GROUP} "${IMAGE%/}${i}"
+        edo chmod 0750 "${IMAGE%/}${i}"
+    done
 
     # hiawatha creates empty /run dir
     edo rm -r "${IMAGE%/}/run"
 
-	keepdir "${HIAWATHA_WEBROOT_DIR}"
-	edo chown ${HIAWATHA_USER}:${HIAWATHA_GROUP} \
+    keepdir "${HIAWATHA_WEBROOT_DIR}"
+    edo chown ${HIAWATHA_USER}:${HIAWATHA_GROUP} \
         "${IMAGE%/}${HIAWATHA_WEBROOT_DIR}"
 }
 

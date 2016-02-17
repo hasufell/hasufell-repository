@@ -1,3 +1,6 @@
+Fixes build with gcc-5.x
+
+Found at https://raw.githubusercontent.com/Homebrew/patches/f2b4fb19/freeimage/gcc5.diff
 diff --git a/Source/LibWebP/src/dsp/dsp.dec_mips_dsp_r2.c b/Source/LibWebP/src/dsp/dsp.dec_mips_dsp_r2.c
 index 55da0ff..40e4d82 100644
 --- a/Source/LibWebP/src/dsp/dsp.dec_mips_dsp_r2.c

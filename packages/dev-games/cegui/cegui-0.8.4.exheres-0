@@ -31,8 +31,8 @@ MYOPTIONS="
 DEPENDENCIES="
     build+run:
         dev-libs/pcre[>=5.0]
-        sys-libs/zlib
         media-libs/freetype:2[>=0.15.0]
+        sys-libs/zlib
         devil? ( media-libs/DevIL )
         expat? ( dev-libs/expat )
         freeimage? ( media-libs/FreeImage )

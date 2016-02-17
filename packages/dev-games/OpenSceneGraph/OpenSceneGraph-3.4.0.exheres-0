@@ -5,14 +5,14 @@ require cmake [ api=2 ]
 
 SUMMARY="High performance 3D graphics toolkit"
 DESCRIPTION="
-The OpenSceneGraph is an open source high performance 3D graphics toolkit,
-used by application developers in fields such as visual simulation, games,
-virtual reality, scientific visualization and modelling. Written entirely
-in Standard C++ and OpenGL it runs on all Windows platforms, OSX, GNU/Linux,
-IRIX, Solaris, HP-Ux, AIX and FreeBSD operating systems. The OpenSceneGraph
-is now well established as the world leading scene graph technology, used
-widely in the vis-sim, space, scientific, oil-gas, games and virtual reality
-industries.
+    The OpenSceneGraph is an open source high performance 3D graphics toolkit,
+    used by application developers in fields such as visual simulation, games,
+    virtual reality, scientific visualization and modelling. Written entirely
+    in Standard C++ and OpenGL it runs on all Windows platforms, OSX, GNU/Linux,
+    IRIX, Solaris, HP-Ux, AIX and FreeBSD operating systems. The OpenSceneGraph
+    is now well established as the world leading scene graph technology, used
+    widely in the vis-sim, space, scientific, oil-gas, games and virtual reality
+    industries.
 "
 
 MY_PN="OpenSceneGraph"
@@ -20,7 +20,7 @@ MY_P=${MY_PN}-${PV}
 HOMEPAGE="http://${PN}.org"
 DOWNLOADS="http://trac.openscenegraph.org/downloads/developer_releases/${MY_P}.zip"
 
-LICENCES="OpenSceneGraph"
+LICENCES="wxWinLL-3 LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
@@ -33,26 +33,26 @@ DEPENDENCIES="
     build:
         app-arch/zip
     build+run:
-        media-libs/freetype:2
-        media-libs/jasper
-        media-libs/openexr
-        sys-libs/zlib
-        net-misc/curl
-        media/ffmpeg
-        media-libs/gstreamer:1.0
-        media-plugins/gst-plugins-base:1.0
         app-text/poppler[cairo]
         dev-libs/glib:2
+        media/ffmpeg
+        media-libs/freetype:2
+        media-libs/giflib:=
+        media-libs/gstreamer:1.0
+        media-libs/jasper
+        media-libs/libpng:=
+        media-libs/openexr
         media-libs/SDL:0
-        x11-libs/gtkglext
-        x11-libs/wxGTK:3.0
+        media-libs/tiff
+        media-plugins/gst-plugins-base:1.0
+        net-misc/curl
+        sys-libs/zlib
         x11-dri/mesa
+        x11-libs/gtkglext
+        x11-libs/qtbase:5
+        x11-libs/wxGTK:3.0
         providers:ijg-jpeg? ( media-libs/jpeg )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
-        media-libs/giflib:=
-        media-libs/libpng:=
-        media-libs/tiff
-        x11-libs/qtbase:5
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(

@@ -1,5 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Copyright 2014-2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 
@@ -9,7 +8,7 @@ SUMMARY="A multi-player, 3D action role-playing game"
 HOMEPAGE="http://sumwars.org"
 DOWNLOADS="mirror://sourceforge/sumwars/${PNV//_/-}-src.tar.bz2"
 
-LICENCES="GPL-3 CC-BY-SA-3.0"
+LICENCES="GPL-3 CCPL-Attribution-ShareAlike-3.0"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
@@ -48,20 +47,20 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 )
 
 src_configure() {
-	# QA
-	append-flags -fno-strict-aliasing
+    # QA
+    append-flags -fno-strict-aliasing
 
-	cmake_src_configure
+    cmake_src_configure
 }
 
 src_install() {
-	cmake_src_install
+    cmake_src_install
 
     # cleanup empty directories
     edo rm -r "${IMAGE}"/usr/share/sumwars/translation/{potfiles,extract}
 
     insinto /usr/share/icons/hicolor/128x128/apps
-	newins share/icon/SumWarsIcon_128x128.png ${PN}.png
+    newins share/icon/SumWarsIcon_128x128.png ${PN}.png
 
     insinto /usr/share/applications
     hereins ${PN}.desktop <<EOF

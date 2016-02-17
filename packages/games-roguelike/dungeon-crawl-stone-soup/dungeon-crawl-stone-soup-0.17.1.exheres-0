@@ -28,10 +28,10 @@ DOWNLOADS="https://crawl.develz.org/release/${MY_P}-nodeps.tar.xz"
 
 LICENCES="
     GPL-2
-    BSD [[ note = [ mt19937ar.cc, MSVC/stdint.h ] ]]
+    BSD-3 [[ note = [ mt19937ar.cc, MSVC/stdint.h ] ]]
     BSD-2 [[ note = [ all contributions by Steve Noonan and Jesse Luehrs ] ]]
     public-domain [[ note = [ most of tiles ] ]]
-    CC0-1.0 [[ note = [ most of tiles ] ]]
+    CC0 [[ note = [ most of tiles ] ]]
     MIT [[ note = [ json.cc/json.h, some .js files in
                     webserver/static/scripts/contrib/ ] ]]
 "
@@ -94,7 +94,7 @@ DEFAULT_SRC_COMPILE_PARAMS=(
 )
 
 src_compile() {
-	export HOSTCXX=${CXX}
+    export HOSTCXX=${CXX}
 
     emake "${DEFAULT_SRC_COMPILE_PARAMS[@]}" $(option tiles "TILES=y" "")
 }
@@ -107,7 +107,7 @@ src_install() {
         bin_prefix="${IMAGE}/usr/$(exhost --target)/bin" \
         install
 
-	# don't relocate docs, needed at runtime
-	rm -rf "${IMAGE}/usr/share/${PN}/docs/license"
+    # don't relocate docs, needed at runtime
+    rm -rf "${IMAGE}/usr/share/${PN}/docs/license"
 }
 

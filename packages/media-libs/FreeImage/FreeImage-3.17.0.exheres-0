@@ -40,11 +40,11 @@ foreach_make() {
 }
 
 src_compile() {
-	foreach_make
+    foreach_make
 }
 
 src_install() {
-	foreach_make install DESTDIR="${IMAGE}" \
+    foreach_make install DESTDIR="${IMAGE}" \
         INCDIR="${IMAGE}"/usr/$(exhost --target)/include \
         INSTALLDIR="${IMAGE}"/usr/$(exhost --target)/lib
 }

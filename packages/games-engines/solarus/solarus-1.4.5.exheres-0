@@ -29,7 +29,7 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 )
 
 src_install() {
-	cmake_src_install
-	doman solarus.6
+    cmake_src_install
+    doman solarus.6
 }
 

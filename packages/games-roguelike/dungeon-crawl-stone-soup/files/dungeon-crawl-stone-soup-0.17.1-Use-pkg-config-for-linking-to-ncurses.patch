@@ -1,5 +1,5 @@
 From 88579f929f0fc777762de1ad0895264ad077e0ee Mon Sep 17 00:00:00 2001
-From: hasufell <hasufell@gentoo.org>
+From: Julian Ospald <hasufell@gentoo.org>
 Date: Mon, 27 Oct 2014 20:48:03 +0100
 Subject: [PATCH 2/2] Use pkg-config for linking to ncurses
 

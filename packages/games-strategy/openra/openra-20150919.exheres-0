@@ -7,6 +7,8 @@ SUMMARY="A free RTS engine supporting games like Command & Conquer and Red Alert
 HOMEPAGE="http://www.openra.net/"
 DOWNLOADS="https://github.com/OpenRA/OpenRA/archive/release-${PV}.tar.gz -> ${PNV}.tar.gz"
 
+## this is a massive amount of 3rd party deps that would otherwise
+## be fetched during build time
 NG_SRC="https://nuget.org/api/v2/package"
 # 3rd party deps
 StyleCopPlus_MSBuild="${NG_SRC}/StyleCopPlus.MSBuild/4.7.49.5 -> StyleCopPlus_MSBuild-4.7.49.5.zip"
@@ -69,50 +71,50 @@ DEPENDENCIES="
 WORK=${WORKBASE}/OpenRA-release-${PV}
 
 src_unpack() {
-	unpack ${PNV}.tar.gz
+    unpack ${PNV}.tar.gz
 
-	# this is pure crapshit, but it will successfully die
-	# if upstream has added/changed files
-	edo cd "${WORK}"/thirdparty
-	edo sed -i \
-		-e 's/get()/furz()/' \
-		-e 's|curl |: |' \
-		fetch-thirdparty-deps.sh
+    # this is pure crapshit, but it will successfully die
+    # if upstream has added/changed files
+    edo cd "${WORK}"/thirdparty
+    edo sed -i \
+        -e 's/get()/furz()/' \
+        -e 's|curl |: |' \
+        fetch-thirdparty-deps.sh
 
-	edo mkdir "${WORK}"/thirdparty/download
-	get() {
-		# don't add dies here
-		local archive="${1/./_}"
-		local version="${2}"
-		mkdir -p "${WORK}"/thirdparty/download/${1}
-		unzip -o -qq "${FETCHEDDIR}"/${archive}-${version}.zip \
-			-d "${WORK}"/thirdparty/download/${1}
-	}
-	export -f get
-	edo ./fetch-thirdparty-deps.sh
-	unset get
-	edo cd "${WORK}"/thirdparty/download
-	edo cp "${FETCHEDDIR}"/${SDL2CS##* } ./SDL2-CS.dll
-	edo cp "${FETCHEDDIR}"/${Eluant##* } ./Eluant.dll
-	edo cp "${FETCHEDDIR}"/${GEO_IP_DB##* } ./GeoLite2-Country.mmdb.gz
+    edo mkdir "${WORK}"/thirdparty/download
+    get() {
+        # don't add dies here
+        local archive="${1/./_}"
+        local version="${2}"
+        mkdir -p "${WORK}"/thirdparty/download/${1}
+        unzip -o -qq "${FETCHEDDIR}"/${archive}-${version}.zip \
+            -d "${WORK}"/thirdparty/download/${1}
+    }
+    export -f get
+    edo ./fetch-thirdparty-deps.sh
+    unset get
+    edo cd "${WORK}"/thirdparty/download
+    edo cp "${FETCHEDDIR}"/${SDL2CS##* } ./SDL2-CS.dll
+    edo cp "${FETCHEDDIR}"/${Eluant##* } ./Eluant.dll
+    edo cp "${FETCHEDDIR}"/${GEO_IP_DB##* } ./GeoLite2-Country.mmdb.gz
 }
 
 src_configure() { :; }
 
 src_prepare() {
-	# register game-version
-	emake VERSION="${PV}" version
+    # register game-version
+    emake VERSION="${PV}" version
 
-	edo sed \
-		-e "s/@LIBLUA51@/liblua${LUA_SLOT}.so/" \
-		"${WORK}"/thirdparty/Eluant.dll.config.in > Eluant.dll.config
+    edo sed \
+        -e "s/@LIBLUA51@/liblua${LUA_SLOT}.so/" \
+        "${WORK}"/thirdparty/Eluant.dll.config.in > Eluant.dll.config
 
-	edo cd "${WORK}"/thirdparty/download
-	edo cp *.dll *.dll.config GeoLite2-Country.mmdb.gz "${WORK}"/
+    edo cd "${WORK}"/thirdparty/download
+    edo cp *.dll *.dll.config GeoLite2-Country.mmdb.gz "${WORK}"/
 }
 
 src_compile() {
-	emake VERSION="${PV}" core tools
+    emake VERSION="${PV}" core tools
 }
 
 install_desktop_entry() {
@@ -132,22 +134,22 @@ EOF
 }
 
 src_install() {
-	emake \
-		datadir="/usr/share" \
+    emake \
+        datadir="/usr/share" \
         bindir="/usr/$(exhost --target)/bin" \
-		libdir="/usr/$(exhost --target)/libexec" \
-		VERSION="${PV}" \
-		DESTDIR="${IMAGE}" \
-		install-all install-linux-scripts install-linux-mime install-linux-icons
+        libdir="/usr/$(exhost --target)/libexec" \
+        VERSION="${PV}" \
+        DESTDIR="${IMAGE}" \
+        install-all install-linux-scripts install-linux-mime install-linux-icons
 
-	exeinto /usr/$(exhost --target)/libexec/openra
-	doexe Eluant.dll.config
+    exeinto /usr/$(exhost --target)/libexec/openra
+    doexe Eluant.dll.config
 
-	# desktop entries
-	install_desktop_entry "${PN} Game.Mods=cnc" "OpenRA CNC" ${PN}
-	install_desktop_entry "${PN} Game.Mods=ra" "OpenRA RA" ${PN}
-	install_desktop_entry "${PN} Game.Mods=d2k" "OpenRA Dune2k" ${PN}
-	install_desktop_entry "${PN}-editor" "OpenRA Map Editor" ${PN}
+    # desktop entries
+    install_desktop_entry "${PN} Game.Mods=cnc" "OpenRA CNC" ${PN}
+    install_desktop_entry "${PN} Game.Mods=ra" "OpenRA RA" ${PN}
+    install_desktop_entry "${PN} Game.Mods=d2k" "OpenRA Dune2k" ${PN}
+    install_desktop_entry "${PN}-editor" "OpenRA Map Editor" ${PN}
 }
 
 pkg_postinst() {

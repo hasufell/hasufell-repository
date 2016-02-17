@@ -24,15 +24,15 @@ DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-tk )
 src_prepare() {
     default
 
-	edo mv src/xawale.tcl src/xawale.tcl.in
-	edo mv configure.in configure.ac
+    edo mv src/xawale.tcl src/xawale.tcl.in
+    edo mv configure.in configure.ac
 
     eautoreconf
 }
 
 src_install() {
     default
-	dodoc AUTHORS ChangeLog NEWS README THANKS
-	edo chmod +x "${IMAGE}"/usr/share/${PN}/xawale.tcl
+    dodoc AUTHORS ChangeLog NEWS README THANKS
+    edo chmod +x "${IMAGE}"/usr/share/${PN}/xawale.tcl
 }
 

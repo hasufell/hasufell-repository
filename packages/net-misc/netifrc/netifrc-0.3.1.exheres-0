@@ -24,24 +24,24 @@ DEPENDENCIES="
 "
 
 src_compile() {
-	MAKE_ARGS="
-		UDEVDIR=${UDEVRULESDIR}
-		LIBEXECDIR=/usr/$(exhost --target)/libexec/${PN}
+    MAKE_ARGS="
+        UDEVDIR=${UDEVRULESDIR}
+        LIBEXECDIR=/usr/$(exhost --target)/libexec/${PN}
         PF=${PNVR}"
 
-	emake ${MAKE_ARGS} all
+    emake ${MAKE_ARGS} all
 }
 
 src_install() {
-	emake ${MAKE_ARGS} DESTDIR="${IMAGE}" install
-	dodoc README CREDITS FEATURE-REMOVAL-SCHEDULE STYLE TODO ChangeLog
+    emake ${MAKE_ARGS} DESTDIR="${IMAGE}" install
+    dodoc README CREDITS FEATURE-REMOVAL-SCHEDULE STYLE TODO ChangeLog
 }
 
 pkg_postinst() {
-	if [[ ! -e "${ROOT}"/etc/conf.d/net ]]; then
-		elog "The network configuration scripts will use dhcp by"
-		elog "default to set up your interfaces."
-		elog "If you need to set up something more complete, see"
-		elog "${ROOT}/usr/share/doc/${PNVR}/README"
-	fi
+    if [[ ! -e "${ROOT}"/etc/conf.d/net ]]; then
+        elog "The network configuration scripts will use dhcp by"
+        elog "default to set up your interfaces."
+        elog "If you need to set up something more complete, see"
+        elog "${ROOT}/usr/share/doc/${PNVR}/README"
+    fi
 }

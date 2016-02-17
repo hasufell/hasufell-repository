@@ -9,7 +9,7 @@ HOMEPAGE="http://minetest.net/"
 DOWNLOADS="http://github.com/minetest/minetest/tarball/${PV} -> ${PNV}.tar.gz
     http://github.com/minetest/minetest_game/tarball/${PV} -> minetest_game-${PV}.tar.gz"
 
-LICENCES="LGPL-2.1+ CC-BY-SA-3.0"
+LICENCES="|| ( LGPL-2.1 LGPL-3 ) CCPL-Attribution-ShareAlike-3.0"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
@@ -74,7 +74,7 @@ src_install() {
     cmake_src_install
 
     edo cd "${WORKBASE}"/minetest_game-${PV}
-	insinto /usr/share/minetest/games/${PN}
-	doins -r mods menu
-	doins game.conf minetest.conf
+    insinto /usr/share/minetest/games/${PN}
+    doins -r mods menu
+    doins game.conf minetest.conf
 }

@@ -12,7 +12,7 @@ PLATFORMS="~amd64 ~x86"
 DEPENDENCIES="
     build+run:
         dev-libs/gmp
-	    dev-libs/mpfr
+        dev-libs/mpfr
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=( verbose )
@@ -26,13 +26,13 @@ src_prepare() {
 
 src_configure() {
     # NOT an autotools script
-	edo ./configure \
-		--prefix="/usr" \
-		--with-gmp="/usr" \
-		--with-mpfr="/usr" \
-		--disable-static \
-		CC=${CC} \
-		CXX=${CXX} \
-		AR=${AR}
+    edo ./configure \
+        --prefix="/usr" \
+        --with-gmp="/usr" \
+        --with-mpfr="/usr" \
+        --disable-static \
+        CC=${CC} \
+        CXX=${CXX} \
+        AR=${AR}
 }
 

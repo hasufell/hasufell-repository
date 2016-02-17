@@ -7,7 +7,7 @@ SUMMARY="A free 2D Zelda fangame"
 HOMEPAGE="http://www.solarus-games.org/"
 DOWNLOADS="http://www.zelda-solarus.com/downloads/${PN}/${PNV}.tar.gz"
 
-LICENCES="CC-BY-SA-3.0 GPL-3"
+LICENCES="CCPL-Attribution-ShareAlike-3.0 GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
@@ -24,15 +24,15 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 )
 
 src_install() {
-	cmake_src_install
+    cmake_src_install
 
     insinto /usr/share/icons/hicolor/256x256/apps
     newins build/icons/${PN}_icon_256.png ${PN}.png
     insinto /usr/share/icons/hicolor/48x48/apps
     newins build/icons/${PN}_icon_48.png ${PN}.png
 
-	# install proper wrapper script
-	edo rm -f "${IMAGE%/}"/usr/share/${PN}
+    # install proper wrapper script
+    edo rm -f "${IMAGE%/}"/usr/share/${PN}
     herebin ${PN} <<EOF
 #!/bin/sh
 exec solarus_run "/usr/share/solarus/${PN}" "\$@"

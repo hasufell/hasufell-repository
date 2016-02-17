@@ -7,7 +7,7 @@ SUMMARY="Free/Libre Action Roleplaying game engine"
 HOMEPAGE="https://github.com/clintbellanger/flare-engine"
 DOWNLOADS="https://github.com/clintbellanger/flare-engine/archive/v${PV}.tar.gz -> ${PNV}-engine.tar.gz"
 
-LICENCES="CC-BY-SA-3.0 GPL-3 OFL-1.1"
+LICENCES="CCPL-Attribution-ShareAlike-3.0 GPL-3 OFL-1.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 

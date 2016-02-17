@@ -11,7 +11,7 @@ SUMMARY="An open source reimplementation of TES III: Morrowind"
 HOMEPAGE="http://openmw.org/"
 DOWNLOADS="https://github.com/OpenMW/openmw/archive/${PNV}.tar.gz"
 
-LICENCES="GPL-3 MIT BitstreamVera OFL-1.1"
+LICENCES="GPL-3 MIT bitstream-font OFL-1.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 

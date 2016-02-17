@@ -5,7 +5,7 @@ SUMMARY="A clone of the popular board game The Settlers of Catan"
 HOMEPAGE="http://pio.sourceforge.net/"
 DOWNLOADS="mirror://sourceforge/pio/${PNV}.tar.gz"
 
-LICENCES="GPL-2 CC-BY-SA-4.0"
+LICENCES="GPL-2 CCPL-Attribution-ShareAlike-4.0"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 

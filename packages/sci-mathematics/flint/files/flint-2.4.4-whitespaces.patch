@@ -1,5 +1,5 @@
 From 3506d617ef9dfc5184aa99be05a25e4f73d6c3f6 Mon Sep 17 00:00:00 2001
-From: hasufell <hasufell@hasufell.de>
+From: Julian Ospald <hasufell@hasufell.de>
 Date: Sun, 18 May 2014 18:47:27 +0200
 Subject: [PATCH] Quote variables that could contain whitespaces
 

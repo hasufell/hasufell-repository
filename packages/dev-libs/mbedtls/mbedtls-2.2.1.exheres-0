@@ -40,22 +40,22 @@ CMAKE_SRC_CONFIGURE_TESTS=(
 )
 
 enable_mbedtls_option() {
-	local myopt="$@"
-	# check that config.h syntax is the same at version bump
-	sed -i \
-		-e "s://#define ${myopt}:#define ${myopt}:" \
-		include/mbedtls/config.h || die
+    local myopt="$@"
+    # check that config.h syntax is the same at version bump
+    sed -i \
+        -e "s://#define ${myopt}:#define ${myopt}:" \
+        include/mbedtls/config.h || die
 }
 
 src_prepare() {
-	enable_mbedtls_option MBEDTLS_ZLIB_SUPPORT
-	option havege && enable_mbedtls_option MBEDTLS_HAVEGE_C
-	option threads && enable_mbedtls_option MBEDTLS_THREADING_C
-	option threads && enable_mbedtls_option MBEDTLS_THREADING_PTHREAD
+    enable_mbedtls_option MBEDTLS_ZLIB_SUPPORT
+    option havege && enable_mbedtls_option MBEDTLS_HAVEGE_C
+    option threads && enable_mbedtls_option MBEDTLS_THREADING_C
+    option threads && enable_mbedtls_option MBEDTLS_THREADING_PTHREAD
 }
 
 src_test() {
-	LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${ECMAKE_BUILD_DIR}/library" \
-		cmake_src_test
+    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${ECMAKE_BUILD_DIR}/library" \
+        cmake_src_test
 }
 

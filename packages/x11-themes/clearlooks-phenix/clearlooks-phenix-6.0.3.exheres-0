@@ -16,7 +16,7 @@ DEPENDENCIES="
 "
 
 src_install() {
-	insinto /usr/share/themes/Clearlooks-Phenix
-	doins -r *
+    insinto /usr/share/themes/Clearlooks-Phenix
+    doins -r *
 }
 

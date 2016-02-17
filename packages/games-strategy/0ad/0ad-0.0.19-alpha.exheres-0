@@ -13,7 +13,7 @@ DOWNLOADS="
 
 LICENCES="
     Arev [[ note = [ Included DejaVu Fonts ] ]]
-    Bitstream-Vera [[ note = [ Included DejaVu Fonts ] ]]
+    bitstream-font [[ note = [ Included DejaVu Fonts ] ]]
     BSD-3 [[ note = [ build/premake/premake4 ] ]]
     CCPL-Attribution-ShareAlike-3.0 [[ note = [ binaries/data/mods/{art,audio} ] ]]
     GPL-2 [[ note = [
@@ -75,7 +75,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p0 "${FILES}"/${PNV}-exherbo.patch
+    -p0 "${FILES}"/${PNV}-flags.patch
 )
 
 src_unpack() {
@@ -159,7 +159,7 @@ src_configure() {
 
 
     ###### spidermonkey #####
-	# build bundled and patched spidermonkey-31
+    # build bundled and patched spidermonkey-31
     #
     # spidermonkey build system requires that SHELL is always set.
     # It's missing sometimes in chroot environments, so force it here.

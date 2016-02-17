@@ -13,7 +13,7 @@ LICENCES="
     GPL-3
     shockbolt-tileset
     Apache-2.0 [[ note = [ fonts license ] ]]
-    BitstreamVera [[ note = [ fonts license ] ]]
+    bitstream-font [[ note = [ fonts license ] ]]
 "
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
@@ -35,51 +35,51 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${MY_P}
 
 src_prepare() {
-	# fix broken sdl2 detection
-	# http://forums.te4.org/viewtopic.php?f=42&t=38714
-	edo sed -i \
-		-e "s~/usr/lib32~/usr/$(exhost --target)/lib~" \
-		-e "s~/opt/SDL-2.0~/usr/$(exhost --target)~" \
-	     premake4.lua
+    # fix broken sdl2 detection
+    # http://forums.te4.org/viewtopic.php?f=42&t=38714
+    edo sed -i \
+        -e "s~/usr/lib32~/usr/$(exhost --target)/lib~" \
+        -e "s~/opt/SDL-2.0~/usr/$(exhost --target)~" \
+         premake4.lua
 }
 
 src_configure() {
-	local premake_options="--lua=default"
-	# Generate a "Makefile" with "premake4".
-	edo premake4 ${premake_options} gmake
+    local premake_options="--lua=default"
+    # Generate a "Makefile" with "premake4".
+    edo premake4 ${premake_options} gmake
 
-	# respect flags, remove misuse of $ARCH
-	# files are generated, cannot patch
-	edo sed -i \
-		-e 's~\(CFLAGS\s*+= \).*~\1-MMD -MP $(DEFINES) $(INCLUDES)~' \
-		-e 's~\(CXXFLAGS\s*+= \).*~\1-MMD -MP $(DEFINES) $(INCLUDES)~' \
-		-e '/LDFLAGS/s~-s~~' \
-		-e 's~$(ARCH) ~~' \
-		build/*.make
+    # respect flags, remove misuse of $ARCH
+    # files are generated, cannot patch
+    edo sed -i \
+        -e 's~\(CFLAGS\s*+= \).*~\1-MMD -MP $(DEFINES) $(INCLUDES)~' \
+        -e 's~\(CXXFLAGS\s*+= \).*~\1-MMD -MP $(DEFINES) $(INCLUDES)~' \
+        -e '/LDFLAGS/s~-s~~' \
+        -e 's~$(ARCH) ~~' \
+        build/*.make
 
-	# respect LDFLAGS
-	# http://forums.te4.org/viewtopic.php?f=42&t=38715
-	edo sed -i \
-		-e 's~^[ \t]*LINKCMD[ \t]*=[ \t]*$(CC).*$~LINKCMD = $(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(LDFLAGS) $(LIBS)~' \
-		build/*.make
+    # respect LDFLAGS
+    # http://forums.te4.org/viewtopic.php?f=42&t=38715
+    edo sed -i \
+        -e 's~^[ \t]*LINKCMD[ \t]*=[ \t]*$(CC).*$~LINKCMD = $(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(LDFLAGS) $(LIBS)~' \
+        build/*.make
 
-	# FHS
-	# http://forums.te4.org/viewtopic.php?f=42&t=38716
-	edo sed -i \
-		-e "/PHYSFS_mount/s~game~/usr/share/${PN}/game~" \
-		src/main.c
+    # FHS
+    # http://forums.te4.org/viewtopic.php?f=42&t=38716
+    edo sed -i \
+        -e "/PHYSFS_mount/s~game~/usr/share/${PN}/game~" \
+        src/main.c
 }
 
 src_compile() {
-	# parallel make broken
-	# http://forums.te4.org/viewtopic.php?f=42&t=38713
-	config='release' emake -j1 verbose=1
+    # parallel make broken
+    # http://forums.te4.org/viewtopic.php?f=42&t=38713
+    config='release' emake -j1 verbose=1
 }
 
 src_install() {
-	insinto "/usr/share/${PN}"
-	doins -r game
-	newbin t-engine ${PN}
+    insinto "/usr/share/${PN}"
+    doins -r game
+    newbin t-engine ${PN}
 
     insinto /usr/share/applications
     hereins ${PN}.desktop <<EOF

@@ -14,11 +14,11 @@ PLATFORMS="~amd64 ~x86"
 WORK=${WORKBASE}/${MY_P}
 
 src_install () {
-	default
+    default
 
-	edo rm -f ChangeLog README LICENSE
+    edo rm -f ChangeLog README LICENSE
 
-	insinto /usr/share/${PN}
-	doins -r *
+    insinto /usr/share/${PN}
+    doins -r *
 }
 

@@ -43,12 +43,12 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 )
 
 pkg_postinst() {
-	elog "This package only installs the game binary."
-	elog "You need the demo or full game data. Also see:"
-	elog "http://wiki.arx-libertatis.org/Getting_the_game_data"
-	elog
-	elog "If you have already installed the game or use the STEAM version,"
-	elog "run \"/usr/$(exhost --target)/bin/arx-install-data\""
+    elog "This package only installs the game binary."
+    elog "You need the demo or full game data. Also see:"
+    elog "http://wiki.arx-libertatis.org/Getting_the_game_data"
+    elog
+    elog "If you have already installed the game or use the STEAM version,"
+    elog "run \"/usr/$(exhost --target)/bin/arx-install-data\""
 
     gtk-icon-cache_pkg_postinst
 }

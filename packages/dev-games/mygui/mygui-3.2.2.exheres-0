@@ -31,8 +31,8 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p0 "${FILES}"/${PNV}-underlinking.patch
-	-p1 "${FILES}"/${PNV}-build.patch
-	-p1 "${FILES}"/${PNV}-FHS.patch
+    -p1 "${FILES}"/${PNV}-build.patch
+    -p1 "${FILES}"/${PNV}-FHS.patch
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
@@ -55,10 +55,10 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 src_install() {
     cmake_src_install
 
-	keepdir /etc/MYGUI
+    keepdir /etc/MYGUI
 
-	# test media not needed at runtime
-	edo rm -rf "${IMAGE}"/usr/share/MYGUI/Media/UnitTests
-	# wrapper not available for linux, remove related media
-	edo rm -rf "${IMAGE}"/usr/share/MYGUI/Media/Wrapper
+    # test media not needed at runtime
+    edo rm -rf "${IMAGE}"/usr/share/MYGUI/Media/UnitTests
+    # wrapper not available for linux, remove related media
+    edo rm -rf "${IMAGE}"/usr/share/MYGUI/Media/Wrapper
 }

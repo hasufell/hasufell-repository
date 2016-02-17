@@ -1,5 +1,5 @@
 From aaa7cde91e4b086164f0c7f46569a34bfbb4e479 Mon Sep 17 00:00:00 2001
-From: hasufell <hasufell@gentoo.org>
+From: Julian Ospald <hasufell@gentoo.org>
 Date: Sun, 3 May 2015 15:05:43 +0200
 Subject: [PATCH] Respect flags and compiler
 

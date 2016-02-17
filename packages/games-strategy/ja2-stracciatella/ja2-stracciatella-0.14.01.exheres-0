@@ -4,7 +4,7 @@
 SUMMARY="A port of Jagged Alliance 2 to SDL"
 HOMEPAGE="https://bitbucket.org/gennady/ja2-stracciatella http://tron.homeunix.org/ja2/"
 DOWNLOADS="https://bitbucket.org/gennady/ja2-stracciatella/get/v${PV}.tar.gz -> ${PNV}.tar.gz
-	mirror://gentoo/editor.slf.gz"
+    mirror://gentoo/editor.slf.gz"
 
 LICENCES="SFI-SCLA"
 SLOT="0"
@@ -24,19 +24,19 @@ src_unpack() {
 
 src_configure() {
     # not an autoconf script
-	./configure --prefix=/usr
+    ./configure --prefix=/usr
 }
 
 src_compile() {
-	emake Q=""
+    emake Q=""
 }
 
 src_install() {
-	emake \
-		BINARY_DIR="${IMAGE}/usr/$(exhost --target)/bin" \
-		MANPAGE_DIR="${IMAGE}/usr/share/man/man6" \
-		FULL_PATH_EXTRA_DATA_DIR="${IMAGE}/usr/share/ja2" \
-		install
+    emake \
+        BINARY_DIR="${IMAGE}/usr/$(exhost --target)/bin" \
+        MANPAGE_DIR="${IMAGE}/usr/share/man/man6" \
+        FULL_PATH_EXTRA_DATA_DIR="${IMAGE}/usr/share/ja2" \
+        install
 
     insinto /usr/share/ja2/data
     doins "${WORKBASE}"/editor.slf
@@ -55,11 +55,11 @@ EOF
 }
 
 pkg_postinst() {
-	elog "You need to copy all files from the Data directory of"
-	elog "Jagged Alliance 2 installation to"
-	elog "/usr/share/ja2/data "
-	elog "Make sure the filenames are lowercase. You may want to run the"
-	elog "script"
-	elog "/usr/bin/ja2-convert"
+    elog "You need to copy all files from the Data directory of"
+    elog "Jagged Alliance 2 installation to"
+    elog "/usr/share/ja2/data "
+    elog "Make sure the filenames are lowercase. You may want to run the"
+    elog "script"
+    elog "/usr/bin/ja2-convert"
 }
 

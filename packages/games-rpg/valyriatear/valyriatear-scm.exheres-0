@@ -15,7 +15,7 @@ MY_PNV=ValyriaTear-${PV}
 
 SUMMARY="A free 2D J-RPG based on the Hero of Allacrost engine"
 HOMEPAGE="http://valyriatear.blogspot.de/
-	https://github.com/Bertram25/ValyriaTear"
+    https://github.com/Bertram25/ValyriaTear"
 DOWNLOADS=""
 
 LICENCES="GPL-2 GPL-3 CCPL-Attribution-ShareAlike-3.0 CCPL-Attribution-3.0 CC0 OFL-1.1"
