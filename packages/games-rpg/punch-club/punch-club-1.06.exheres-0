@@ -82,6 +82,6 @@ EOF
     edo rm "${WORK}/game/Punch Club.${noarch}"
     insinto "${dir}"
     doins -r "${WORK}/game"
-    chmod +x "${IMAGE%/}${dir}/game/Punch Club.${arch}"
+    edo chmod +x "${IMAGE%/}${dir}/game/Punch Club.${arch}"
 }
 
