@@ -1,0 +1,87 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+SUMMARY="Punch Club is a boxing tycoon management game with multiple branching story lines"
+HOMEPAGE="https://www.gog.com/game/punch_club"
+DOWNLOADS="gog_punch_club_2.1.0.2.sh"
+
+LICENCES="all-rights-reserved GOG-EULA"
+SLOT="0"
+PLATFORMS="-* ~amd64 ~x86"
+RESTRICT="fetch mirror"
+
+MYOPTIONS="
+    ( platform: amd64 x86 )
+"
+
+DEPENDENCIES="
+    run:
+        dev-libs/glib:2
+        x11-dri/glu
+        x11-dri/mesa
+        x11-libs/gdk-pixbuf:2.0
+        x11-libs/gtk+:2
+        x11-libs/libX11
+        x11-libs/libXcursor
+    build:
+        virtual/unzip
+"
+
+WORK="${WORKBASE}/data/noarch"
+
+pkg_nofetch() {
+	einfo
+	einfo "Please buy & download \"${DOWNLOADS}\""
+	einfo "from:"
+	einfo "  ${HOMEPAGE}"
+	einfo "and move/link it to \"${FETCHEDDIR}\""
+	einfo
+}
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
+
+src_unpack() {
+    # unzip
+	unzip -qo "${FETCHEDDIR}/${DOWNLOADS}"
+	[[ $? -le 1 ]] || die "unpacking ${DOWNLOADS} failed!"
+}
+
+src_install() {
+	local dir=/opt/${PN}
+	local arch=$(option platform:amd64 "x86_64" "x86")
+	local noarch=$(option platform:amd64 "x86" "x86_64")
+
+    insinto /usr/share/icons/hicolor/128x128/apps
+	newins "game/Punch Club_Data/Resources/UnityPlayer.png" ${PN}.png
+
+    herebin ${PN} <<EOF
+#!/bin/sh
+cd "${dir}/game"
+exec "./Punch Club.${arch}" "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Punch Club
+Type=Application
+Comment=${SUMMARY}
+Exec=punch-club
+TryExec=punch-club
+Icon=punch-club
+Categories=Game;RolePlaying;
+EOF
+
+	edo rm "${WORK}/game/Punch Club_Data/Plugins/${arch}/libsteam_api.so" \
+		"${WORK}/game/Punch Club_Data/Plugins/${arch}/libCSteamworks.so"
+	edo rm -r "${WORK}/game/Punch Club_Data/Plugins/${noarch}"
+	edo rm "${WORK}/game/Punch Club.${noarch}"
+	insinto "${dir}"
+	doins -r "${WORK}/game"
+	chmod +x "${IMAGE%/}${dir}/game/Punch Club.${arch}"
+}
+
