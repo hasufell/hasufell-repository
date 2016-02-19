@@ -1,0 +1,102 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+SUMMARY="Direct sequel to 1988's Wasteland, the first-ever post-apocalyptic computer RPG and the inspiration behind the Fallout series"
+HOMEPAGE="https://wasteland.inxile-entertainment.com/"
+DOWNLOADS="gog_wasteland_2_2.9.0.14.sh"
+
+LICENCES="all-rights-reserved"
+SLOT="0"
+PLATFORMS="-* ~x86"
+MYOPTIONS=""
+RESTRICT="bindist fetch mirror"
+
+DEPENDENCIES="
+    run:
+        dev-libs/atk
+        dev-libs/glib:2
+        media-libs/fontconfig
+        media-libs/freetype:2
+        x11-dri/glu
+        x11-dri/mesa
+        x11-libs/cairo
+        x11-libs/gdk-pixbuf:2.0
+        x11-libs/gtk+:2
+        x11-libs/pango
+        x11-libs/libX11
+        x11-libs/libXcursor
+        x11-libs/libXext
+        x11-libs/libXrandr
+    build:
+        virtual/unzip
+"
+
+WORK="${WORKBASE}/data/noarch"
+
+pkg_pretend() {
+    if [[ $(exhost --target) != i686-* ]];then
+        die "${CATEGORY}/${PNVR} is i686 only, you'll have to cross compile it :("
+    fi
+}
+
+pkg_nofetch() {
+    einfo
+    einfo "Please buy Wasteland 2"
+    einfo "from https://www.gog.com/ and"
+    einfo "download \"${DOWNLOADS}\""
+    einfo "and move/link it to \"${FETCHEDDIR}\""
+    einfo
+    einfo "This exheres was tested with the CLASSICAL edition."
+    einfo "If it works with the deluxe edition too, please"
+    einfo "open a bug report. If not, open a bug report too."
+    einfo
+}
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
+
+src_unpack() {
+    unzip -qo "${FETCHEDDIR}/${DOWNLOADS}"
+    [[ $? -le 1 ]] || die "unpacking ${DOWNLOADS} failed!"
+}
+
+src_install() {
+    local dir=/opt/${PN}
+
+    # over 20GB of data
+    dodir "${dir}"
+    edo mv game/WL2_Data "${IMAGE%/}${dir}"/
+    exeinto "${dir}"
+    doexe game/WL2
+
+    insinto /usr/share/icons/hicolor/256x256/apps
+    newins support/icon.png ${PN}.png
+
+    local LD_PATH="/usr/$(exhost --target)/lib/ld-linux.so.2";
+    herebin ${PN} <<EOF
+#!/bin/sh
+cd "${dir}/game"
+exec ${LD_PATH} "${dir}/game/WL2" "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Wasteland 2
+Type=Application
+Comment=${SUMMARY}
+Exec=/usr/$(exhost --target)/${PN}
+TryExec=/usr/$(exhost --target)/${PN}
+Icon=${PN}
+Categories=Game;RolePlaying;
+EOF
+
+    dodoc docs/*.pdf
+
+    # empty, but let's just keep it
+    keepdir /opt/wasteland2/WL2_Data/Localization
+}
+
