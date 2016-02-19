@@ -1,0 +1,64 @@
+# Copyright 2011 Kim Højgaard-Hansen <kimrhh@exherbo.org>
+# Copyright 2011 Elias Pipping <pipping@exherbo.org>
+# Copyright 2013 Timo Gurr <tgurr@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+export_exlib_phases pkg_setup src_unpack src_install
+
+CHROMIUM_CHANNEL=stable
+CHROMIUM_CHANNEL=${CHROMIUM_CHANNEL%-flash-plugin}
+MY_PV=${PV/_/-}
+
+SUMMARY="Pepper Flash plugin for Chromium"
+DESCRIPTION="
+Google maintained up to date version of Adobe's flash plugin.
+
+The Flash plugin is not officially supported for Chromium by upstream.
+It is released for Chrome and updated silently, and we are not allowed
+to mirror it. Debian provides a versioned plugin that matches a specific
+Chromium revision which we use. The revision of the plugin changes when
+Debian changes their Chromium packages, which means the fetch of the plugin
+will fail. The users of the flash plugin will have to update this exheres
+to match the revision when that happens.
+"
+HOMEPAGE="http://blog.chromium.org/2012/08/the-road-to-safer-more-stable-and.html"
+
+LICENCES="google-chrome"
+SLOT="0"
+MYOPTIONS="
+    platform: amd64 x86
+"
+
+WORK=${WORKBASE}
+
+inox-flash-plugin_pkg_setup() {
+    exdirectory --allow /opt
+}
+
+inox-flash-plugin_src_unpack() {
+    default
+
+    if ever at_least 41.0.2272.76 && [[ ${CHROMIUM_CHANNEL} = "stable" ]]; then
+        edo tar xf data.tar.xz ./opt/google/chrome/PepperFlash
+    elif ever at_least 41.0.2272.16 && [[ ${CHROMIUM_CHANNEL} != "stable" ]]; then
+        edo tar xf data.tar.xz ./opt/google/chrome-${CHROMIUM_CHANNEL}/PepperFlash
+    elif ever at_least 33.0.1750.46 && [[ ${CHROMIUM_CHANNEL} != "stable" ]]; then
+        edo tar xf data.tar.lzma ./opt/google/chrome-${CHROMIUM_CHANNEL}/PepperFlash
+    else
+        edo tar xf data.tar.lzma ./opt/google/chrome/PepperFlash
+    fi
+}
+
+inox-flash-plugin_src_install() {
+    insinto /opt/inox
+
+    local pepper_flash_version
+    doins -r "${WORKBASE}"/opt/google/chrome*/PepperFlash
+    pepper_flash_version=$(sed -n 's/.*"version": "\(.*\)",.*/\1/p' "${WORKBASE}"/opt/google/chrome/PepperFlash/manifest.json)
+
+    insinto /etc/inox
+    hereins default  <<EOF
+CHROMIUM_FLAGS="--ppapi-flash-path=/opt/inox/PepperFlash/libpepflashplayer.so --ppapi-flash-version=$pepper_flash_version"
+EOF
+}
+
