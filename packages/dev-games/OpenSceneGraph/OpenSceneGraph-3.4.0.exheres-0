@@ -1,7 +1,8 @@
 # Copyright 2013-2014 Thomas Witt
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake [ api=2 ]
+require cmake [ api=2 ] flag-o-matic
 
 SUMMARY="High performance 3D graphics toolkit"
 DESCRIPTION="
@@ -27,8 +28,6 @@ MYOPTIONS="
     ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
-# TODO Some of these may be optional
-# TODO SDL gtkglxext
 DEPENDENCIES="
     build:
         app-arch/zip
@@ -55,34 +54,34 @@ DEPENDENCIES="
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-cmake.patch
-)
-
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DWITH_Asio=FALSE
-    -DWITH_Inventor=FALSE
-    -DWITH_COLLADA=FALSE
-    -DWITH_FBX=FALSE
-    -DWITH_Xine=FALSE
-    -DWITH_OpenVRML=FALSE
-    -DWITH_Performer=FALSE
-    -DWITH_GDAL=FALSE
-    -DWITH_LibVNCServer=FALSE
-    -DWITH_OurDCMTK=FALSE
-    -DWITH_RSVG=FALSE
-    -DWITH_NVTT=FALSE
-    -DWITH_LIBLAS=FALSE
-    -DWITH_Lua51=FALSE
-    -DWITH_Lua52=FALSE
-    -DOSG_USE_LOCAL_LUA_SOURCE=OFF
-    -DWITH_ITK=FALSE
-    -DWITH_FLTK=FALSE
-    -DWITH_GLUT=FALSE
-    -DWITH_FOX=FALSE
-    -DWITH_SDL2=OFF
+    -DCMAKE_DISABLE_FIND_PACKAGE_Asio=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_COLLADA=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_FBX=
+    -DCMAKE_DISABLE_FIND_PACKAGE_Xine=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_OpenVRML=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_Performer=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_GDAL=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_LibVNCServer=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_OurDCMTK=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_RSVG=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_NVTT=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_LIBLAS=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_Lua51=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_Lua52=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_SDL2=1
     -DOSG_USE_QT=ON
+    -DOSG_USE_LOCAL_LUA_SOURCE=OFF
     -DDESIRED_QT_VERSION=5
     -DOPENGL_PROFILE=GL2
     -DDYNAMIC_OPENSCENEGRAPH=ON
+    -DLIB_POSTFIX=""
 )
+
+src_prepare() {
+    # https://github.com/openscenegraph/osg/issues/58
+    append-flags -fpermissive
+
+    cmake_src_prepare
+}
