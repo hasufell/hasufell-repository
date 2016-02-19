@@ -32,12 +32,12 @@ DEPENDENCIES="
 WORK="${WORKBASE}/data/noarch"
 
 pkg_nofetch() {
-	einfo
-	einfo "Please buy & download \"${DOWNLOADS}\""
-	einfo "from:"
-	einfo "  ${HOMEPAGE}"
-	einfo "and move/link it to \"${FETCHEDDIR}\""
-	einfo
+    einfo
+    einfo "Please buy & download \"${DOWNLOADS}\""
+    einfo "from:"
+    einfo "  ${HOMEPAGE}"
+    einfo "and move/link it to \"${FETCHEDDIR}\""
+    einfo
 }
 
 pkg_setup() {
@@ -46,17 +46,17 @@ pkg_setup() {
 
 src_unpack() {
     # unzip
-	unzip -qo "${FETCHEDDIR}/${DOWNLOADS}"
-	[[ $? -le 1 ]] || die "unpacking ${DOWNLOADS} failed!"
+    unzip -qo "${FETCHEDDIR}/${DOWNLOADS}"
+    [[ $? -le 1 ]] || die "unpacking ${DOWNLOADS} failed!"
 }
 
 src_install() {
-	local dir=/opt/${PN}
-	local arch=$(option platform:amd64 "x86_64" "x86")
-	local noarch=$(option platform:amd64 "x86" "x86_64")
+    local dir=/opt/${PN}
+    local arch=$(option platform:amd64 "x86_64" "x86")
+    local noarch=$(option platform:amd64 "x86" "x86_64")
 
     insinto /usr/share/icons/hicolor/128x128/apps
-	newins "game/Punch Club_Data/Resources/UnityPlayer.png" ${PN}.png
+    newins "game/Punch Club_Data/Resources/UnityPlayer.png" ${PN}.png
 
     herebin ${PN} <<EOF
 #!/bin/sh
@@ -76,12 +76,12 @@ Icon=punch-club
 Categories=Game;RolePlaying;
 EOF
 
-	edo rm "${WORK}/game/Punch Club_Data/Plugins/${arch}/libsteam_api.so" \
-		"${WORK}/game/Punch Club_Data/Plugins/${arch}/libCSteamworks.so"
-	edo rm -r "${WORK}/game/Punch Club_Data/Plugins/${noarch}"
-	edo rm "${WORK}/game/Punch Club.${noarch}"
-	insinto "${dir}"
-	doins -r "${WORK}/game"
-	chmod +x "${IMAGE%/}${dir}/game/Punch Club.${arch}"
+    edo rm "${WORK}/game/Punch Club_Data/Plugins/${arch}/libsteam_api.so" \
+        "${WORK}/game/Punch Club_Data/Plugins/${arch}/libCSteamworks.so"
+    edo rm -r "${WORK}/game/Punch Club_Data/Plugins/${noarch}"
+    edo rm "${WORK}/game/Punch Club.${noarch}"
+    insinto "${dir}"
+    doins -r "${WORK}/game"
+    chmod +x "${IMAGE%/}${dir}/game/Punch Club.${arch}"
 }
 
