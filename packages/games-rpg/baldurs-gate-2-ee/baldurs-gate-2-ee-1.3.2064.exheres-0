@@ -1,0 +1,97 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+SUMMARY="Baldur's Gate2: Enhanced Edition"
+HOMEPAGE="http://www.gog.com/game/baldurs_gate_2_enhanced_edition"
+DOWNLOADS="gog_baldur_s_gate_2_enhanced_edition_2.0.0.3.sh"
+
+LICENCES="all-rights-reserved"
+SLOT="0"
+PLATFORMS="-* ~x86"
+MYOPTIONS=""
+RESTRICT="fetch bindist"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+"
+
+WORK="${WORKBASE}/data/noarch"
+
+pkg_pretend() {
+    if [[ $(exhost --target) != i686-* ]];then
+        die "${CATEGORY}/${PNVR} is i686 only, you'll have to cross compile it :("
+    fi
+}
+
+pkg_nofetch() {
+	einfo
+	einfo "Please buy & download \"${DOWNLOADS}\" from:"
+	einfo "  ${HOMEPAGE}"
+	einfo "and move/link it to \"${FETCHEDDIR}\""
+	einfo
+}
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
+
+src_unpack() {
+    unzip -qo "${FETCHEDDIR}/${DOWNLOADS}"
+    [[ $? -le 1 ]] || die "unpacking ${DOWNLOADS} failed!"
+}
+
+src_install() {
+	local dir=/opt/${PN}
+	local f
+
+	insinto "${dir}"
+	doins -r game
+	edo chmod +x "${IMAGE}${dir}"/game/BaldursGateII
+
+	dodir "${dir}/lib"
+
+    edo pushd "${WORK}"/lib
+    exeinto "${dir}/lib"
+    for f in * ; do
+        if [[ -L ${f} ]] ; then
+            dosym "$(readlink ${f})" "${dir}"/lib/${f}
+        else
+            doexe ${f}
+        fi
+    done
+    unset f
+    edo popd
+
+    insinto /usr/share/icons/hicolor/256x256/apps
+	newins support/icon.png ${PN}.png
+
+    local LD_PATH="/usr/$(exhost --target)/lib/ld-linux.so.2";
+    herebin ${PN} <<EOF
+#!/bin/sh
+cd "${dir}/game"
+if [ "\${LD_LIBRARY_PATH+set}" = "set" ] ; then
+export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:/opt/baldurs-gate-ee/lib"
+else
+export LD_LIBRARY_PATH="/opt/baldurs-gate-ee/lib"
+fi
+exec ${LD_PATH} "${dir}/game/BaldursGateII" "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Baldurs Gate 2 Enhanced Edition
+Type=Application
+Comment=${SUMMARY}
+Exec=/usr/$(exhost --target)/${PN}
+TryExec=/usr/$(exhost --target)/${PN}
+Icon=${PN}
+Categories=Game;RolePlaying;
+EOF
+
+	dodoc docs/BGManual2.pdf
+}
+
