@@ -1,0 +1,25 @@
+# Copyright 2008 Mike Kelly <pioto@exherbo.org>
+# Distributed under the terms of the GPL v2
+
+SUMMARY="Script to help do all the necessary voodoo for suspending to ram/disk on Linux"
+HOMEPAGE="http://www.tuxonice.net/"
+DOWNLOADS="http://www.tuxonice.net/downloads/all/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+BUGS_TO="pioto@exherbo.org"
+
+src_install() {
+    PREFIX="/usr" \
+        BASE_DIR="${IMAGE}" \
+        MAN_DIR="${IMAGE}/usr/share/man" \
+        DISTRIBUTION="gentoo" \
+        SCRIPT_DEST="${IMAGE}/usr/$(exhost --target)/bin/hibernate" \
+        edo sh ./install.sh
+}
+
