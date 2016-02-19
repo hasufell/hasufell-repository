@@ -1,0 +1,47 @@
+# Copyright 2011 Kim Højgaard-Hansen <kimrhh@exherbo.org>
+# Copyright 2011 Elias Pipping <pipping@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+export_exlib_phases pkg_setup src_unpack src_install
+
+CHROMIUM_CHANNEL=stable
+CHROMIUM_CHANNEL=${CHROMIUM_CHANNEL%-widevine-plugin}
+MY_PV=${PV/_/-}
+
+SUMMARY="Widevine Content Decryption Module plugin for Chromium"
+DESCRIPTION="
+Enables Widevine licenses for playback of HTML audio/video content.
+"
+HOMEPAGE="http://blog.chromium.org"
+
+LICENCES="google-chrome"
+SLOT="0"
+MYOPTIONS="
+    platform:
+        amd64
+        x86
+"
+
+RESTRICT="strip"
+
+WORK=${WORKBASE}
+
+inox-widevine-plugin_pkg_setup() {
+    exdirectory --allow /opt
+}
+
+inox-widevine-plugin_src_unpack() {
+    default
+
+    if [[ ${CHROMIUM_CHANNEL} != "stable" ]]; then
+        edo tar xf data.tar.xz ./opt/google/chrome-${CHROMIUM_CHANNEL}
+    else
+        edo tar xf data.tar.xz ./opt/google/chrome
+    fi
+}
+
+inox-widevine-plugin_src_install() {
+    insinto /opt/inox
+    doins "${WORKBASE}"/opt/google/chrome*/libwidevinecdm.so
+}
+
