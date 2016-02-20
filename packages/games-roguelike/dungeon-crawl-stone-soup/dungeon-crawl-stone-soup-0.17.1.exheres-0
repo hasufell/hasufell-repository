@@ -1,3 +1,4 @@
+# Copyright 2011 Elias Pipping <pipping@exherbo.org>
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
@@ -43,12 +44,18 @@ MYOPTIONS="
     tiles [[ description = [ Do graphical (tiled) build instead of
                              ncurses build ] ]]
 "
-RESTRICT="test"
+RESTRICT="test" # lots of sydbox access violations
 
 DEPENDENCIES="
+    build:
+        dev-lang/perl:*
+        sys-devel/bison
+        sys-devel/flex
+        virtual/pkg-config
+        tiles? ( sys-libs/ncurses )
     build+run:
-        dev-lang/lua:5.1
         dev-db/sqlite:3
+        dev-lang/lua:5.1
         sys-libs/zlib
         !tiles? ( sys-libs/ncurses )
         tiles? (
@@ -60,23 +67,17 @@ DEPENDENCIES="
             x11-dri/glu
             x11-dri/mesa
         )
-    build:
-        dev-lang/perl
-        sys-devel/bison
-        sys-devel/flex
-        virtual/pkg-config
-        tiles? ( sys-libs/ncurses )
 "
 
 WORK=${WORKBASE}/${MY_PNV}/source
 
 MY_SAVEDIR=/var/lib/games/${MY_PN}
 
-# https://github.com/crawl/crawl/pull/237
+# merged upstream: https://github.com/crawl/crawl/pull/237
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p3 "${FILES}"/0001-${PV}-MAKE-use-PKGCONFIG-to-get-ncurses-flags-if-available.patch
     -p3 "${FILES}"/0002-${PV}-MAKE-always-use-PKGCONFIG-instead-of-pkg-config.patch
-    -p3 "${FILES}"/0004-${PV}-MAKE-allow-to-skip-automagic-gold-linker-detection.patch
+    -p3 "${FILES}"/0003-${PV}-MAKE-allow-to-skip-automagic-gold-linker-detection.patch
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=(

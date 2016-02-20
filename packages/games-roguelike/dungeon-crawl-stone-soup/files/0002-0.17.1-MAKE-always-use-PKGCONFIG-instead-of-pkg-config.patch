@@ -1,20 +1,17 @@
-From 39d12bfca474695bdfeee8e749137cb93e1c5d0b Mon Sep 17 00:00:00 2001
+From 4c94a6bea47048a707ea86d17d36ac1161a99c76 Mon Sep 17 00:00:00 2001
 From: Julian Ospald <hasufell@posteo.de>
 Date: Fri, 19 Feb 2016 12:34:07 +0100
-Subject: [PATCH 2/3] MAKE: always use $(PKGCONFIG) instead of pkg-config
+Subject: [PATCH] MAKE: always use $(PKGCONFIG) instead of pkg-config
 
 This fixes build failures on distributions that use special
 binary prefixes and PATHs.
-
-Upstream pull-request:
-https://github.com/crawl/crawl/pull/237
 ---
  crawl-ref/source/Makefile         | 2 +-
  crawl-ref/source/rltiles/Makefile | 5 +++--
  2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/crawl-ref/source/Makefile b/crawl-ref/source/Makefile
-index 3702c4c..839e0c5 100644
+index 88ad7f8..266c3da 100644
 --- a/crawl-ref/source/Makefile
 +++ b/crawl-ref/source/Makefile
 @@ -605,7 +605,7 @@ endif
@@ -49,6 +46,3 @@ index 98e01ec..3d97d7a 100644
    else
      PNG_INCLUDE := -I../contrib/install/$(ARCH)/include
      PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
--- 
-2.7.1
-
