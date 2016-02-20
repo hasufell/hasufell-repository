@@ -71,9 +71,9 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
 )
 
 src_install() {
-	default
-	keepdir /var/{lib,log,spool}/pgl
+    default
+    keepdir /var/{lib,log,spool}/pgl
     keepdir /etc/pgl/blocklists.local
-	edo rm -r "${IMAGE%/}"/{tmp,run}
+    edo rm -r "${IMAGE%/}"/{tmp,run}
 }
 
