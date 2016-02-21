@@ -25,9 +25,8 @@ DEPENDENCIES="
         net-libs/libnetfilter_queue
         net-libs/libnfnetlink
         gui? (
-            sys-auth/polkit-qt
+            sys-auth/polkit-qt[qt4]
             x11-libs/qt:4[dbus]
-            || ( kde-apps/kdesu x11-libs/gksu x11-misc/ktsuss )
         )
     run:
         net-firewall/iptables
@@ -44,6 +43,11 @@ DEPENDENCIES="
         virtual/mta [[ description = [ needed to send informational (blocklist
                                        updates) and warning mails (if pglcmd.wd
                                        detects a problem.) ] ]]
+    suggestion:
+        gui? (
+            app-admin/ktsuss [[ description = [ make pglinux use ktsuss for graphical sudo ] ]]
+            kde/kde-runtime:4 [[ description = [ make pglinux use kdesu for graphical sudo ] ]]
+        )
 "
 
 WORK=${WORKBASE}/${MY_P}
