@@ -15,6 +15,8 @@ MYOPTIONS="
     havege [[ description = [ Enable the HAVEGE random generator,
                               not suitable for virtualized environments! ] ]]
     threads
+    x86_cpu_features:
+        sse2
 "
 
 DEPENDENCIES="
@@ -48,6 +50,7 @@ enable_mbedtls_option() {
 }
 
 src_prepare() {
+    option x86_cpu_features:sse2 && enable_mbedtls_option MBEDTLS_HAVE_SSE2
     enable_mbedtls_option MBEDTLS_ZLIB_SUPPORT
     option havege && enable_mbedtls_option MBEDTLS_HAVEGE_C
     option threads && enable_mbedtls_option MBEDTLS_THREADING_C
