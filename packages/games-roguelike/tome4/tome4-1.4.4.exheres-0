@@ -86,10 +86,10 @@ src_install() {
 [Desktop Entry]
 Name=ToME4
 Type=Application
-Comment=Topdown tactical RPG roguelike game and game engine
-Exec=tome4
-TryExec=tome4
-Icon=tome4
+Comment=${SUMMARY}
+Exec=${PN}
+TryExec=${PN}
+Icon=${PN}
 Categories=Game;RolePlaying;
 EOF
 }
