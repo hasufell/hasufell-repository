@@ -1,0 +1,94 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="TeamSpeak Client - Voice Communication Software"
+HOMEPAGE="http://www.teamspeak.com/"
+DOWNLOADS="
+    listed-only:
+        platform:amd64? ( http://ftp.4players.de/pub/hosted/ts3/releases/${PV}/TeamSpeak3-Client-linux_amd64-${PV/_/-}.run )
+        platform:x86? ( http://ftp.4players.de/pub/hosted/ts3/releases/${PV}/TeamSpeak3-Client-linux_x86-${PV/_/-}.run )
+"
+
+LICENCES="teamspeak3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( alsa pulseaudio ) [[ number-selected = at-least-one ]]
+    platform: amd64 x86
+"
+RESTRICT="mirror strip"
+
+
+DEPENDENCIES="
+    run:
+        app-arch/quazip[qt5]
+        x11-libs/qtbase:5[sqlite]
+        sys-libs/zlib
+        alsa? ( sys-sound/alsa-lib )
+        pulseaudio? ( media-sound/pulseaudio )
+"
+
+
+WORK="${WORKBASE}"
+
+pkg_nofetch() {
+    einfo "Please download ${ARCHIVES}"
+    einfo "from ${HOMEPAGE}?page=downloads and place this"
+    einfo "file in ${FETCHEDDIR}"
+}
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
+
+src_unpack() {
+    edo sh "${FETCHEDDIR}/${ARCHIVES}" --tar -xf 2>/dev/null
+}
+
+src_prepare() {
+    # Remove the qt-libraries as they just cause trouble with the system's Qt, see bug #328807.
+    edo rm libQt*
+
+    edo rm -r platforms sqldrivers qt.conf
+
+    # Remove unwanted soundbackends.
+    if ! option alsa ; then
+        edo rm soundbackends/libalsa*
+    fi
+
+    if ! option pulseaudio ; then
+        edo rm soundbackends/libpulseaudio*
+    fi
+
+    # Remove quazip
+    edo rm libquazip.so
+
+    # Rename the tsclient to its shorter version, required by the
+    # teamspeak3 script we install.
+    edo mv ts3client_linux_* ts3client
+}
+
+src_install() {
+    insinto /opt/teamspeak3-client
+    doins -r *
+
+    chmod +x "${IMAGE%/}"/opt/teamspeak3-client/ts3client
+
+    dobin "${FILES}/teamspeak3"
+
+    edo ln -s ../../usr/$(exhost --target)/lib/libquazip5.so \
+        "${IMAGE%/}"/opt/teamspeak3-client/libquazip.so
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=TeamSpeak3
+Type=Application
+Comment=${SUMMARY}
+Exec=teamspeak3
+TryExec=teamspeak3
+Icon=/opt/teamspeak3-client/pluginsdk/docs/client_html/images/logo.png
+Categories=Network;
+EOF
+}
+
