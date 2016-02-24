@@ -1,0 +1,79 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Faster Than Light: A spaceship simulation real-time roguelike-like game"
+HOMEPAGE="http://www.ftlgame.com/"
+DOWNLOADS="manual: FTL.${PV}.tar.gz"
+
+LICENCES="all-rights-reserved Boost-1.0 free-noncomm MIT FTL LGPL-2.1 ZLIB libpng"
+SLOT="0"
+PLATFORMS="-* ~amd64 ~x86"
+MYOPTIONS="
+    ( platform: amd64 x86 )
+"
+RESTRICT="fetch bindist"
+
+DEPENDENCIES="
+    run:
+        media-libs/DevIL
+        media-libs/SDL:0[X]
+        media-libs/freetype:2
+        sys-libs/zlib
+        x11-dri/mesa
+"
+
+WORK=${WORKBASE}/${PN}
+
+pkg_nofetch() {
+    einfo "Please buy & download ${DOWNLOADS} from:"
+    einfo "  ${HOMEPAGE}"
+    einfo "and move it to ${FETCHEDDIR}"
+    einfo
+}
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
+
+src_install() {
+    local dir=/opt/${PN}
+    local arch=$(option platform:amd64 "amd64" "x86")
+
+    insinto "${dir}"
+    doins -r data/resources
+
+    exeinto "${dir}"/bin
+    doexe data/${arch}/bin/${PN}
+    exeinto "${dir}"/lib
+    doexe data/${arch}/lib/*.so*
+
+    herebin ${PN} << EOF
+#!/bin/sh
+cd "/opt/FTL"
+if [ "\${LD_LIBRARY_PATH+set}" = "set" ] ; then
+export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:/opt/FTL/lib"
+else
+export LD_LIBRARY_PATH="/opt/FTL/lib"
+fi
+exec /opt/FTL/bin/FTL "$@"
+EOF
+
+    insinto /usr/share/applications/
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=Faster Than Light
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}
+TryExec=${PN}
+Icon=/usr/share/pixmaps/FTL.bmp
+Categories=Game;RolePlaying;
+EOF
+
+    insinto /usr/share/pixmaps
+    newins data/resources/exe_icon.bmp FTL.bmp
+
+    insinto /usr/share/doc/${PNVR}/html
+    doins ${PN}_README.html
+}
+
