@@ -38,6 +38,7 @@ DEPENDENCIES="
         media-libs/freetype:2
         media-libs/giflib:=
         media-libs/gstreamer:1.0
+        media-libs/ilmbase
         media-libs/jasper
         media-libs/libpng:=
         media-libs/openexr
@@ -47,10 +48,11 @@ DEPENDENCIES="
         net-misc/curl
         sys-libs/zlib
         x11-dri/mesa
-        x11-libs/gtkglext
+        x11-libs/cairo
+        x11-libs/libX11
+        x11-libs/libXrandr
         x11-libs/qtbase:5
-        x11-libs/wxGTK:3.0
-        providers:ijg-jpeg? ( media-libs/jpeg )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
