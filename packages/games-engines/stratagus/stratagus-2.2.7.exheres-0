@@ -1,0 +1,51 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake
+
+SUMMARY="A realtime strategy game engine"
+HOMEPAGE="http://stratagus.sourceforge.net/"
+DOWNLOADS="http://launchpad.net/stratagus/trunk/${PV}/+download/stratagus_${PV}.orig.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        app-arch/bzip2
+        dev-db/sqlite:3
+        dev-lang/lua:=
+        dev-lang/toluapp
+        media-libs/SDL:0[X]
+        media-libs/libmikmod
+        media-libs/libmng
+        media-libs/libogg
+        media-libs/libpng:=
+        media-libs/libtheora
+        media-libs/libvorbis
+        sys-libs/zlib
+        x11-dri/mesa
+        x11-libs/libX11
+"
+
+WORK=${WORKBASE}/${PN}_${PV}.orig
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBINDIR=/usr/$(exhost --target)/bin
+    -DDOCDIR="/usr/share/doc/${PNVR}"
+    -DGAMEDIR=/usr/$(exhost --target)/bin
+    -DSBINDIR=/usr/$(exhost --target)/bin
+
+    -DENABLE_DEV=ON
+    -DENABLE_DOC=OFF
+    -DWITH_BZIP2=ON
+    -DWITH_MIKMOD=ON
+    -DWITH_MNG=ON
+    -DWITH_OGGVORBIS=ON
+    -DWITH_THEORA=ON
+)
+
