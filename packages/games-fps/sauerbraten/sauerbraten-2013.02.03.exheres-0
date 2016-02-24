@@ -1,0 +1,126 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+EDITION="collect_edition"
+SUMMARY="Cube 2: Sauerbraten is an open source game engine (Cube 2) with freeware game data (Sauerbraten)"
+HOMEPAGE="http://sauerbraten.org/"
+DOWNLOADS="mirror://sourceforge/sauerbraten/sauerbraten/2013_01_04/sauerbraten_${PV//./_}_${EDITION}_linux.tar.bz2"
+
+LICENCES="ZLIB freedist"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+		media-libs/SDL:0[X]
+		media-libs/SDL_image:1
+		media-libs/SDL_mixer:0[ogg]
+		x11-libs/libX11
+        sys-libs/zlib
+        x11-dri/glu
+        x11-dri/mesa
+    run:
+        group/sauerbraten [[ note = [ for server ] ]]
+        user/sauerbraten [[ note = [ for server ] ]]
+"
+
+WORK=${WORKBASE}/${PN}
+
+src_prepare() {
+	edo rm -r sauerbraten_unix bin_unix src/{include,lib,vcpp}
+
+    default
+
+	# Fix links so they point to the correct directory
+	edo sed -i -e 's:docs/::' README.html
+}
+
+src_compile() {
+    emake -C src master server client
+}
+
+src_install() {
+    local LIBEXECDIR="/usr/$(exhost --target)/libexec/${PN}"
+	local DATADIR="/usr/share/${PN}"
+	local STATEDIR="/var/lib/${PN}"
+
+    # Install the game data
+    insinto "${DATADIR}"
+    doins -r data packages
+
+    # Install the client executable
+    exeinto "${LIBEXECDIR}"
+    doexe src/sauer_client
+
+    # Install the client wrapper
+    herebin ${PN}-client <<EOF
+#!/bin/sh
+cd ${DATADIR}
+exec "${LIBEXECDIR}/sauer_client" -q \$HOME/.${PN} -r "\$@"
+EOF
+
+    # Create menu entry
+    insinto /usr/share/icons/hicolor/256x256/apps
+    newins data/cube.png ${PN}.png
+    insinto /usr/share/applications
+    hereins ${PN}.desktop <<EOF
+[Desktop Entry]
+Name=Cube 2: Sauerbraten
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}-client
+TryExec=${PN}-client
+Icon=${PN}
+Categories=Game;ActionGame;
+EOF
+
+	# Install the server config files
+	insinto "${STATEDIR}"
+	doins "server-init.cfg"
+
+	# Install the server executables
+	exeinto "${LIBEXECDIR}"
+	doexe src/sauer_master
+	doexe src/sauer_server
+
+    herebin ${PN}-server <<EOF
+#!/bin/sh
+exec "${LIBEXECDIR}/sauer_server" -k${DATADIR} -q${STATEDIR} "\$@"
+EOF
+    herebin ${PN}-master <<EOF
+#!/bin/sh
+exec "${LIBEXECDIR}/sauer_master" ${STATEDIR} "\$@"
+EOF
+
+    # Install the server init script
+	edo cp "${FILES}"/${PN}.init "${TEMP}"
+	edo sed -i \
+		-e "s:%SYSCONFDIR%:${STATEDIR}:g" \
+		-e "s:%LIBEXECDIR%:${LIBEXECDIR}:g" \
+		"${TEMP}"/${PN}.init
+	newinitd "${TEMP}"/${PN}.init ${PN}
+	edo cp "${FILES}"/${PN}.conf "${TEMP}"
+	edo sed -i \
+		-e "s:%SYSCONFDIR%:${STATEDIR}:g" \
+		-e "s:%LIBEXECDIR%:${LIBEXECDIR}:g" \
+		"${TEMP}"/${PN}.conf
+	newconfd "${TEMP}"/${PN}.conf ${PN}
+
+	dodoc src/*.txt docs/dev/*.txt
+
+    insinto /usr/share/doc/${PNVR}/html
+    doins -r README.html docs/*
+
+	edo chown sauerbraten:sauerbraten "${IMAGE%/}/${STATEDIR}"
+}
+
+pkg_postinst() {
+	elog "If you plan to use map editor feature copy all map data from ${DATADIR}"
+	elog "to corresponding folder in your HOME/.${PN}"
+
+    gtk-icon-cache_pkg_postinst
+}
+
