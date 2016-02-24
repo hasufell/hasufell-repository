@@ -5,7 +5,7 @@ require gtk-icon-cache
 
 SUMMARY="Baldur's Gate2: Enhanced Edition"
 HOMEPAGE="http://www.gog.com/game/baldurs_gate_2_enhanced_edition"
-DOWNLOADS="gog_baldur_s_gate_2_enhanced_edition_2.0.0.3.sh"
+DOWNLOADS="manual: gog_baldur_s_gate_2_enhanced_edition_2.0.0.3.sh"
 
 LICENCES="all-rights-reserved"
 SLOT="0"

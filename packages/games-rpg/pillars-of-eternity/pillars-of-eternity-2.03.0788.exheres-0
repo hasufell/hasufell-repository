@@ -10,10 +10,13 @@ BASE_SRC_DL="gog_pillars_of_eternity_2.9.0.13.sh"
 DLC1_SRC_DL="gog_pillars_of_eternity_kickstarter_item_dlc_2.0.0.2.sh"
 DLC2_SRC_DL="gog_pillars_of_eternity_kickstarter_pet_dlc_2.0.0.2.sh"
 DLC3_SRC_DL="gog_pillars_of_eternity_preorder_item_and_pet_dlc_2.0.0.2.sh"
-DOWNLOADS="${BASE_SRC_DL}
-	dlc1? ( ${DLC1_SRC_DL} )
-	dlc2? ( ${DLC2_SRC_DL} )
-	dlc3? ( ${DLC3_SRC_DL} )"
+DOWNLOADS="
+    manual:
+        ${BASE_SRC_DL}
+        dlc1? ( ${DLC1_SRC_DL} )
+        dlc2? ( ${DLC2_SRC_DL} )
+        dlc3? ( ${DLC3_SRC_DL} )
+"
 
 LICENCES="all-rights-reserved"
 SLOT="0"
