@@ -1,0 +1,17 @@
+Source: Julian Ospald <hasufell@posteo.de>
+Upstream: not yet
+Reason: fix install rules
+
+--- a/angelscript/projects/gnuc/Makefile
++++ b/angelscript/projects/gnuc/Makefile
+@@ -147,8 +147,8 @@
+ 		echo "Skipping creation of symbolic links..."; \
+ 	else \
+ 		( install -Dm 755 $(LIBDIR)/$(SHLIB) $(LIBRARYDEST)$(LIBNAME)_s-$$ver.so && \
+-		ln -fs $(LIBRARYDEST)$(LIBNAME)_s-$$ver.so $(LIBRARYDEST)$(SHLIB) && \
+-		ln -fs $(LIBRARYDEST)$(LIBNAME)_s-$$ver.so $(LIBRARYDEST)$(SHLIB).$$ver ) \
++		ln -fs $(LIBNAME)_s-$$ver.so $(LIBRARYDEST)$(SHLIB) && \
++		ln -fs $(LIBNAME)_s-$$ver.so $(LIBRARYDEST)$(SHLIB).$$ver ) \
+ 	fi ;
+ 
+ 

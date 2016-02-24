@@ -1,0 +1,37 @@
+# Copyright Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="A flexible, cross-platform scripting library"
+HOMEPAGE="http://www.angelcode.com/angelscript/"
+DOWNLOADS="http://www.angelcode.com/angelscript/sdk/files/angelscript_${PV}.zip"
+
+LICENCES="ZLIB"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build: virtual/unzip
+"
+
+WORK=${WORKBASE}/sdk
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-install.patch
+)
+
+src_compile() {
+	export CXX=${CXX} AR=${AR} RANLIB=${RANLIB}
+	emake -C ${PN}/projects/gnuc \
+        LIBRARYDEST=
+}
+
+src_install() {
+    emake -C ${PN}/projects/gnuc \
+        LIBRARYDEST="${IMAGE}"/usr/$(exhost --target)/lib \
+        INCLUDEDEST="${IMAGE}"/usr/$(exhost --target)/include/ install
+
+    insinto /usr/share/doc/${PNVR}/html
+    doins -r "${WORK}"/docs/*
+}
+
