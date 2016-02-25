@@ -1,0 +1,46 @@
+# Copyright 2015-2016 Julian Ospald <hasufell@posteo.de>, Heiko Schaefer <heiko@rangun.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require qmake [ slot=4 ]
+
+MY_P=nmm-qt-client${PV}
+
+SUMMARY="Client for games-server/netmaumau, the popular card game Mau Mau"
+HOMEPAGE="http://sourceforge.net/projects/netmaumau"
+DOWNLOADS="https://github.com/velnias75/NetMauMau-Qt-Client/archive/V${PV}.tar.gz -> ${PNV}-client.tar.gz"
+
+LICENCES="LGPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="espeak [[ description = [ enable speech support ] ]]"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        app-text/discount
+        dev-libs/qjson
+        games-server/netmaumau
+        x11-libs/qt:4
+        espeak? ( app-accessibility/espeak )
+"
+
+WORK=${WORKBASE}/NetMauMau-Qt-Client-${PV}
+
+src_configure() {
+	if option espeak; then USE_ESPEAK='CONFIG+=espeak'; fi
+	EQMAKE_SOURCES="nmm-qt-client.pro" eqmake $USE_ESPEAK
+	lrelease -compress -nounfinished -removeidentical -silent src/src.pro
+}
+
+src_install() {
+	dobin src/nmm-qt-client
+	dodoc src/THANKS
+    insinto /usr/share/icons/hicolor/256x256/apps
+    doins src/nmm_qt_client.png
+    insinto /usr/share/applications
+    doins src/nmm_qt_client.desktop
+	insinto /usr/share/nmm-qt-client
+	doins src/*.qm
+}
+
