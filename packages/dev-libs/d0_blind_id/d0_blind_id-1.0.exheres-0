@@ -1,0 +1,37 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
+SUMMARY="Blind-ID library for user identification using RSA blind signatures"
+HOMEPAGE="http://git.xonotic.org/?p=xonotic/d0_blind_id.git;a=summary"
+DOWNLOADS="https://github.com/divVerent/d0_blind_id/archive/v${PV}.tar.gz -> ${PNV}.tar.gz"
+
+LICENCES="BSD"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        dev-libs/gmp:=
+"
+
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( d0_blind_id.txt )
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-rijndael
+    --without-openssl
+    --without-tommath
+)
+
+src_prepare() {
+    # fix out-of-source build
+    edo sed -i \
+        -e 's, d0_rijndael.c, "$srcdir/d0_rijndael.c",' \
+        configure.ac
+    autotools_src_prepare
+}
+
