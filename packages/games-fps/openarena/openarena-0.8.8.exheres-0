@@ -28,7 +28,7 @@ DEPENDENCIES="
         x11-libs/libXau
         x11-libs/libXdmcp
         x11-libs/libXext
-        providers:ijg-jpeg? ( media-libs/jpeg )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
