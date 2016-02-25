@@ -1,0 +1,119 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+MY_PN="${PN^}"
+SUMMARY="Fork of Nexuiz, Deathmatch FPS based on DarkPlaces, an advanced Quake 1 engine"
+HOMEPAGE="http://www.xonotic.org/"
+DOWNLOADS="http://dl.xonotic.org/${PNV}.zip"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    alsa
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        x11-proto/xextproto
+        x11-proto/xf86dgaproto
+        x11-proto/xf86vidmodeproto
+        x11-proto/xproto
+    build+run:
+        dev-libs/d0_blind_id
+        media-libs/SDL:0[X]
+        media-libs/freetype:2
+        media-libs/libmodplug
+        media-libs/libogg
+        media-libs/libpng:=
+        media-libs/libtheora
+        media-libs/libvorbis
+        net-misc/curl
+        sys-libs/zlib
+        x11-dri/mesa
+        x11-libs/libX11
+        x11-libs/libXau
+        x11-libs/libXdmcp
+        x11-libs/libXext
+        x11-libs/libXpm
+        x11-libs/libXxf86dga
+        x11-libs/libXxf86vm
+        alsa? ( sys-sound/alsa-lib )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+    suggestion:
+        media-libs/libtxc_dxtn [[ description = [ For opensource drivers ] ]]
+"
+
+WORK=${WORKBASE}/${MY_PN}
+
+src_prepare() {
+	edo sed -i \
+		-e "/^EXE_/s:darkplaces:${PN}:" \
+		-e "s:-O3:${CFLAGS}:" \
+		-e "/-lm/s:$: ${LDFLAGS}:" \
+		-e '/^STRIP/s/strip/true/' \
+		source/darkplaces/makefile.inc
+
+	if ! option alsa; then
+		edo sed -i \
+			-e "/DEFAULT_SNDAPI/s:ALSA:OSS:" \
+			source/darkplaces/makefile
+	fi
+}
+
+src_compile() {
+	local i
+
+	export CC=${CC} CXX=${CXX} LD=${LD} AR=${AR} RANLIB=${RANLIB}
+
+	# fixes parallel build issues
+	for i in sv-release cl-release sdl-release ; do
+		emake \
+			-C source/darkplaces \
+			DP_LINK_TO_LIBJPEG=1 \
+			DP_FS_BASEDIR="/usr/share/${PN}" \
+			${i}
+	done
+}
+
+src_install() {
+    insinto /usr/share/icons/hicolor/scalable/apps
+    newins misc/logos/${PN}_icon.svg ${PN}.svg
+
+    insinto /usr/share/applications/
+    hereins ${PN}-glx.desktop << EOF
+[Desktop Entry]
+Name=${MY_PN} (GLX)
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}-glx
+TryExec=${PN}-glx
+Icon=${PN}
+Categories=Game;ActionGame;
+EOF
+
+    hereins ${PN}-sdl.desktop << EOF
+[Desktop Entry]
+Name=${MY_PN} (SDL)
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}-sdl
+TryExec=${PN}-sdl
+Icon=${PN}
+Categories=Game;ActionGame;
+EOF
+
+    dobin source/darkplaces/${PN}-glx
+    dobin source/darkplaces/${PN}-sdl
+	dobin source/darkplaces/${PN}-dedicated
+
+	dodoc Docs/*.txt
+
+	insinto /usr/share/${PN}
+	doins -r key_0.d0pk server data
+}
+
