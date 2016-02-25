@@ -1,0 +1,89 @@
+# Copyright 2015 Julian Ospald <hasufell@posteo.de>, Heiko Schaefer <heiko@rangun.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require flag-o-matic
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require lua [ whitelist="5.1" multibuild=false ]
+require bash-completion
+
+SUMMARY="Server for the popular card game Mau Mau"
+HOMEPAGE="http://sourceforge.net/projects/netmaumau"
+DOWNLOADS="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${PNV}-server.tar.gz"
+
+LICENCES="LGPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    console-client [[ description = [ Build a console based client ] ]]
+    http [[ description = [ Enable embedded HTTP server ] ]]
+"
+
+DEPENDENCIES="
+    build:
+        dev-util/xxdi
+        sys-apps/help2man
+        virtual/awk
+        virtual/pkg-config
+    build+run:
+        dev-db/sqlite:3
+        dev-lang/lua:5.1
+        dev-libs/popt
+        sci-libs/gsl
+        sys-apps/file
+        http? (
+            net-libs/libmicrohttpd
+            sys-libs/zlib
+        )
+    suggestion:
+        games-board/netmaumau [[ description = [ The GUI client for NetMauMau ] ]]
+        sys-apps/xinetd [[ description = [ NetMauMau provides xinetd scripts ] ]]
+"
+
+WORK=${WORKBASE}/NetMauMau-${PV}
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-apidoc
+    --disable-static
+    --docdir=/usr/share/doc/${PNVR}
+    --enable-ai-image="${FILES}/gblend.png"
+    --enable-ai-name='Gentoo Hero'
+    --enable-client
+    --enable-xinetd
+    --localstatedir=/var/lib/games/
+    --with-bashcompletiondir="${BASHCOMPLETIONDIR}"
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'console-client'
+    'http webserver'
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    "http zlib ${ROOT}/usr/$(exhost --target)"
+)
+
+src_configure() {
+    append-cppflags -DNDEBUG
+    default
+}
+
+src_install() {
+    default
+    bash-completion_src_install
+    keepdir /var/lib/games/netmaumau
+    chown nobody:nogroup "${IMAGE%/}"/var/lib/games/netmaumau
+}
+
+pkg_postinst() {
+    # if there is a running nmm-server started by xinetd
+    # than it get stopped, so the next connection attempt
+    # will use the newly installed instance
+    if [ -n "`pgrep -f "nmm-server"`" ]; then
+                if [ -n "`pgrep -f "inetd"`" ]; then
+            elog "Detected a NetMauMau server started from (x)inetd."
+                        elog "Stopping nmm-server to spawn the newly installed instance at next request …"
+                        killall nmm-server 2> /dev/null
+                fi
+    fi
+}
+
