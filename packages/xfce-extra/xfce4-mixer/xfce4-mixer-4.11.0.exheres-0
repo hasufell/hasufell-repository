@@ -1,0 +1,26 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require xfce [ module=apps ]
+
+SUMMARY="A volume control application (and panel plug-in) for the Xfce desktop environment"
+HOMEPAGE="http://goodies.xfce.org/projects/applications/${PN}"
+
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/glib:2
+        dev-libs/keybinder
+        dev-libs/unique
+        x11-libs/gtk+:2
+        xfce-base/libxfce4ui
+        xfce-base/libxfce4util
+        xfce-base/xfce4-panel
+        xfce-base/xfconf
+    run:
+        media-plugins/gst-plugins-base:0.10[gstreamer_plugins:alsa]
+"
+
