@@ -1,0 +1,223 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+# TODO/FIXME:
+# lunatic broken
+# lunatic? ( >=dev-lang/luajit-2.0.0_beta10:2 )
+# $(usex lunatic "LUNATIC=1" "LUNATIC=0")
+#
+# extras? ( games-fps/${PN}-extras )
+#
+# clang does not build
+
+SCM_SVN_RAW_URI=1
+SCM_REPOSITORY="http://svn.eduke32.com/eduke32/polymer/eduke32"
+
+require gtk-icon-cache scm-svn
+
+MY_PV=${PV%.*}
+MY_BUILD=${PV#*.}
+
+# extensions
+MY_HRP=5.2
+MY_SC55=3.0
+MY_OPL=2.0
+MY_XXX=1.33
+
+DESCRIPTION="Port of Duke Nukem 3D for SDL"
+HOMEPAGE="http://www.eduke32.com/ http://hrp.duke4.net/"
+DOWNLOADS="http://dev.gentoo.org/~hasufell/distfiles/eduke32-icons.tar
+    hires-textures? ( mirror://gentoo/duke3d_hrp_${MY_HRP}.zip )
+    sc55-musicpack? ( http://www.duke4.org/files/nightfright/music/duke3d_mus.zip -> duke3d_mus_${MY_SC55}.zip )
+    opl-musicpack? ( http://www.duke4.org/files/nightfright/music/duke3d_musopl.zip -> duke3d_musopl_${MY_OPL}.zip )
+    offensive? ( http://www.duke4.org/files/nightfright/duke3d_xxx.zip -> duke3d_xxx_${MY_XXX}.zip )"
+
+LICENCES="GPL-2 BUILDLIC hires-textures? ( hrp_art )"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    offensive [[ requires = hires-textures
+                 description = [ Include optional XXX texture pack ] ]]
+    hires-textures [[ description = [ Include optional high-resolution
+                                      textures ] ]]
+    tools [[ description = [ Build several tools for modding and
+                             development ] ]]
+    vpx [[ description = [ Enable support for WebM VP8 Codecs ] ]]
+    ( opl-musicpack sc55-musicpack ) [[ number-selected = at-most-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/SDL_mixer:0[midi]
+        media-libs/flac
+        media-libs/libogg
+        media-libs/libpng:=
+        media-libs/libvorbis
+        sys-libs/zlib
+        x11-dri/glu
+        x11-dri/mesa
+        x11-libs/gtk+:2
+        vpx? ( media-libs/libvpx )
+    suggestion:
+        games-fps/duke3d-data [[ description = [ Install data portion via
+                                                 GOG installer ] ]]
+"
+
+src_unpack() {
+    unpack eduke32-icons.tar
+    scm_src_unpack
+
+    if option hires-textures; then
+        edo unzip -q "${FETCHEDDIR}"/duke3d_hrp_${MY_HRP}.zip "hrp_readme.txt"
+        if option offensive; then
+            edo unzip -q "${FETCHEDDIR}"/duke3d_xxx_${MY_XXX}.zip "xxx_readme.txt"
+        fi
+    fi
+    if option opl-musicpack; then
+        edo unzip -q "${FETCHEDDIR}"/duke3d_musopl_${MY_OPL}.zip "readme.txt"
+        edo mv readme.txt musopl_readme.txt
+    elif option sc55-musicpack; then
+        edo unzip -q "${FETCHEDDIR}"/duke3d_mus_${MY_SC55}.zip "music_readme.txt"
+    fi
+}
+
+src_prepare() {
+    edo sed -i \
+        -e "s;/usr/local/share/games/${PN};/usr/share/duke3d;" \
+        source/common.c
+    edo sed -i \
+        -e "/OSD_SetLogFile/s;mapster32.log;~/.mapster32.log;" \
+        source/astub.c
+    edo sed -i \
+        -e "/OSD_SetLogFile/s;${PN}.log;~/.${PN}.log;" \
+        source/game.c
+    edo sed -i \
+        -e "s|pkg-config|${PKG_CONFIG}|" \
+        Makefile
+}
+
+src_compile() {
+    local MY_OPTS=(
+        AR=${AR}
+        AS=${AS}
+        CC=${CC}
+        CXX=${CXX}
+        RANLIB=${RANLIB}
+        STRIP=touch
+
+        ARCH=
+        CPLUSPLUS=0
+        DEBUGANYWAY=0
+        F_JUMP_TABLES=""
+        LINKED_GTK=1
+        LTO=0
+        LUNATIC=0
+        NETCODE=1
+        NOASM=1
+        POLYMER=1
+        PRETTY_OUTPUT=0
+        RELEASE=1
+        SDL_TARGET=1
+        SYSARCH=
+        USE_LIBPNG=1
+        USE_OPENGL=1
+        WITHOUT_GTK=0
+
+        $(usex vpx "USE_LIBVPX=1" "USE_LIBVPX=0")
+    )
+
+    emake ${MY_OPTS[@]}
+    emake ${MY_OPTS[@]} $(option tools "utils" "")
+}
+
+src_install() {
+    local ARGS
+
+    newbin ${PN} ${PN}.bin
+    dobin mapster32
+
+    if option tools; then
+        dobin {arttool,bsuite,cacheinfo,generateicon,givedepth,kextract,kgroup,kmd2tool,md2tool,mkpalette,transpal,unpackssi,wad2art,wad2map}
+        dodoc build/doc/*.txt
+    fi
+
+    insinto "/usr/share/${PN}"
+    # Install optional components
+    if option hires-textures; then
+        newins "${FETCHEDDIR}"/duke3d_hrp_${MY_HRP}.zip duke3d_hrp.zip
+        dodoc "${WORKBASE}"/hrp_readme.txt
+        ARGS+=" -g duke3d_hrp.zip"
+
+        if option offensive; then
+            newins "${FETCHEDDIR}"/duke3d_xxx_${MY_XXX}.zip duke3d_xxx.zip
+            dodoc "${WORKBASE}"/xxx_readme.txt
+            ARGS+=" -g duke3d_xxx.zip"
+        fi
+    fi
+
+    if option opl-musicpack; then
+        newins "${FETCHEDDIR}"/duke3d_musopl_${MY_OPL}.zip duke3d_musopl.zip
+        dodoc "${WORKBASE}"/musopl_readme.txt
+        ARGS+=" -g duke3d_musopl.zip"
+    elif option sc55-musicpack; then
+        newins "${FETCHEDDIR}"/duke3d_mus_${MY_SC55}.zip duke3d_mus.zip
+        dodoc "${WORKBASE}"/music_readme.txt
+        ARGS+=" -g duke3d_mus.zip"
+    fi
+
+    # Install game data
+    doins package/sdk/{SEHELP.HLP,STHELP.HLP,m32help.hlp,names.h,tiles.cfg}
+
+    local i
+    for i in 16 32 128 256 ; do
+        insinto /usr/share/icons/hicolor/${i}x${i}/apps
+        newins "${WORKBASE}"/${PN}_${i}x${i}x32.png ${PN}.png
+        newins "${WORKBASE}"/mapster32_${i}x${i}x32.png mapster32.png
+    done
+
+    herebin ${PN} << EOF
+#!/bin/sh
+exec /usr/bin/eduke32.bin ${ARGS} "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=EDuke32
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}
+TryExec=${PN}
+Icon=${PN}
+Categories=Game;ActionGame;
+EOF
+
+    hereins mapster32.desktop << EOF
+[Desktop Entry]
+Name=Mapster32
+Type=Application
+Comment=${SUMMARY}
+Exec=mapster32
+TryExec=mapster32
+Icon=mapster32
+Categories=Game;ActionGame;
+EOF
+
+    dodoc build/buildlic.txt
+
+    keepdir /var/log/eduke32
+}
+
+pkg_postinst() {
+    gtk-icon-cache_pkg_postinst
+
+    einfo
+    elog "${PN} reads data files from /usr/share/duke3d"
+    elog "make sure the game files are there (either copied or linked)."
+    einfo
+    elog "Logs are written to ~/.eduke32.log and ~/.mapster32.log"
+}
+
