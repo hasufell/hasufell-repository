@@ -21,7 +21,7 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${PN}-${MODULE_VERSION}
 
 src_install() {
-	dobin xxdi.pl
-	dodoc README.md
+    dobin xxdi.pl
+    dodoc README.md
 }
 

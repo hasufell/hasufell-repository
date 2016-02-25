@@ -28,19 +28,19 @@ DEPENDENCIES="
 WORK=${WORKBASE}/NetMauMau-Qt-Client-${PV}
 
 src_configure() {
-	if option espeak; then USE_ESPEAK='CONFIG+=espeak'; fi
-	EQMAKE_SOURCES="nmm-qt-client.pro" eqmake $USE_ESPEAK
-	lrelease -compress -nounfinished -removeidentical -silent src/src.pro
+    if option espeak; then USE_ESPEAK='CONFIG+=espeak'; fi
+    EQMAKE_SOURCES="nmm-qt-client.pro" eqmake $USE_ESPEAK
+    lrelease -compress -nounfinished -removeidentical -silent src/src.pro
 }
 
 src_install() {
-	dobin src/nmm-qt-client
-	dodoc src/THANKS
+    dobin src/nmm-qt-client
+    dodoc src/THANKS
     insinto /usr/share/icons/hicolor/256x256/apps
     doins src/nmm_qt_client.png
     insinto /usr/share/applications
     doins src/nmm_qt_client.desktop
-	insinto /usr/share/nmm-qt-client
-	doins src/*.qm
+    insinto /usr/share/nmm-qt-client
+    doins src/*.qm
 }
 
