@@ -1,0 +1,46 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+GOG_FILE="gog_duke_nukem_3d_atomic_edition_2.0.0.8.sh"
+SUMMARY="Duke Nukem 3D data files"
+HOMEPAGE="http://www.3drealms.com/"
+DOWNLOADS="manual: ${GOG_FILE}"
+
+LICENCES="DUKE3D GOG-EULA"
+SLOT="0"
+PLATFORMS="amd64 hppa ppc x86"
+MYOPTIONS=""
+RESTRICT="mirror bindist fetch"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+"
+
+WORK=${WORKBASE}
+
+pkg_nofetch() {
+    einfo "Please download ${GOG_FILE} from your GOG.com account"
+    einfo "after buying Duke Nukem 3d"
+    einfo "and put it into ${FETCHEDDIR}."
+}
+
+src_unpack() {
+	unzip -qo "${FETCHEDDIR}"/${GOG_FILE}
+	[[ $? -le 1 ]] || die "unpacking ${GOG_FILE} failed"
+
+    edo cd data/noarch/data
+
+    # convert to lowercase
+    find . -type f \
+        -execdir sh -c 'echo "converting ${1} to lowercase"
+        lower="`echo "${1}" | tr [:upper:] [:lower:]`"
+        [ "${1}" = "${lower}" ] || mv "${1}" "${lower}"' - {} \;
+}
+
+src_install() {
+    insinto /usr/share/duke3d
+
+    doins data/noarch/data/{duke3d.grp,duke.rts,game.con,user.con,demo?.dmo,defs.con}
+}
+
