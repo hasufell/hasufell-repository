@@ -9,16 +9,16 @@ UPDATE_PV=${PV:0:3}.${FULL_P#*full}
 SUMMARY="Hollywood tactical shooter based on the ioquake3 engine"
 HOMEPAGE="http://www.urbanterror.info/home/"
 DOWNLOADS="http://up.barbatos.fr/urt/${FULL_P}.zip
-	https://github.com/Barbatos/ioq3-for-UrbanTerror-4/archive/release-${ENGINE_PV}.tar.gz -> ${PN}-${ENGINE_PV}.tar.gz
-	http://upload.wikimedia.org/wikipedia/en/5/56/Urbanterror.svg -> ${PN}.svg"
+    https://github.com/Barbatos/ioq3-for-UrbanTerror-4/archive/release-${ENGINE_PV}.tar.gz -> ${PN}-${ENGINE_PV}.tar.gz
+    http://upload.wikimedia.org/wikipedia/en/5/56/Urbanterror.svg -> ${PN}.svg"
 
 # fetch updates
 if [[ ${FULL_P#*full} != ${PV#*.} ]] ; then
-	UPDATE_I=${UPDATE_PV:5:2}
-	while [[ ${UPDATE_I} -lt ${PV:5:2} ]] ; do
-		DOWNLOADS="${DOWNLOADS} http://up.barbatos.fr/urt/UrbanTerror-${PV:0:5}${UPDATE_I}-to-${PV:0:5}$(( ${UPDATE_I} + 1)).zip"
-		UPDATE_I=$(( ${UPDATE_I} + 1))
-	done
+    UPDATE_I=${UPDATE_PV:5:2}
+    while [[ ${UPDATE_I} -lt ${PV:5:2} ]] ; do
+        DOWNLOADS="${DOWNLOADS} http://up.barbatos.fr/urt/UrbanTerror-${PV:0:5}${UPDATE_I}-to-${PV:0:5}$(( ${UPDATE_I} + 1)).zip"
+        UPDATE_I=$(( ${UPDATE_I} + 1))
+    done
 fi
 unset UPDATE_I
 
@@ -35,12 +35,12 @@ DEPENDENCIES="
     build:
         virtual/unzip
     build+run:
-		media-libs/SDL:0[X]
-		media-libs/libogg
-		net-misc/curl
+        media-libs/SDL:0[X]
+        media-libs/libogg
+        net-misc/curl
         media-libs/libvorbis
         x11-dri/mesa
-	"
+    "
 
 WORK=${WORKBASE}/ioq3-for-UrbanTerror-4-release-${ENGINE_PV}
 S_DATA=${WORKBASE}/UrbanTerror42
@@ -50,45 +50,45 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 src_unpack() {
-	local UPDATE_I
-	default
-	# apply updates
-	if [[ ${FULL_P#*full} != ${PV##*.} ]] ; then
-		UPDATE_I=${UPDATE_PV:5:2}
-		while [[ ${UPDATE_I} -lt ${PV:5:2} ]] ; do
-			edo cp -dRpf \
-				"${WORKBASE}"/UrbanTerror-${PV:0:5}${UPDATE_I}-to-${PV:0:5}$((${UPDATE_I} + 1))/* \
-				"${S_DATA}"/
-			UPDATE_I=$(( ${UPDATE_I} + 1))
-		done
-	fi
+    local UPDATE_I
+    default
+    # apply updates
+    if [[ ${FULL_P#*full} != ${PV##*.} ]] ; then
+        UPDATE_I=${UPDATE_PV:5:2}
+        while [[ ${UPDATE_I} -lt ${PV:5:2} ]] ; do
+            edo cp -dRpf \
+                "${WORKBASE}"/UrbanTerror-${PV:0:5}${UPDATE_I}-to-${PV:0:5}$((${UPDATE_I} + 1))/* \
+                "${S_DATA}"/
+            UPDATE_I=$(( ${UPDATE_I} + 1))
+        done
+    fi
 }
 
 src_compile() {
-	env -u TARGETS -u PLATFORM emake \
-		ARCH=$(option platform:amd64 "x86_64" "i386") \
+    env -u TARGETS -u PLATFORM emake \
+        ARCH=$(option platform:amd64 "x86_64" "i386") \
         PLATFORM=linux \
-		DEFAULT_BASEDIR="/usr/share/${PN}" \
-		BUILD_CLIENT=1 \
-		BUILD_CLIENT_SMP=0 \
-		BUILD_SERVER=1 \
-		USE_SDL=1 \
-		USE_OPENAL=0 \
-		USE_OPENAL_DLOPEN=0 \
-		USE_CODEC_VORBIS=1 \
-		USE_ALTGAMMA=$(option altgamma 1 0) \
-		USE_LOCAL_HEADERS=0 \
-		Q="" \
-		release
+        DEFAULT_BASEDIR="/usr/share/${PN}" \
+        BUILD_CLIENT=1 \
+        BUILD_CLIENT_SMP=0 \
+        BUILD_SERVER=1 \
+        USE_SDL=1 \
+        USE_OPENAL=0 \
+        USE_OPENAL_DLOPEN=0 \
+        USE_CODEC_VORBIS=1 \
+        USE_ALTGAMMA=$(option altgamma 1 0) \
+        USE_LOCAL_HEADERS=0 \
+        Q="" \
+        release
 }
 
 src_install() {
     local my_arch=$(option platform:amd64 "x86_64" "i386")
 
-	dodoc ChangeLog README md4-readme.txt
-	dodoc "${S_DATA}"/q3ut4/readme42.txt
-	insinto /usr/share/${PN}/q3ut4
-	doins "${S_DATA}"/q3ut4/*.pk3
+    dodoc ChangeLog README md4-readme.txt
+    dodoc "${S_DATA}"/q3ut4/readme42.txt
+    insinto /usr/share/${PN}/q3ut4
+    doins "${S_DATA}"/q3ut4/*.pk3
 
     newbin build/release-linux-${my_arch}/Quake3-UrT.${my_arch} ${PN}
     insinto /usr/share/icons/hicolor/scalable/apps

@@ -26,8 +26,8 @@ pkg_nofetch() {
 }
 
 src_unpack() {
-	unzip -qo "${FETCHEDDIR}"/${GOG_FILE}
-	[[ $? -le 1 ]] || die "unpacking ${GOG_FILE} failed"
+    unzip -qo "${FETCHEDDIR}"/${GOG_FILE}
+    [[ $? -le 1 ]] || die "unpacking ${GOG_FILE} failed"
 
     edo cd data/noarch/data
 
