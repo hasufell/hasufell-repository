@@ -1,0 +1,27 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+MODULE_VERSION=001
+
+SUMMARY="Simple alternative to vim's 'xxd -i' mode"
+HOMEPAGE="https://github.com/gregkh/xxdi"
+DOWNLOADS="https://github.com/gregkh/xxdi/archive/v${MODULE_VERSION}.tar.gz -> ${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    run:
+        dev-lang/perl:*
+        dev-perl/File-Slurp
+"
+
+WORK=${WORKBASE}/${PN}-${MODULE_VERSION}
+
+src_install() {
+	dobin xxdi.pl
+	dodoc README.md
+}
+
