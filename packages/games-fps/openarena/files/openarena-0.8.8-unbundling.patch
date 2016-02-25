@@ -1,3 +1,7 @@
+Source: from Gentoo, original author unknown
+Upstream: no
+Reason: unbundling jpeg
+
 --- openarena-engine-source-0.8.8/Makefile
 +++ openarena-engine-source-0.8.8/Makefile
 @@ -1406,41 +1406,7 @@
