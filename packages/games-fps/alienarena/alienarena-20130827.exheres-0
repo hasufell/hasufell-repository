@@ -1,0 +1,73 @@
+# Copyright 2016 Julian Ospald <hasufell@poste.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+MY_PN=alienarena-7.66
+SUMMARY="Fast-paced multiplayer deathmatch game"
+HOMEPAGE="http://red.planetarena.org/"
+DOWNLOADS="http://icculus.org/alienarena/Files/${MY_PN}-linux${PV}.tar.gz
+	http://red.planetarena.org/files/${MY_PN}-linux${PV}.tar.gz"
+
+LICENCES="GPL-2 free-noncomm"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+        x11-proto/xf86dgaproto
+        x11-proto/xf86vidmodeproto
+    build+run:
+        media-libs/freetype:2
+        media-libs/libvorbis
+        media-libs/openal
+        net-misc/curl
+        sys-libs/zlib
+        x11-dri/glu
+        x11-dri/mesa
+        x11-libs/libXxf86dga
+        x11-libs/libXxf86vm
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+"
+
+WORK=${WORKBASE}/${MY_PN/_/.}
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PNV}-format.patch
+)
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-documents
+    --enable-client
+    --with-icondir=/usr/share/icons/hicolor/48x48/apps/
+    --with-xf86dga
+    --with-xf86vm
+    --with-zlib
+    --without-system-libode
+)
+
+src_compile() {
+    emake AR=${AR}
+}
+
+src_install() {
+	default
+
+    insinto /usr/share/applications/
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=Alien Arena
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}
+TryExec=${PN}
+Icon=${PN}
+Categories=Game;ActionGame;
+EOF
+}
+
