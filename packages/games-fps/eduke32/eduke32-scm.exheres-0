@@ -106,6 +106,7 @@ src_compile() {
         CC=${CC}
         CXX=${CXX}
         RANLIB=${RANLIB}
+        CUSTOMOPT="${CFLAGS}"
         STRIP=touch
 
         ARCH=
@@ -117,6 +118,7 @@ src_compile() {
         LUNATIC=0
         NETCODE=1
         NOASM=1
+        OPTLEVEL=0
         POLYMER=1
         PRETTY_OUTPUT=0
         RELEASE=1
@@ -129,8 +131,10 @@ src_compile() {
         $(usex vpx "USE_LIBVPX=1" "USE_LIBVPX=0")
     )
 
-    emake ${MY_OPTS[@]}
-    emake ${MY_OPTS[@]} $(option tools "utils" "")
+    emake "${MY_OPTS[@]}"
+    if option tools ; then
+        emake "${MY_OPTS[@]}" utils
+    fi
 }
 
 src_install() {
@@ -207,8 +211,6 @@ Categories=Game;ActionGame;
 EOF
 
     dodoc build/buildlic.txt
-
-    keepdir /var/log/eduke32
 }
 
 pkg_postinst() {
