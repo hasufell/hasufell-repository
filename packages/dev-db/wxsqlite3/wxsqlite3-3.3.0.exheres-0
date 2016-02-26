@@ -18,13 +18,15 @@ DEPENDENCIES="
         x11-libs/wxGTK:${SLOT}[providers:gtk3?][providers:gtk2?]
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --enable-shared
-    --enable-unicode
-    --with-wx-config="/usr/$(exhost --target)/lib/wx/config/gtk3-unicode-3.0"
-    --with-wxshared
-    --with-sqlite3-prefix="/usr/$(exhost --target)"
-)
+src_configure() {
+    econf \
+        --enable-shared \
+        --enable-unicode \
+        --with-wx-config="/usr/$(exhost --target)/lib/wx/config/$(option providers:gtk3 'gtk3' 'gtk2')-unicode-3.0" \
+        --with-wxshared \
+        --with-sqlite3-prefix="/usr/$(exhost --target)"
+
+}
 
 src_install() {
     default
