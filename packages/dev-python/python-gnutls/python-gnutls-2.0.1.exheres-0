@@ -13,6 +13,6 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     run:
-        dev-libs/gnutls
+        dev-libs/gnutls[<3.4.9] [[ note = [ needs libgnutls.so.28 ] ]]
 "
 
