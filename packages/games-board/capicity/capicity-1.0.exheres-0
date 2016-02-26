@@ -34,7 +34,7 @@ src_compile() {
 }
 
 src_install() {
-	local res
+    local res
 
     dobin "${WORK}"/Capid_${PV}/Capid
     dodoc "${WORK}"/Capid_${PV}/doc/*
