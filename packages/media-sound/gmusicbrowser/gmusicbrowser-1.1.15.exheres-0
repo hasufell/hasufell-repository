@@ -42,6 +42,13 @@ DEPENDENCIES="
                                              plugins ] ]]
 "
 
+src_prepare() {
+    edo sed -i \
+        -e "s|\$FindBin::RealBin\,'\.\.'|'/usr'|" \
+        -e "s|\$FindBin::RealBin\.SLASH\.'\.\.'|SLASH\.'usr'|" \
+        gmusicbrowser.pl
+}
+
 src_install() {
     emake \
         DOCS="AUTHORS NEWS README" \
