@@ -3,7 +3,7 @@
 
 require perl-module [ module_author=XAOC ]
 
-DESCRIPTION="Perl bindings for GStreamer"
+SUMMARY="Perl bindings for GStreamer"
 
 LICENCES="LGPL-2.1"
 SLOT="0"
