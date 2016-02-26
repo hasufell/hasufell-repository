@@ -1,0 +1,23 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=distutils blacklist="3" ]
+
+SUMMARY="Coroutine-based networking library"
+HOMEPAGE="http://sipsimpleclient.org"
+DOWNLOADS="http://download.ag-projects.com/SipClient/${PNV}.tar.gz"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+
+DEPENDENCIES="
+    run:
+        dev-python/greenlet[python_abis:*(-)?]
+        net-twisted/TwistedCore[python_abis:*(-)?]
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PNV}-libressl.patch" )
+
