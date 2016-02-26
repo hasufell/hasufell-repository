@@ -1,0 +1,62 @@
+# Copyright 2015-2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+require qmake [ slot=4 ]
+
+SUMMARY="A monopd compatible boardgame to play Monopoly-like games (previously named capitalism)"
+HOMEPAGE="http://linux-ecke.de/CapiCity/"
+DOWNLOADS="mirror://sourceforge/project/capitalism/Capi%20City/${PV}/Capid_${PV}.tar.gz
+    mirror://sourceforge/project/capitalism/Capi%20City/${PV}/CapiCity_${PV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        x11-libs/qt:4
+"
+
+WORK=${WORKBASE}
+
+src_configure() {
+    edo cd "${WORK}"/Capid_${PV}
+    EQMAKE_SOURCES="Capid.pro" eqmake
+    edo cd "${WORK}"/CapiCity_${PV}
+    EQMAKE_SOURCES="CapiCity.pro" eqmake
+}
+
+src_compile() {
+    emake -C "${WORK}"/Capid_${PV}
+    emake -C "${WORK}"/CapiCity_${PV}
+}
+
+src_install() {
+	local res
+
+    dobin "${WORK}"/Capid_${PV}/Capid
+    dodoc "${WORK}"/Capid_${PV}/doc/*
+
+    dobin "${WORK}"/CapiCity_${PV}/CapiCity
+    dodoc "${WORK}"/CapiCity_${PV}/{changelog,README}
+
+    for res in 16 22 24 32 48 64; do
+        insinto /usr/share/icons/hicolor/${rex}x${res}/apps
+        newins "${WORK}"/CapiCity_${PV}/icons/${res}x${res}.png ${PN}.png
+    done
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=CapiCity
+Comment=${SUMMARY}
+Exec=CapiCity
+Icon=${PN}
+Terminal=false
+Type=Application
+Categories=Game;BoardGame;
+EOF
+}
+
