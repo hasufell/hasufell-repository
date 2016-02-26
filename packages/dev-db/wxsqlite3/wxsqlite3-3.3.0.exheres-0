@@ -38,7 +38,7 @@ src_install() {
 
     edo sed \
         -e "s:prefix=/usr:prefix=/usr/$(exhost --target):" \
-        -e "s:wxcode_gtk2_wxsqlite3:wxcode_gtk${gtkver}_wxsqlite3:" \
+        -e "s:wxcode_gtk2_wxsqlite3:wxcode_gtk${gtkver}u_wxsqlite3:" \
         -e "s:@WXVERSION@:${SLOT}:g" \
         -e "s:@LIBDIR@:lib:g" \
         -e "s:@VERSION@:${PV}:g" \
