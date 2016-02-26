@@ -1,0 +1,59 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+require setup-py [ import=distutils blacklist="3" multibuild=false ]
+
+SUMMARY="A state of the art, easy to use SIP client"
+HOMEPAGE="http://iCanBlink.com"
+DOWNLOADS="http://download.ag-projects.com/BlinkQt/blink-${PV}.tar.gz"
+
+LICENCES="GPL-3"
+SLOT="0"
+MYOPTIONS=""
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build:
+        dev-python/Cython[python_abis:*(-)?]
+    build+run:
+        net-libs/libvncserver
+    run:
+        dev-python/PyQt4[webkit][python_abis:*(-)?]
+        dev-python/lxml[python_abis:*(-)?]
+        dev-python/python-application[python_abis:*(-)?]
+        dev-python/python-cjson[python_abis:*(-)?]
+        dev-python/python-dateutil[python_abis:*(-)?]
+        dev-python/python-eventlib[python_abis:*(-)?]
+        dev-python/python-sipsimple[python_abis:*(-)?]
+        dev-python/zopeinterface[python_abis:*(-)?]
+        net-twisted/TwistedCore[python_abis:*(-)?]
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/${PNV}-data-path.patch"
+)
+
+src_install() {
+    setup-py_src_install
+
+    insinto /usr/share/icons/hicolor/48x48/apps
+    newins resources/icons/blink48.png blink.png
+    insinto /usr/share/icons/hicolor/64x64/apps
+    newins resources/icons/blink64.png blink.png
+    insinto /usr/share/icons/hicolor/512x512/apps
+    doins resources/icons/blink.png
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=Blink
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}
+TryExec=${PN}
+Icon=${PN}
+Categories=Network;Telephony;
+EOF
+}
+
