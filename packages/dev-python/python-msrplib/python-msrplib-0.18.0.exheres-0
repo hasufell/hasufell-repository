@@ -1,0 +1,23 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=distutils blacklist="3" ]
+
+SUMMARY="Client library for MSRP protocol and its relay extension"
+HOMEPAGE="http://sipsimpleclient.org"
+DOWNLOADS="http://download.ag-projects.com/MSRP/python-msrplib-${PV}.tar.gz"
+
+LICENCES="LGPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    run:
+        dev-python/python-application[python_abis:*(-)?]
+        dev-python/python-eventlib[python_abis:*(-)?]
+        dev-python/python-gnutls[python_abis:*(-)?]
+        net-twisted/TwistedCore[python_abis:*(-)?]
+        net-twisted/TwistedNames[python_abis:*(-)?]
+"
+
