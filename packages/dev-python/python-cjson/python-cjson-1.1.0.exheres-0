@@ -1,0 +1,13 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require pypi setup-py [ import=distutils blacklist="3" ]
+
+SUMMARY="Fast JSON encoder/decoder for Python"
+HOMEPAGE="http://ag-projects.com/"
+
+LICENCES="LGPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
