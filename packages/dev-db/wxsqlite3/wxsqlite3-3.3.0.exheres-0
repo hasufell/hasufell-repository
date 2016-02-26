@@ -1,0 +1,26 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="C++ wrapper around the public domain SQLite 3.x database"
+HOMEPAGE="https://github.com/utelle/wxsqlite3"
+DOWNLOADS="https://github.com/utelle/wxsqlite3/archive/v${PV}.tar.gz -> ${PNV}.tar.gz"
+
+LICENCES="wxWinLL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+	build+run:
+		dev-db/sqlite:3
+		x11-libs/wxGTK:3.0
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-shared
+    --enable-unicode
+    --with-wx-config="/usr/$(exhost --target)/lib/wx/config/gtk3-unicode-3.0"
+    --with-wxshared
+    --with-sqlite3-prefix="/usr/$(exhost --target)"
+)
+
