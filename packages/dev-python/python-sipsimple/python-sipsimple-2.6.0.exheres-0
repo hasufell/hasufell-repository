@@ -1,0 +1,51 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=distutils blacklist="3" ]
+
+SUMMARY="SIP SIMPLE client SDK is a Software Development Kit"
+HOMEPAGE="http://sipsimpleclient.org"
+DOWNLOADS="http://download.ag-projects.com/SipClient/${PNV}.tar.gz"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        dev-python/Cython[python_abis:*(-)?]
+        virtual/pkg-config
+    build+run:
+        dev-db/sqlite:3
+        dev-python/python-application[python_abis:*(-)?]
+        media-libs/libvpx
+        media-libs/v4l-utils
+        media/ffmpeg
+        sys-apps/util-linux
+        sys-sound/alsa-lib
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
+    run:
+        dev-python/dnspython[python_abis:*(-)?]
+        dev-python/greenlet[python_abis:*(-)?]
+        dev-python/lxml[python_abis:*(-)?]
+        dev-python/python-cjson[python_abis:*(-)?]
+        dev-python/python-dateutil[python_abis:*(-)?]
+        dev-python/python-eventlib[python_abis:*(-)?]
+        dev-python/python-gnutls[python_abis:*(-)?]
+        dev-python/python-msrplib[python_abis:*(-)?]
+        dev-python/python-xcaplib[python_abis:*(-)?]
+        dev-python/zopeinterface[python_abis:*(-)?]
+        net-twisted/TwistedCore[python_abis:*(-)?]
+"
+
+src_compile() {
+    # breaks horribly with 'ld'
+    export LD=${CC}
+
+    setup-py_src_compile
+}
+
