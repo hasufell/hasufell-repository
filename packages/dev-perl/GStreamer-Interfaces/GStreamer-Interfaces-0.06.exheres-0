@@ -1,0 +1,22 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require perl-module [ module_author=TSCH ]
+
+SUMMARY="Perl interface to the GStreamer Interfaces library"
+
+LICENCES="LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    build:
+        dev-perl/ExtUtils-Depends
+        dev-perl/ExtUtils-PkgConfig
+        virtual/pkg-config
+    build+run:
+        dev-perl/GStreamer
+        dev-perl/Glib-Perl
+        media-plugins/gst-plugins-base:0.10
+"
+
