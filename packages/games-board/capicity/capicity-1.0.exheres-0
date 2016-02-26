@@ -43,7 +43,7 @@ src_install() {
     dodoc "${WORK}"/CapiCity_${PV}/{changelog,README}
 
     for res in 16 22 24 32 48 64; do
-        insinto /usr/share/icons/hicolor/${rex}x${res}/apps
+        insinto /usr/share/icons/hicolor/${res}x${res}/apps
         newins "${WORK}"/CapiCity_${PV}/icons/${res}x${res}.png ${PN}.png
     done
 
