@@ -1,0 +1,61 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require lua [ whitelist="5.1" multibuild="false" ]
+
+if [[ -n ${LOVE_AUTOCONF} ]]; then
+    require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+fi
+
+export_exlib_phases src_prepare src_install
+
+SUMMARY="A framework for 2D games in Lua"
+HOMEPAGE="http://love2d.org/"
+DOWNLOADS="https://bitbucket.org/rude/love/downloads/love-${PV}-linux-src.tar.gz"
+
+LICENCES="ZLIB"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        dev-games/physfs
+        dev-lang/lua:5.1
+        media-libs/DevIL[mng][tiff]
+        media-libs/SDL:2[X]
+        media-libs/freetype:2
+        media-libs/libmodplug
+        media-libs/libtheora
+        media-libs/libvorbis
+        media-libs/openal
+        media-sound/mpg123
+        x11-dri/mesa
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-shared
+    --enable-static
+)
+
+if ever at_least 0.9.0; then
+    DEFAULT_SRC_CONFIGURE_PARAMS+=( --with-lua=lua )
+fi
+
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( "readme.md" "changes.txt" )
+
+love_src_prepare() {
+    if [[ -n ${LOVE_AUTOCONF} ]]; then
+        edo cp platform/unix/{configure.ac,Makefile.am} .
+        edo bash platform/unix/genmodules
+        eautoreconf
+    else
+        default
+    fi
+}
+
+love_src_install() {
+    newbin src/${PN} ${PN}-${SLOT}
+    emagicdocs
+}
+
