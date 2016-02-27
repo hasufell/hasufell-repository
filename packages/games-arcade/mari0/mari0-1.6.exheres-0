@@ -1,0 +1,56 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+MY_PNV=${PNV/-/_}
+LOVE_SLOT="0.8"
+
+DESCRIPTION="A mix from Nintendo's Super Mario Bros and Valve's Portal"
+HOMEPAGE="http://stabyourself.net/mari0/"
+DOWNLOADS="http://stabyourself.net/dl.php?file=mari0-1006/mari0-source.zip -> ${PNV}.zip"
+
+LICENCES="CCPL-Attribution-NonCommercial-ShareAlike-3.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+RESTRICT="mirror"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+    run:
+        games-engines/love:${LOVE_SLOT}
+        media-libs/DevIL
+"
+
+WORK=${WORKBASE}
+
+src_install() {
+    local dir=/usr/share/love/${PN}
+
+    exeinto "${dir}"
+    doexe ${MY_PNV}.love
+
+    insinto /usr/share/icons/hicolor/scalable/apps
+    doins "${FILES}"/${PN}.svg
+
+    herebin ${PN} << EOF
+#!/bin/sh
+cd "/usr/share/love/mari0"
+exec love-${LOVE_SLOT} ${MY_PNV}.love "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=mari0
+Type=Application
+Comment=${SUMMARY}
+Exec=mari0
+TryExec=mari0
+Icon=mari0
+Categories=Game;ArcadeGame;
+EOF
+}
+
