@@ -1,0 +1,115 @@
+# Copyright 1999-2015 Gentoo Foundation
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake [ out_of_source=false ]
+
+SUMMARY="cross-platform multimedia library"
+HOMEPAGE="http://alleg.sourceforge.net/"
+DOWNLOADS="mirror://sourceforge/alleg/${PNV}.tar.gz"
+
+LICENCES="Allegro MIT GPL-2 ZLIB"
+SLOT="0"
+PLATFORMS="amd64 ~mips ppc ppc64 x86"
+MYOPTIONS="
+    alsa
+    fbcon [[ description = [ Add framebuffer support for the console,
+                             via the kernel ] ]]
+    jack
+    opengl
+    oss
+    ogg
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+        x11-proto/xextproto
+        x11-proto/xf86dgaproto
+        x11-proto/xf86vidmodeproto
+        x11-proto/xproto
+    build+run:
+        media-libs/libpng:=
+        x11-libs/libX11
+        x11-libs/libXcursor
+        x11-libs/libXext
+        x11-libs/libXpm
+        x11-libs/libXt
+        x11-libs/libXxf86dga
+        x11-libs/libXxf86vm
+        alsa? ( sys-sound/alsa-lib )
+        jack? ( media-sound/jack-audio-connection-kit )
+        ogg? ( media-libs/libvorbis )
+        opengl? (
+            x11-dri/glu
+            x11-dri/mesa
+        )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PNV}-shared.patch
+    "${FILES}"/${PNV}-underlink.patch
+    "${FILES}"/${PNV}-gentoo.patch
+    "${FILES}"/${PNV}-rpath.patch
+
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    "-DDOCDIR=share/doc"
+    "-DINFODIR=share/info"
+    "-DMANDIR=share/man"
+    "-DWANT_EXAMPLES=OFF"
+    "-DWANT_JPGALLEG=ON"
+    "-DWANT_LINUX_CONSOLE=OFF"
+    "-DWANT_LINUX_SVGALIB=OFF"
+    "-DWANT_LINUX_VGA=ON"
+    "-DWANT_LOADPNG=ON"
+    "-DWANT_TOOLS=ON"
+    "-DWANT_X11=ON"
+)
+
+CMAKE_SRC_CONFIGURE_OPTION_WANTS=(
+    "alsa   ALSA"
+    "fbcon  LINUX_FBCON"
+    "jack   JACK"
+    "ogg    LOGG"
+    "opengl ALLEGROGL"
+    "oss    OSS"
+)
+
+CMAKE_SRC_CONFIGURE_TESTS=(
+    "-DWANT_TESTS=ON"
+)
+
+src_prepare() {
+    default
+
+    edo sed -i \
+        -e "s:allegro-\${ALLEGRO_VERSION}:${PNVR}:" \
+        docs/CMakeLists.txt
+}
+
+src_install() {
+    cmake_src_install
+
+    newbin setup/setup ${PN}-setup
+    insinto /usr/share/${PN}
+    doins {keyboard,language,setup/setup}.dat
+    insinto /usr/share/pixmaps
+    newins misc/icon.png ${PN}.png
+    insinto /usr/share/applications
+    hereins ${PN}-setup.desktop << EOF
+[Desktop Entry]
+Name=Allegro Setup
+Type=Application
+Comment=${SUMMARY}
+Exec=allegro-setup
+TryExec=allegro-setup
+Icon=allegro
+Categories=Settings;
+EOF
+}
+
