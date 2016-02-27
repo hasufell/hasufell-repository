@@ -41,7 +41,7 @@ WORK=${WORKBASE}/${PNV}-source/module
 src_prepare() {
     export CFLAGS="${CFLAGS} $(${PKG_CONFIG} --cflags fribidi)"
 
-	edo find "${WORK}" -name '*.py[co]' -print -delete
+    edo find "${WORK}" -name '*.py[co]' -print -delete
     edo sed -i -e 's:usr/bin/env python$:usr/bin/env python2:' \
         "${WORKBASE}"/${PNV}-source/renpy.py \
         "${WORKBASE}"/${PNV}-source/launcher/game/tkaskdir.py
