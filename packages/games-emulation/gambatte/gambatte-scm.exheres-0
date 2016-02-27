@@ -1,0 +1,96 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require qmake
+require scons
+require github [ user=sinamas ]
+
+SUMMARY="An accuracy-focused Gameboy / Gameboy Color emulator"
+HOMEPAGE="http://sourceforge.net/projects/gambatte"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    (
+      qt4 [[ description = [ build qt4 frontend with real GUI ] ]]
+      sdl [[ description = [ build sdl fronted, start via cli ] ]]
+    ) [[ number-selected = at-least-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        sys-libs/zlib
+        qt4? (
+            sys-sound/alsa-lib
+            x11-libs/libX11
+            x11-libs/libXext
+            x11-libs/libXrandr
+            x11-libs/libXv
+            x11-libs/qt:4[opengl]
+        )
+        sdl? ( media-libs/SDL:0[X] )
+"
+
+fix_scons() {
+	local i
+	for i; do
+		cat >> $i << END || die
+import os
+import SCons.Util
+
+if os.environ.has_key('AR'):
+	env['AR'] = os.environ['AR']
+if os.environ.has_key('RANLIB'):
+	env['RANLIB'] = os.environ['RANLIB']
+if os.environ.has_key('CC'):
+	env['CC'] = os.environ['CC']
+if os.environ.has_key('CFLAGS'):
+	env['CCFLAGS'] += SCons.Util.CLVar(os.environ['CFLAGS'])
+if os.environ.has_key('CXX'):
+	env['CXX'] = os.environ['CXX']
+if os.environ.has_key('CXXFLAGS'):
+	env['CXXFLAGS'] += SCons.Util.CLVar(os.environ['CXXFLAGS'])
+if os.environ.has_key('CPPFLAGS'):
+	env['CCFLAGS'] += SCons.Util.CLVar(os.environ['CPPFLAGS'])
+if os.environ.has_key('LDFLAGS'):
+	env['LINKFLAGS'] += SCons.Util.CLVar(os.environ['LDFLAGS'])
+END
+	done
+}
+
+src_prepare() {
+	fix_scons {gambatte_sdl,libgambatte}/SConstruct
+}
+
+src_configure() {
+	if option qt4; then
+		edo cd "${WORK}"/gambatte_qt
+		eqmake ${PN}_qt.pro
+	fi
+}
+
+src_compile() {
+	# build core library
+	edo cd "${WORK}"/libgambatte
+	escons
+
+	# build sdl frontend
+	if option sdl; then
+		edo cd "${WORK}"/gambatte_sdl
+		escons
+	fi
+
+	# build qt frontend
+	if option qt4; then
+		emake -C "${WORK}"/gambatte_qt
+	fi
+}
+
+src_install() {
+	option sdl && dobin gambatte_sdl/gambatte_sdl
+	option qt4 && dobin gambatte_qt/bin/gambatte_qt
+
+	nonfatal dodoc README changelog
+}
+
