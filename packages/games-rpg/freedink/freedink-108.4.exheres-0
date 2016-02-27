@@ -1,0 +1,61 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+DATA_V="1.08.20140901"
+
+SUMMARY="Dink Smallwood is an adventure/role-playing game, similar to Zelda (2D top view)"
+HOMEPAGE="http://www.freedink.org/"
+DOWNLOADS="mirror://gnu/freedink/${PNV}.tar.gz
+    mirror://gnu/freedink/${PN}-data-${DATA_V}.tar.gz"
+
+LICENCES="
+    GPL-3 [[ note = [ engine ] ]]
+    (
+        CCPL-Attribution-3.0
+        CCPL-Attribution-ShareAlike-3.0
+        FreeArt
+        GPL-2
+        GPL-3
+        OAL-1.0.1
+        WTFPL-2
+        ZLIB
+        public-domain
+    ) [[ note = [ data files ] ]]
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-libs/check
+        sys-devel/gettext
+        virtual/pkg-config
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/SDL_gfx:0
+        media-libs/SDL_image:1
+        media-libs/SDL_mixer:0[midi][ogg]
+        media-libs/SDL_ttf:0
+        media-libs/fontconfig
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-embedded-resources
+    --localedir="/usr/share/locale"
+    --enable-nls
+)
+
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=(
+    TROUBLESHOOTING
+)
+
+src_install() {
+    default
+
+    emake -C "${WORKBASE}/${PN}-data-${DATA_V}" \
+        DESTDIR="${IMAGE}" \
+        DATADIR="/usr/share" \
+        install
+}
+
