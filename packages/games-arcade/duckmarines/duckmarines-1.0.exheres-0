@@ -1,0 +1,55 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+LOVE_SLOT="0.9"
+
+SUMMARY="Free software ChuChu Rocket remake for PC"
+HOMEPAGE="http://tangramgames.dk/games/duckmarines/"
+DOWNLOADS="https://github.com/SimonLarsen/duckmarines/releases/download/v${PV}b/duckmarines-${PV}-love.zip"
+
+# no license info for Tserial.lua
+# https://love2d.org/wiki/Tserial
+LICENCES="
+    CCPL-Attribution-ShareAlike-4.0 [[ note = [ assets ] ]]
+    ZLIB [[ note = [ duckmarine code ] ]]
+    SLAM [[ note = [ slam.lua ] ]]
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+RESTRICT="mirror"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+    run:
+        games-engines/love:${LOVE_SLOT}
+"
+
+WORK=${WORK}-love
+
+src_install() {
+    local dir=/usr/share/love/${PN}
+
+    exeinto "${dir}"
+    newexe ${PNV}.love ${PN}.love
+
+    herebin ${PN} << EOF
+#!/bin/sh
+cd "/usr/share/love/${PN}"
+exec love-${LOVE_SLOT} ${PN}.love "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=${PN}
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}
+TryExec=${PN}
+Icon=${PN}
+Categories=Game;ArcadeGame;
+EOF
+}
+
