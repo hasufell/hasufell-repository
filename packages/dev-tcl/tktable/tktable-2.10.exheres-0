@@ -1,0 +1,38 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PNV="Tktable${PV}"
+
+SUMMARY="Full-featured 2D table widget"
+HOMEPAGE="http://tktable.sourceforge.net/"
+DOWNLOADS="mirror://sourceforge/tktable/${MY_PNV}.tar.gz"
+
+LICENCES="BSD-3"
+PLATFORMS="~amd64 ~x86"
+SLOT="0"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/tk[>=8.0]
+"
+
+WORK=${WORKBASE}/${MY_PNV}
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --hates=datarootdir
+    --hates=docdir
+)
+
+src_prepare() {
+    edo sed -i \
+        -e '/^install:/{s: install-doc::}' \
+        -e '/^PKG_EXTRA_FILES/{s:=.*:=:}' \
+        Makefile.in
+}
+
+src_install() {
+    default
+    edo rmdir "${IMAGE%/}"/usr/$(exhost --target)/bin
+}
+
