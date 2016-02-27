@@ -1,0 +1,110 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require alternatives
+require setup-py [ import=distutils multibuild=false blacklist=3 ]
+require gtk-icon-cache
+
+export_exlib_phases src_prepare src_install pkg_postinst
+
+SUMMARY="Visual novel engine written in python"
+DESCRIPTION="
+Ren'Py is a free and cross-platform visual novel engine that
+helps you use words,
+pictures, and sounds to tell stories with the computer.
+It's easy and efficient script language makes it possible for
+non-programmers to make visual novels,
+while its Python support allows for complex simulation games.
+"
+HOMEPAGE="http://www.renpy.org"
+DOWNLOADS="http://www.renpy.org/dl/${PV}/${PNV}-source.tar.bz2"
+
+LICENCES="MIT"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-python/Cython[python_abis:*(-)?]
+        virtual/pkg-config
+    build+run:
+        dev-libs/fribidi
+        media-libs/freetype:2
+        media-libs/glew
+        media-libs/libpng:=
+        media/ffmpeg
+        sys-libs/zlib
+"
+
+if ever at_least 6.99.0; then
+    DEPENDENCIES+="
+        build+run:
+            dev-python/pygame_sdl2[~${PV}][python_abis:*(-)?]
+            media-libs/SDL:2[X]
+    "
+else
+    DEPENDENCIES+="
+        build+run:
+            media-libs/SDL:0[X]
+    "
+fi
+
+
+WORK=${WORKBASE}/${PNV}-source/module
+
+renpy_src_prepare() {
+    export CFLAGS="${CFLAGS} $(${PKG_CONFIG} --cflags fribidi)"
+
+    edo find "${WORK}" -name '*.py[co]' -print -delete
+    edo sed -i -e 's:usr/bin/env python$:usr/bin/env python2:' \
+        "${WORKBASE}"/${PNV}-source/renpy.py \
+        "${WORKBASE}"/${PNV}-source/launcher/game/tkaskdir.py
+
+    setup-py_src_prepare
+}
+
+renpy_src_install() {
+    local renpydir="$(python_get_sitedir)/renpy-${SLOT}"
+
+    edo cd "${WORKBASE}"/${PNV}-source
+    insinto /usr/share/icons/hicolor/32x32/apps
+    newins launcher/game/images/logo32.png ${PN}-${SLOT}.png
+
+    # slightly weird directory structure
+    insinto "${renpydir}"
+    doins -r launcher templates the_question tutorial
+    doins -r renpy renpy.py
+
+    herebin ${PN}-${SLOT} << EOF
+#!/bin/sh
+
+exec python2 ${renpydir}/renpy.py "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}-${SLOT}.desktop <<EOF
+[Desktop Entry]
+Name=Ren'Py (${SLOT})
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}-${SLOT}
+TryExec=${PN}-${SLOT}
+Icon=${PN}-${SLOT}
+Categories=Game;
+EOF
+
+    edo cd "${WORK}"
+    SETUP_PY_SRC_INSTALL_PARAMS=( --install-lib="${renpydir}" )
+    setup-py_src_install
+
+    local host=$(exhost --target)
+    local binaries=( renpy renpy-${SLOT} )
+
+    for (( i = 0; i < ${#binaries[@]}; i++ )); do
+        alternatives_for _${host}_renpy ${SLOT} ${SLOT} /usr/${host}/bin/${binaries[i]} /usr/${host}/bin/${binaries[++i]}
+    done
+}
+
+renpy_pkg_postinst() {
+    alternatives_pkg_postinst
+}
+

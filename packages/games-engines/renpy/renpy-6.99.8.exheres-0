@@ -1,83 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require setup-py [ import=distutils multibuild=false blacklist=3 ]
-require gtk-icon-cache
+require renpy
 
-SUMMARY="Visual novel engine written in python"
-DESCRIPTION="
-Ren'Py is a free and cross-platform visual novel engine that
-helps you use words,
-pictures, and sounds to tell stories with the computer.
-It's easy and efficient script language makes it possible for
-non-programmers to make visual novels,
-while its Python support allows for complex simulation games.
-"
-HOMEPAGE="http://www.renpy.org"
-DOWNLOADS="http://www.renpy.org/dl/${PV}/${PNV}-source.tar.bz2"
-
-LICENCES="MIT"
-SLOT="0"
+SLOT="6.99"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
-
-DEPENDENCIES="
-    build:
-        dev-python/Cython[python_abis:*(-)?]
-        virtual/pkg-config
-    build+run:
-        dev-libs/fribidi
-        dev-python/pygame_sdl2[~${PV}][python_abis:*(-)?]
-        media-libs/SDL:2[X]
-        media-libs/freetype:2
-        media-libs/glew
-        media-libs/libpng:=
-        media/ffmpeg
-        sys-libs/zlib
-"
-
-WORK=${WORKBASE}/${PNV}-source/module
-
-src_prepare() {
-    export CFLAGS="${CFLAGS} $(${PKG_CONFIG} --cflags fribidi)"
-
-    edo find "${WORK}" -name '*.py[co]' -print -delete
-    edo sed -i -e 's:usr/bin/env python$:usr/bin/env python2:' \
-        "${WORKBASE}"/${PNV}-source/renpy.py \
-        "${WORKBASE}"/${PNV}-source/launcher/game/tkaskdir.py
-
-    setup-py_src_prepare
-}
-
-src_install() {
-    edo cd "${WORKBASE}"/${PNV}-source
-    insinto /usr/share/icons/hicolor/32x32/apps
-    newins launcher/game/images/logo32.png ${PN}.png
-
-    # slightly weird directory structure
-    insinto "$(python_get_sitedir)"/renpy
-    doins -r launcher templates the_question tutorial
-    doins -r renpy renpy.py
-
-    herebin ${PN} << EOF
-#!/bin/sh
-
-exec python2 $(python_get_sitedir)/renpy/renpy.py "\$@"
-EOF
-
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Ren'Py
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}
-TryExec=${PN}
-Icon=${PN}
-Categories=Game;
-EOF
-
-    edo cd "${WORK}"
-    setup-py_src_install
-}
 
