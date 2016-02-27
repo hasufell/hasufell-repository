@@ -1,0 +1,61 @@
+# Copyright 1999-2013 Gentoo Foundation
+# Copyright 2014-2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache freedesktop-desktop freedesktop-mime
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require lua [ whitelist="5.1" multibuild="false" ]
+
+SUMMARY="A framework for 2D games in Lua"
+HOMEPAGE="http://love2d.org/"
+DOWNLOADS="https://bitbucket.org/rude/love/get/${PV}.tar.bz2 -> ${PNV}.tar.bz2"
+
+LICENCES="ZLIB"
+PLATFORMS="~amd64 ~x86"
+SLOT="0"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        dev-games/physfs
+        dev-lang/lua:5.1
+        media-libs/DevIL[mng][tiff]
+        media-libs/SDL:2[X]
+        media-libs/freetype:2
+        media-libs/libmodplug
+        media-libs/libtheora
+        media-libs/libvorbis
+        media-libs/openal
+        media-sound/mpg123
+        x11-dri/mesa
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=( --with-lua=lua )
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( "readme.md" "changes.txt" )
+
+src_unpack() {
+    default
+    edo mv rude-love-* "${WORK}"
+}
+
+src_prepare() {
+    edo cp platform/unix/{configure.ac,Makefile.am} .
+    edo bash platform/unix/genmodules
+
+    eautoreconf
+}
+
+pkg_postinst() {
+    gtk-icon-cache_pkg_postinst
+    freedesktop-mime_pkg_postinst
+    freedesktop-desktop_pkg_postinst
+}
+
+pkg_postrm() {
+    gtk-icon-cache_pkg_postrm
+    freedesktop-desktop_pkg_postrm
+    freedesktop-mime_pkg_postrm
+}
+
