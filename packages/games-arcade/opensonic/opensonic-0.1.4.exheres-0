@@ -1,0 +1,51 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake
+
+MY_PN=opensnc
+MY_PNV=${MY_PN}-src-${PV}
+
+SUMMARY="A free open-source game based on the Sonic the Hedgehog universe"
+HOMEPAGE="http://opensnc.sourceforge.net/"
+DOWNLOADS="mirror://sourceforge/opensnc/Open%20Sonic/${PV}/${MY_PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/allegro:0[ogg]
+        media-libs/libogg
+        media-libs/libpng:=
+        media-libs/libvorbis
+        sys-libs/zlib
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+"
+
+WORK=${WORKBASE}/${MY_PNV}
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PNV}-cmake.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DGAME_INSTALL_DIR=/usr/share/${PN}
+    -DGAME_FINAL_DIR="/usr/$(exhost --target)/bin"
+    -DGAME_LIBDIR="/usr/$(exhost --target)/libexec/${PN}"
+)
+
+src_install() {
+	cmake_src_install
+    local i
+	for i in "${IMAGE}"/usr/share/${PN}/* ; do
+        dosym "${i#${IMAGE}}" \
+            "/usr/$(exhost --target)/libexec/${PN}/${i#${IMAGE}/usr/share/${PN}/}"
+	done
+}
+
