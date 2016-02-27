@@ -1,13 +1,14 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require alternatives
 require lua [ whitelist="5.1" multibuild="false" ]
 
 if [[ -n ${LOVE_AUTOCONF} ]]; then
     require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 fi
 
-export_exlib_phases src_prepare src_install
+export_exlib_phases src_prepare src_install pkg_postinst
 
 SUMMARY="A framework for 2D games in Lua"
 HOMEPAGE="http://love2d.org/"
@@ -57,5 +58,16 @@ love_src_prepare() {
 love_src_install() {
     newbin src/${PN} ${PN}-${SLOT}
     emagicdocs
+
+    local host=$(exhost --target)
+    local binaries=( love love-${SLOT} )
+
+    for (( i = 0; i < ${#binaries[@]}; i++ )); do
+        alternatives_for _${host}_love ${SLOT} ${SLOT} /usr/${host}/bin/${binaries[i]} /usr/${host}/bin/${binaries[++i]}
+    done
+}
+
+love_pkg_postinst() {
+    alternatives_pkg_postinst
 }
 
