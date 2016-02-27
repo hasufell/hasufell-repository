@@ -6,7 +6,7 @@ require gtk-icon-cache
 MY_PNV=${PNV/-/_}
 LOVE_SLOT="0.8"
 
-DESCRIPTION="A mix from Nintendo's Super Mario Bros and Valve's Portal"
+SUMMARY="A mix from Nintendo's Super Mario Bros and Valve's Portal"
 HOMEPAGE="http://stabyourself.net/mari0/"
 DOWNLOADS="http://stabyourself.net/dl.php?file=mari0-1006/mari0-source.zip -> ${PNV}.zip"
 
