@@ -47,5 +47,16 @@ src_install() {
         dosym "${i#${IMAGE}}" \
             "/usr/$(exhost --target)/libexec/${PN}/${i#${IMAGE}/usr/share/${PN}/}"
 	done
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=OpenSonic
+Exec=${PN}
+Icon=${PN}
+Comment=${SUMMARY}
+Categories=Game;ArcadeGame;
+EOF
 }
 
