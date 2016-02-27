@@ -1,0 +1,30 @@
+# Copyright 1999-2015 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=distutils work=pygame-sdl2-for-renpy-${PV} ]
+
+SUMMARY="Reimplementation of portions of the pygame API using SDL2"
+HOMEPAGE="https://github.com/renpy/pygame_sdl2"
+DOWNLOADS="http://www.renpy.org/dl/${PV}/pygame_sdl2-for-renpy-${PV}.tar.bz2"
+
+LICENCES="LGPL-2.1 ZLIB"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        dev-python/Cython[python_abis:*(-)?]
+    build+run:
+        dev-python/numpy[python_abis:*(-)?]
+        media-libs/libpng:=
+        media-libs/SDL:2[X]
+        media-libs/SDL_image:2
+        media-libs/SDL_mixer:2
+        media-libs/SDL_ttf:2
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+"
+
