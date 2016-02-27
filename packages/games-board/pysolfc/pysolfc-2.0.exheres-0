@@ -1,0 +1,58 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=distutils multibuild=false blacklist=3 python_opts="[tk]" ]
+
+MY_PN=PySolFC
+
+SUMMARY="An exciting collection of more than 1000 solitaire card games"
+HOMEPAGE="http://pysolfc.sourceforge.net/"
+DOWNLOADS="mirror://sourceforge/${PN}/${MY_PN}-${PV}.tar.bz2
+	mirror://sourceforge/${PN}/${MY_PN}-Cardsets-${PV}.tar.bz2"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    run:
+        dev-python/Pillow[tk][python_abis:*(-)?]
+        dev-python/pygame[python_abis:*(-)?]
+        dev-tcl/tktable
+"
+
+WORK=${WORKBASE}/${MY_PN}-${PV}
+
+src_prepare() {
+	setup-py_src_prepare
+
+	edo sed -i \
+		-e "/pysol.desktop/d" \
+		-e "s:share/icons:share/pixmaps:" \
+		setup.py
+
+	edo mv docs/README{,.txt}
+}
+
+src_install() {
+    setup-py_src_install
+
+    insinto /usr/share/${MY_PN}
+    doins -r "${WORKBASE}"/${MY_PN}-Cardsets-${PV}/*
+
+	doman docs/*.6
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=PySol Fan Club Edition
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}.py
+TryExec=${PN}.py
+Icon=pysol02
+Categories=Game;BoardGame;
+EOF
+}
+
