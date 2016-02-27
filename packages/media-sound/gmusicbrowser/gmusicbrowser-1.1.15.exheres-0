@@ -41,6 +41,10 @@ DEPENDENCIES="
         dev-perl/Net-DBus [[ description = [ for dbus support and mpris1/2
                                              plugins ] ]]
 "
+# TODO:
+#   dev-perl/Gtk2-WebKit (for Web context plugin)
+#   dev-perl/Gtk2-Notify (for Notify plugin)
+#   dev-perl/gnome2-wnck (for Titlebar plugin)
 
 src_prepare() {
     edo sed -i \
