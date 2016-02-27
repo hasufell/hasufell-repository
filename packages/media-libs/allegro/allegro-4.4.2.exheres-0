@@ -50,14 +50,11 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p0 "${FILES}"/${PNV}-shared.patch
-    "${FILES}"/${PNV}-underlink.patch
-    "${FILES}"/${PNV}-gentoo.patch
-    "${FILES}"/${PNV}-rpath.patch
-
+    -p0 "${FILES}"/${PNV}-underlink.patch
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
+    "-DCMAKE_SKIP_BUILD_RPATH=TRUE"
     "-DDOCDIR=share/doc"
     "-DINFODIR=share/info"
     "-DMANDIR=share/man"
@@ -88,8 +85,8 @@ src_prepare() {
     default
 
     edo sed -i \
-        -e "s:allegro-\${ALLEGRO_VERSION}:${PNVR}:" \
-        docs/CMakeLists.txt
+        -e 's#ADDON_LINKAGE STATIC#ADDON_LINKAGE SHARED#' \
+        CMakeLists.txt
 }
 
 src_install() {
