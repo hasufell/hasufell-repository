@@ -21,7 +21,6 @@ DEPENDENCIES="
         virtual/unzip
     run:
         games-engines/love:${LOVE_SLOT}
-        media-libs/DevIL
 "
 
 WORK=${WORKBASE}
