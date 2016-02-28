@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require lua [ whitelist="all" multibuild=false ]
+require lua [ whitelist="5.1" multibuild=false ]
 require cmake
 
 SUMMARY="A realtime strategy game engine"
