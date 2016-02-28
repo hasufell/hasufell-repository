@@ -1,0 +1,96 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+# Purpose: an exlib dealing with installation of love applications
+# Maintainer: Julian Ospald <hasufell@posteo.de>
+# Exports: src_install
+# Side-effects: - adds build and runtime dependencies
+#               - sets $WORK
+#               - imports desktop-utils
+#
+# Usage
+#   exparams: - loveslot: SLOT of games-engines/love to use
+#             - lovepn: name of the '.love' file to install without the extension
+#             - lovezip (boolean): whether a zip file needs to be unpacked
+
+require desktop-utils
+
+myexparam loveslot=
+myexparam lovepn=${PN}
+myexparam -b lovezip=false
+
+exparam -v LOVE_SLOT loveslot
+exparam -v LOVE_PN lovepn
+
+if [[ -z $(exparam loveslot) ]]; then
+    die "loveslot exparam needs to be set!"
+fi
+
+export_exlib_phases src_install
+
+
+DEPENDENCIES+="
+    run:
+        games-engines/love:$(exparam loveslot)
+"
+
+if exparam -b lovezip ; then
+    DEPENDENCIES+="
+        build:
+            virtual/unzip
+    "
+fi
+
+WORK=${WORKBASE}
+
+# Outputs the common base directory used for installing love applications.
+#
+# Arguments: none
+# Side-effects: outputs to stdout
+# Inspection: none
+# Errors: none
+share_love() {
+    echo -n "/usr/share/love"
+}
+
+# Outputs the directory used for installing the given love application.
+#
+# Arguments: none
+# Side-effects: outputs to stdout
+# Inspection: none
+# Errors: none
+share_love_with_me() {
+    echo -n "$(share_love)/${PN}"
+}
+
+# Exported 'src_install'.
+#
+# Arguments: none
+# Side-effects: carries out installation
+# Inspection: $WORK, $PN{,V}, $FETCHEDDIR
+# Errors: if exparam lovepn is not set properly and main '.love' file cannot be
+#         found
+love-app_src_install() {
+    local ldir=$(share_love_with_me)
+
+    exeinto "${ldir}"
+
+    if [[ -e "${WORK}"/${LOVE_PN}.love ]] ; then
+        newexe "${WORK}"/${LOVE_PN}.love ${PN}.love
+    elif [[ -e "${FETCHEDDIR}"/${PNV}.love ]] ; then
+        newexe "${FETCHEDDIR}"/${LOVE_PN}.love ${PN}.love
+    else
+        die "Could not find ${LOVE_PN}.love for installation!"
+    fi
+
+    emagicdocs
+
+    herebin ${PN} << EOF
+#!/bin/sh
+cd "${ldir}"
+exec love-${LOVE_SLOT} ${PN}.love "\$@"
+EOF
+
+    install_desktop_entry
+}
+
