@@ -1,0 +1,55 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+
+LOVE_SLOT="0.7"
+
+SUMMARY="A mashup of \"Not\" and \"Pacman\""
+HOMEPAGE="http://stabyourself.net/notpacman/"
+DOWNLOADS="http://stabyourself.net/dl.php?file=notpacman-1004/notpacman-linux.zip -> ${PNV}.zip
+    http://dev.gentoo.org/~hasufell/distfiles/${PN}.png"
+
+LICENCES="WTFPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+    run:
+        games-engines/love:${LOVE_SLOT}
+"
+
+WORK=${WORKBASE}
+
+src_install() {
+    local dir=/usr/share/love/${PN}
+
+    exeinto "${dir}"
+    newexe not_pacman.love ${PN}.love
+
+    dodoc README
+
+    insinto /usr/share/icons/hicolor/32x32/apps
+    doins "${FETCHEDDIR}"/${PN}.png
+
+    herebin ${PN} << EOF
+#!/bin/sh
+cd "${dir}"
+exec love-${LOVE_SLOT} ${PN}.love "\$@"
+EOF
+
+    insinto /usr/share/applications
+    hereins ${PN}.desktop << EOF
+[Desktop Entry]
+Name=${PN}
+Type=Application
+Comment=${SUMMARY}
+Exec=${PN}
+TryExec=${PN}
+Icon=${PN}
+Categories=Game;ArcadeGame;
+EOF
+}
+
