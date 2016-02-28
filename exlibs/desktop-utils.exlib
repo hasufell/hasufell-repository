@@ -107,14 +107,14 @@ find_desktop_file_category() {
     case ${CATEGORY} in
         games*) maincat="Game"
             case ${CATEGORY##*-} in
-                action) subcat="ActionGame" ;;
-                adventure) subcat="AdventureGame" ;;
-                arcade) subcat="ArcadeGame" ;;
-                board) subcat="BoardGame" ;;
-                fps) subcat="Shooter" ;;
+                action)     subcat="ActionGame" ;;
+                adventure)  subcat="AdventureGame" ;;
+                arcade)     subcat="ArcadeGame" ;;
+                board)      subcat="BoardGame" ;;
+                fps)        subcat="Shooter" ;;
                 simulation) subcat="Simulation" ;;
-                sports) subcat="SportsGame" ;;
-                strategy) subcat="StrategyGame" ;;
+                sports)     subcat="SportsGame" ;;
+                strategy)   subcat="StrategyGame" ;;
                 *) ;;
             esac
             ;;
