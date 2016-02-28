@@ -41,12 +41,12 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 )
 
 src_install() {
-	cmake_src_install
+    cmake_src_install
     local i
-	for i in "${IMAGE}"/usr/share/${PN}/* ; do
+    for i in "${IMAGE}"/usr/share/${PN}/* ; do
         dosym "${i#${IMAGE}}" \
             "/usr/$(exhost --target)/libexec/${PN}/${i#${IMAGE}/usr/share/${PN}/}"
-	done
+    done
 
     insinto /usr/share/applications
     hereins ${PN}.desktop << EOF
