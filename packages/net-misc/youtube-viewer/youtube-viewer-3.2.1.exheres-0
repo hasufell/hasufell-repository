@@ -1,0 +1,92 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+
+require gtk-icon-cache
+require perl-module
+
+SUMMARY="A command line utility for viewing youtube-videos in Mplayer"
+HOMEPAGE="https://trizen.googlecode.com"
+DOWNLOADS="https://github.com/trizen/youtube-viewer/tarball/${PV} -> ${PNV}.tar.gz"
+
+LICENCES="|| ( Artistic GPL-1 GPL-2 GPL-3 )"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    gtk [[ description = [ Install the gtk GUI, called gtk-youtube-viewer ] ]]
+"
+
+
+# TODO: dev-perl/LWP-UserAgent-Cached (cache support)
+DEPENDENCIES="
+    build:
+        dev-perl/Module-Build
+    build+run:
+        dev-lang/perl:=[>=5.22]
+        dev-perl/Data-Dump
+        dev-perl/Getopt-Long
+        dev-perl/JSON
+        dev-perl/LWP-Protocol-https
+        dev-perl/Scalar-List-Utils
+        dev-perl/Term-ANSIColor
+        dev-perl/Term-ReadLine-Gnu
+        dev-perl/Text-ParseWords
+        dev-perl/Text-Tabs+Wrap
+        dev-perl/libwww-perl
+        gtk? (
+            dev-perl/File-ShareDir
+            dev-perl/Gtk2-Perl
+            x11-libs/gdk-pixbuf:2.0[X]
+        )
+    suggestion:
+        dev-perl/JSON-XS [[ description = [ faster JSON to HASH conversion ] ]]
+        dev-perl/Mozilla-CA [[ description = [ may help in case there are SSL problems ] ]]
+        dev-perl/Term-ReadLine-Gnu [[ description = [ for a better STDIN support ] ]]
+        dev-perl/Text-CharWidth [[ description = [ print the results in a fixed-width format (--fixed-width, -W) ] ]]
+        (
+            media-video/gnome-mplayer
+            media/mpv
+            media/smplayer
+            media/vlc
+        ) [[ *description = [ video player backend ] ]]
+
+
+"
+
+src_unpack() {
+    default
+    edo mv trizen-${PN}-* "${WORK}"
+}
+
+src_configure() {
+    if option gtk ; then
+        PERL_MODULE_SRC_CONFIGURE_PARAMS=( --gtk-youtube-viewer )
+    fi
+    perl-module_src_configure
+}
+
+src_compile() { :; }
+
+src_install() {
+    perl-module_src_install
+
+    if option gtk ; then
+        insinto /usr/share/applications
+        doins share/gtk-youtube-viewer.desktop
+        insinto /usr/share/pixmaps
+        doins share/icons/gtk-youtube-viewer.png
+    fi
+}
+
+pkg_preinst() {
+    option gtk && gtk-icon-cache_pkg_preinst
+}
+
+pkg_postinst() {
+    option gtk && gtk-icon-cache_pkg_postinst
+}
+
+pkg_postrm() {
+    option gtk && gtk-icon-cache_pkg_postrm
+}
+
