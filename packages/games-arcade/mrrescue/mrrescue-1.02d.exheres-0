@@ -2,8 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gtk-icon-cache
-
-LOVE_SLOT="0.10"
+require love-app [ loveslot="0.10" lovepn=${PNV} ]
 
 SUMMARY="Arcade styled 2d action game centered around evacuating civilians from burning buildings"
 HOMEPAGE="http://tangramgames.dk/games/mrrescue/"
@@ -13,40 +12,12 @@ DOWNLOADS="https://github.com/SimonLarsen/mrrescue/releases/download/v${PV}/${PN
 LICENCES="CCPL-Attribution-ShareAlike-3.0 MIT ZLIB"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
-
-DEPENDENCIES="
-    run:
-        games-engines/love:${LOVE_SLOT}
-"
-
-WORK=${WORKBASE}
 
 src_install() {
-	local dir=/usr/share/love/${PN}
-
-	exeinto "${dir}"
-	newexe "${FETCHEDDIR}"/${PNV}.love ${PN}.love
+    love-app_src_install
 
     insinto /usr/share/icons/hicolor/64x64/apps
     doins "${FETCHEDDIR}"/${PN}.png
 
-    herebin ${PN} << EOF
-#!/bin/sh
-cd "/usr/share/love/${PN}"
-exec love-${LOVE_SLOT} ${PN}.love "\$@"
-EOF
-
-    insinto /usr/share/applications
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=${PN}
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}
-TryExec=${PN}
-Icon=${PN}
-Categories=Game;ArcadeGame;
-EOF
 }
 
