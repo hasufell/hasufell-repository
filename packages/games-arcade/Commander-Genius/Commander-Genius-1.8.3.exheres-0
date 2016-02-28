@@ -41,16 +41,16 @@ src_prepare() {
     default
 
     # don't install questionable bundled keen data
-	edo rm -r vfsroot
+    edo rm -r vfsroot
 
     # fixes build skew
-	sed -i \
-		-e '/INCLUDE(package.cmake)/d' \
-		CMakeLists.txt || die
+    sed -i \
+        -e '/INCLUDE(package.cmake)/d' \
+        CMakeLists.txt || die
 }
 
 src_install() {
-	cmake_src_install
+    cmake_src_install
 
     insinto /usr/share/applications
     doins share/cgenius.desktop
@@ -60,10 +60,10 @@ src_install() {
 }
 
 pkg_postinst() {
-	elog "Check your settings in ~/.CommanderGenius/cgenius.cfg"
-	elog "after you have started the game for the first time."
-	elog "You may also want to set \"OpenGL = true\""
-	elog
+    elog "Check your settings in ~/.CommanderGenius/cgenius.cfg"
+    elog "after you have started the game for the first time."
+    elog "You may also want to set \"OpenGL = true\""
+    elog
     elog "Then create the folder ~/.CommanderGenius/games"
     elog "and drop your keen game folders into it."
 }
