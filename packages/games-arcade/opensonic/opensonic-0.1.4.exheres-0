@@ -35,28 +35,20 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DGAME_INSTALL_DIR=/usr/share/${PN}
+    -DGAME_INSTALL_DIR=/opt/${PN}
     -DGAME_FINAL_DIR="/usr/$(exhost --target)/bin"
-    -DGAME_LIBDIR="/usr/$(exhost --target)/libexec/${PN}"
+    -DGAME_LIBDIR="/opt/${PN}"
+    -DCMAKE_INSTALL_PREFIX="/usr"
 )
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
 
 src_install() {
     cmake_src_install
-    local i
-    for i in "${IMAGE}"/usr/share/${PN}/* ; do
-        dosym "${i#${IMAGE}}" \
-            "/usr/$(exhost --target)/libexec/${PN}/${i#${IMAGE}/usr/share/${PN}/}"
-    done
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Type=Application
-Name=OpenSonic
-Exec=${PN}
-Icon=${PN}
-Comment=${SUMMARY}
-Categories=Game;ArcadeGame;
-EOF
+    # rm misplaced docs
+    edo rm "${IMAGE}"/usr/share/doc/${PNVR}/*.html
 }
 
