@@ -1,0 +1,127 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+# Purpose: an exlib dealing with '.desktop' files
+# Maintainer: Julian Ospald <hasufell@posteo.de>
+# Exports: nothing
+# Side-effects: adds build dependencies
+
+
+# needed for 'here_desktop_entry'
+DEPENDENCIES+="
+    build:
+        dev-util/desktop-file-utils
+"
+
+# Like 'herebin', but for desktop entry files.
+#
+# Arguments: <filename>
+# Side-effects: installs the desktop entry via 'here_desktop_entry'
+# Inspection: $TEMP, $IMAGE
+# Errors: according to 'desktop-file-validate'
+here_desktop_entry() {
+    if [[ ${#} -ne 1 ]]; then
+        die "exactly one argument needed."
+    fi
+
+    (
+    cat > "${TEMP}/${1}"
+    insinto /usr/share/applications
+    doins "${TEMP}/${1}"
+    )
+
+    if ! desktop-file-validate ${IMAGE}/usr/share/applications/${1} ; then
+        eerror "${1} does not pass desktop file validation"
+        die_unless_nonfatal "${1} does not pass desktop file validation"
+    fi
+}
+
+# Creates and installs a desktop entry file according to
+# https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.1.html
+# Name, Comment, Exec, TryExec and Icon are initialized automatically.
+# Categories may be initialized depending on 'find_desktop_file_category'.
+#
+# Arguments: all fields of the desktop entry spec, e.g. 'Name=myname'
+# Side-effects: installs the desktop entry via 'here_desktop_entry'
+# Inspection: $PN, $SUMMARY
+# Errors: on invalid arguments
+install_desktop_entry() {
+    local Name=${PN}
+    local Comment=${SUMMARY}
+    local Exec=${PN}
+    local TryExec=
+    local Icon=${PN}
+    local Categories=$(find_desktop_file_category)
+    local OtherValidFields=( Version GenericName NoDisplay Hidden OnlyShowIn
+        NotShowIn DBusActivatable Path Terminal Actions MimeType Implements
+        Keywords StartupNotify StartupWMClass )
+    local AddFields=
+
+    while [[ $# -gt 0 ]] ; do
+        case $1 in
+            Name=*)       Name=${1##*=}       ; shift ;;
+            Comment=*)    Comment=${1##*=}    ; shift ;;
+            Exec=*)       Exec=${1##*=}       ; shift ;;
+            TryExec=*)    TryExec=${1##*=}    ; shift ;;
+            Icon=*)       Icon=${1##*=}       ; shift ;;
+            Categories=*) Categories=${1##*=} ; shift ;;
+            *=*)
+                if has ${1%%=*} ${OtherValidFields[@]} ; then
+                    AddFields+="\n${1}"
+                    shift
+                else
+                    die "invalid argument \"${1}\"!"
+                fi
+                ;;
+            *) die "invalid argument \"${1}\"!" ;;
+        esac
+    done
+
+    TryExec=${TryExec:-${Exec%% *}}
+
+    here_desktop_entry ${PN}-${Exec// /_}.desktop << EOF
+[Desktop Entry]
+Name=${Name}
+Type=Application
+Comment=${Comment}
+Exec=${Exec}
+TryExec=${TryExec}
+Icon=${Icon}
+Categories=${Categories}$(echo -ne ${AddFields})
+EOF
+}
+
+# Tries to guess the desktop file category according to ${CATEGORY}
+# and puts it to stdout.
+#
+# Arguments: none
+# Side-effects: stdout
+# Inspection: $CATEGORY
+# Errors: no
+find_desktop_file_category() {
+    # see https://specifications.freedesktop.org/menu-spec/latest/apa.html
+    local maincat=
+    # see https://specifications.freedesktop.org/menu-spec/latest/apas02.html
+    local subcat=
+
+    case ${CATEGORY} in
+        games*) maincat="Game"
+            case ${CATEGORY##*-} in
+                action) subcat="ActionGame" ;;
+                adventure) subcat="AdventureGame" ;;
+                arcade) subcat="ArcadeGame" ;;
+                board) subcat="BoardGame" ;;
+                fps) subcat="Shooter" ;;
+                simulation) subcat="Simulation" ;;
+                sports) subcat="SportsGame" ;;
+                strategy) subcat="StrategyGame" ;;
+                *) ;;
+            esac
+            ;;
+        *) ;;
+    esac
+
+    [[ -n ${maincat} ]] && echo -n "${maincat};"
+    [[ -n ${subcat} ]] && echo -n "${subcat};"
+}
+
