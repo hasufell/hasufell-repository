@@ -9,7 +9,7 @@
 #               - imports desktop-utils
 #
 # Usage
-#   exparams: - loveslot: SLOT of games-engines/love to use
+#   exparams: - loveslot: SLOT of games-engines/love to use (required)
 #             - lovepn: name of the '.love' file to install without the extension
 #             - lovezip (boolean): whether a zip file needs to be unpacked
 
