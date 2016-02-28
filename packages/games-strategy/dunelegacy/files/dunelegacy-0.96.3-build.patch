@@ -1,5 +1,6 @@
 Author: Julian Ospald <hasufell@gentoo.org>
 Date:   Thu Aug 9 18:57:40 2012 +0200
+Upstream: no
 
     respect flags
     use pkg-config

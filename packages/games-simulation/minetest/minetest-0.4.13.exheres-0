@@ -17,9 +17,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    run:
-        user/minetest
-        group/minetest
+    build:
+        sys-devel/gettext
     build+run:
         app-arch/bzip2
         dev-db/leveldb
@@ -28,8 +27,6 @@ DEPENDENCIES="
         dev-libs/gmp:0
         dev-libs/hiredis
         media-libs/freetype:2
-        providers:ijg-jpeg? ( media-libs/jpeg )
-        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         media-libs/libogg
         media-libs/libpng:=
         media-libs/libvorbis
@@ -39,8 +36,11 @@ DEPENDENCIES="
         x11-dri/mesa
         x11-libs/libX11
         x11-libs/libXxf86vm
-    build:
-        sys-devel/gettext
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+    run:
+        user/minetest
+        group/minetest
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
@@ -78,3 +78,4 @@ src_install() {
     doins -r mods menu
     doins game.conf minetest.conf
 }
+

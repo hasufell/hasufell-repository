@@ -1,6 +1,7 @@
 From: Julian Ospald <hasufell@gentoo.org>
 Date: Sun Aug 12 09:26:49 UTC 2012
 Subject: build system
+Upstream: yes
 
 respect CXX and CXXFLAGS
 

@@ -1,6 +1,7 @@
 commit afadc8d05674a0e3e2fcf6dfbcf5f3c8f9133119
 Author: Julian Ospald <hasufell@hasufell.de>
 Date:   Sun May 18 19:32:59 2014 +0200
+Upstream: yes, https://github.com/wbhart/flint2/commit/afadc8d05674a0e3e2fcf6dfbcf5f3c8f9133119
 
     Respect CFLAGS/CXXFLAGS/LDFLAGS, fixes #66
     

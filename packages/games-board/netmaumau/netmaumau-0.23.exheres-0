@@ -1,4 +1,5 @@
-# Copyright 2015-2016 Julian Ospald <hasufell@posteo.de>, Heiko Schaefer <heiko@rangun.de>
+# Copyright 2015-2016 Julian Ospald <hasufell@posteo.de>,
+#                     Heiko Schaefer <heiko@rangun.de>
 # Distributed under the terms of the GNU General Public License v2
 
 require qmake [ slot=4 ]
@@ -30,7 +31,7 @@ WORK=${WORKBASE}/NetMauMau-Qt-Client-${PV}
 src_configure() {
     if option espeak; then USE_ESPEAK='CONFIG+=espeak'; fi
     EQMAKE_SOURCES="nmm-qt-client.pro" eqmake $USE_ESPEAK
-    lrelease -compress -nounfinished -removeidentical -silent src/src.pro
+    edo lrelease -compress -nounfinished -removeidentical -silent src/src.pro
 }
 
 src_install() {

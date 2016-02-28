@@ -17,6 +17,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        virtual/unzip
     run:
         dev-libs/glib:2
         x11-dri/glu
@@ -25,8 +27,6 @@ DEPENDENCIES="
         x11-libs/gtk+:2
         x11-libs/libX11
         x11-libs/libXcursor
-    build:
-        virtual/unzip
 "
 
 WORK="${WORKBASE}/data/noarch"

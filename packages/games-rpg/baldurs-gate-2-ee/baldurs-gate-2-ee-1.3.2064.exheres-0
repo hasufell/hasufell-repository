@@ -27,11 +27,11 @@ pkg_pretend() {
 }
 
 pkg_nofetch() {
-	einfo
-	einfo "Please buy & download \"${DOWNLOADS}\" from:"
-	einfo "  ${HOMEPAGE}"
-	einfo "and move/link it to \"${FETCHEDDIR}\""
-	einfo
+    einfo
+    einfo "Please buy & download \"${DOWNLOADS}\" from:"
+    einfo "  ${HOMEPAGE}"
+    einfo "and move/link it to \"${FETCHEDDIR}\""
+    einfo
 }
 
 pkg_setup() {
@@ -44,14 +44,14 @@ src_unpack() {
 }
 
 src_install() {
-	local dir=/opt/${PN}
-	local f
+    local dir=/opt/${PN}
+    local f
 
-	insinto "${dir}"
-	doins -r game
-	edo chmod +x "${IMAGE}${dir}"/game/BaldursGateII
+    insinto "${dir}"
+    doins -r game
+    edo chmod +x "${IMAGE}${dir}"/game/BaldursGateII
 
-	dodir "${dir}/lib"
+    dodir "${dir}/lib"
 
     edo pushd "${WORK}"/lib
     exeinto "${dir}/lib"
@@ -66,7 +66,7 @@ src_install() {
     edo popd
 
     insinto /usr/share/icons/hicolor/256x256/apps
-	newins support/icon.png ${PN}.png
+    newins support/icon.png ${PN}.png
 
     local LD_PATH="/usr/$(exhost --target)/lib/ld-linux.so.2";
     herebin ${PN} <<EOF
@@ -92,6 +92,6 @@ Icon=${PN}
 Categories=Game;RolePlaying;
 EOF
 
-	dodoc docs/BGManual2.pdf
+    dodoc docs/BGManual2.pdf
 }
 

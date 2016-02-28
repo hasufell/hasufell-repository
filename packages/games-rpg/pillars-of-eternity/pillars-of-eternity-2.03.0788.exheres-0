@@ -29,6 +29,8 @@ MYOPTIONS="
 RESTRICT="fetch bindist"
 
 DEPENDENCIES="
+    build:
+        virtual/unzip
     run:
         dev-libs/atk
         media-libs/fontconfig
@@ -38,22 +40,20 @@ DEPENDENCIES="
         x11-libs/gdk-pixbuf:2.0
         x11-libs/gtk+:2
         x11-libs/pango
-    build:
-        virtual/unzip
 "
 
 WORK="${WORKBASE}/data/noarch"
 
 pkg_nofetch() {
-	einfo
-	einfo "Please buy & download \"${BASE_SRC_DL}\""
-	option dlc1 && einfo "and \"${DLC1_SRC_DL}\""
-	option dlc2 && einfo "and \"${DLC2_SRC_DL}\""
-	option dlc3 && einfo "and \"${DLC3_SRC_DL}\""
-	einfo "from:"
-	einfo "  ${HOMEPAGE}"
-	einfo "and move/link it to \"${FETCHEDDIR}\""
-	einfo
+    einfo
+    einfo "Please buy & download \"${BASE_SRC_DL}\""
+    option dlc1 && einfo "and \"${DLC1_SRC_DL}\""
+    option dlc2 && einfo "and \"${DLC2_SRC_DL}\""
+    option dlc3 && einfo "and \"${DLC3_SRC_DL}\""
+    einfo "from:"
+    einfo "  ${HOMEPAGE}"
+    einfo "and move/link it to \"${FETCHEDDIR}\""
+    einfo
 }
 
 pkg_setup() {
@@ -73,26 +73,26 @@ src_unpack() {
 }
 
 src_unpack() {
-	if option dlc1 ; then
-		unpack_zip "${FETCHEDDIR}/${DLC1_SRC_DL}"
-	fi
+    if option dlc1 ; then
+        unpack_zip "${FETCHEDDIR}/${DLC1_SRC_DL}"
+    fi
 
-	if option dlc2 ; then
-		unpack_zip "${FETCHEDDIR}/${DLC2_SRC_DL}"
-	fi
+    if option dlc2 ; then
+        unpack_zip "${FETCHEDDIR}/${DLC2_SRC_DL}"
+    fi
 
-	if option dlc3 ; then
-		unpack_zip "${FETCHEDDIR}/${DLC3_SRC_DL}"
-	fi
+    if option dlc3 ; then
+        unpack_zip "${FETCHEDDIR}/${DLC3_SRC_DL}"
+    fi
 
-	unpack_zip "${FETCHEDDIR}/${BASE_SRC_DL}"
+    unpack_zip "${FETCHEDDIR}/${BASE_SRC_DL}"
 }
 
 src_install() {
-	local dir=/opt/${PN}
+    local dir=/opt/${PN}
 
     insinto /usr/share/icons/hicolor/512x512/apps
-	newins game/PillarsOfEternity.png ${PN}.png
+    newins game/PillarsOfEternity.png ${PN}.png
 
     herebin ${PN} <<EOF
 #!/bin/sh
@@ -112,13 +112,13 @@ Icon=${PN}
 Categories=Game;RolePlaying;
 EOF
 
-	dodoc game/Docs/{pe-game-manual.pdf,readme.txt}
+    dodoc game/Docs/{pe-game-manual.pdf,readme.txt}
 
-	dodir "${dir}"
-	edo rm "${WORK}"/game/PillarsOfEternity_Data/Plugins/x86_64/libCSteamworks.so \
-		"${WORK}"/game/PillarsOfEternity_Data/Plugins/x86_64/libsteam_api.so
-	edo mv "${WORK}/game" "${IMAGE}${dir}/"
-	edo chmod +x "${IMAGE}${dir}"/game/PillarsOfEternity
+    dodir "${dir}"
+    edo rm "${WORK}"/game/PillarsOfEternity_Data/Plugins/x86_64/libCSteamworks.so \
+        "${WORK}"/game/PillarsOfEternity_Data/Plugins/x86_64/libsteam_api.so
+    edo mv "${WORK}/game" "${IMAGE}${dir}/"
+    edo chmod +x "${IMAGE}${dir}"/game/PillarsOfEternity
 
     # there are empty installed dirs for some reason, just keep em
     find "${IMAGE}" -depth -type d -empty -exec sh -c 'touch "${1}"' - '{}'/.keep_${CATEGORY}_${PN}-${SLOT%/*} \; || die

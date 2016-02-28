@@ -3,10 +3,10 @@
 
 require gtk-icon-cache
 
-MY_P=zod_linux-${PV:0:4}-${PV:4:2}-${PV:6:2}
-DESCRIPTION="Zod engine is a remake of the 1996 classic game by Bitmap Brothers called Z"
+MY_PNV=zod_linux-${PV:0:4}-${PV:4:2}-${PV:6:2}
+SUMMARY="Zod engine is a remake of the 1996 classic game by Bitmap Brothers called Z"
 HOMEPAGE="http://zod.sourceforge.net/"
-DOWNLOADS="mirror://sourceforge/zod/linux_releases/${MY_P}.tar.gz"
+DOWNLOADS="mirror://sourceforge/zod/linux_releases/${MY_PNV}.tar.gz"
 
 LICENCES="all-rights-reserved GPL-3 LGPL-2.1"
 SLOT="0"

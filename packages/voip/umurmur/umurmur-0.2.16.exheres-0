@@ -1,11 +1,10 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-
 require systemd-service
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
-DESCRIPTION="Minimalistic Murmur (Mumble server)"
+SUMMARY="Minimalistic Murmur (Mumble server)"
 HOMEPAGE="https://github.com/fatbob313/umurmur"
 DOWNLOADS="https://github.com/fatbob313/${PN}/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
 

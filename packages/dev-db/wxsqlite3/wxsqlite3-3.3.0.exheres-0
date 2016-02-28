@@ -25,7 +25,6 @@ src_configure() {
         --with-wx-config="/usr/$(exhost --target)/lib/wx/config/$(option providers:gtk3 'gtk3' 'gtk2')-unicode-3.0" \
         --with-wxshared \
         --with-sqlite3-prefix="/usr/$(exhost --target)"
-
 }
 
 src_install() {
@@ -38,6 +37,7 @@ src_install() {
         gtkver=2
     fi
 
+    # this is the upstream .pc file
     edo sed \
         -e "s:prefix=/usr:prefix=/usr/$(exhost --target):" \
         -e "s:wxcode_gtk2_wxsqlite3:wxcode_gtk${gtkver}u_wxsqlite3:" \

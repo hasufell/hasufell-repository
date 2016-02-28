@@ -1,7 +1,6 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-
 require gtk-icon-cache
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
@@ -14,11 +13,11 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
+    build:
+        virtual/pkg-config
     build+run:
         media-libs/SDL:0[X]
         media-libs/SDL_mixer:0[midi]
-    build:
-        virtual/pkg-config
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(

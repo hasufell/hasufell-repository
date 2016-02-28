@@ -22,6 +22,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        virtual/pkg-config
     build+run:
         dev-libs/libgcrypt
         sys-apps/util-linux
@@ -40,8 +42,6 @@ DEPENDENCIES="
             providers:eudev? ( sys-apps/eudev )
             providers:systemd? ( sys-apps/systemd )
         )
-    build:
-        virtual/pkg-config
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(

@@ -1,7 +1,6 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-
 require cmake gtk-icon-cache flag-o-matic
 
 SUMMARY="A multi-player, 3D action role-playing game"
@@ -22,9 +21,9 @@ DEPENDENCIES="
         dev-libs/ogre[freeimage][opengl]
         dev-libs/tinyxml
         media-libs/freealut
-        media-libs/openal
         media-libs/libogg
         media-libs/libvorbis
+        media-libs/openal
         net-libs/enet
         x11-libs/libX11
         x11-libs/libXrandr

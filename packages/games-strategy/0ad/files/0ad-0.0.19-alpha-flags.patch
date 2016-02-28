@@ -1,6 +1,7 @@
 From: Julian Ospald <hasufell@gentoo.org>
 Date: Sun Jun 24 18:32:38 UTC 2012
 Subject: build system
+Upstream: no
 
 * respect flags
 

@@ -24,7 +24,6 @@ DEPENDENCIES="
 WORK=${WORKBASE}
 
 src_prepare() {
-    # see https://code.google.com/p/pidgin-opensteamworks/issues/detail?id=31
     edo cp "${FILES}"/${PN}-1.3-Makefile "${WORK}"/${PNV}/steam-mobile/Makefile
     edo unzip "${WORK}"/${PNV}/steam-mobile/releases/icons.zip
 }

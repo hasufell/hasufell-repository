@@ -17,10 +17,10 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
-    run:
-        sys-apps/gentoo-functions
     build:
         virtual/pkg-config
+    run:
+        sys-apps/gentoo-functions
 "
 
 src_compile() {
@@ -45,3 +45,4 @@ pkg_postinst() {
         elog "${ROOT}/usr/share/doc/${PNVR}/README"
     fi
 }
+

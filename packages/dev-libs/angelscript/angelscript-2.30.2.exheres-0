@@ -1,4 +1,4 @@
-# Copyright Julian Ospald <hasufell@posteo.de>
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="A flexible, cross-platform scripting library"
@@ -11,7 +11,8 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES="
-    build: virtual/unzip
+    build:
+        virtual/unzip
 "
 
 WORK=${WORKBASE}/sdk
@@ -21,8 +22,8 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 src_compile() {
-	export CXX=${CXX} AR=${AR} RANLIB=${RANLIB}
-	emake -C ${PN}/projects/gnuc \
+    export CXX=${CXX} AR=${AR} RANLIB=${RANLIB}
+    emake -C ${PN}/projects/gnuc \
         LIBRARYDEST=
 }
 

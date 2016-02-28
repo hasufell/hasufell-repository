@@ -8,7 +8,7 @@ MY_PN=PySolFC
 SUMMARY="An exciting collection of more than 1000 solitaire card games"
 HOMEPAGE="http://pysolfc.sourceforge.net/"
 DOWNLOADS="mirror://sourceforge/${PN}/${MY_PN}-${PV}.tar.bz2
-	mirror://sourceforge/${PN}/${MY_PN}-Cardsets-${PV}.tar.bz2"
+    mirror://sourceforge/${PN}/${MY_PN}-Cardsets-${PV}.tar.bz2"
 
 LICENCES="GPL-3"
 SLOT="0"
@@ -25,14 +25,14 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${MY_PN}-${PV}
 
 src_prepare() {
-	setup-py_src_prepare
+    setup-py_src_prepare
 
-	edo sed -i \
-		-e "/pysol.desktop/d" \
-		-e "s:share/icons:share/pixmaps:" \
-		setup.py
+    edo sed -i \
+        -e "/pysol.desktop/d" \
+        -e "s:share/icons:share/pixmaps:" \
+        setup.py
 
-	edo mv docs/README{,.txt}
+    edo mv docs/README{,.txt}
 }
 
 src_install() {
@@ -41,7 +41,7 @@ src_install() {
     insinto /usr/share/${MY_PN}
     doins -r "${WORKBASE}"/${MY_PN}-Cardsets-${PV}/*
 
-	doman docs/*.6
+    doman docs/*.6
 
     insinto /usr/share/applications
     hereins ${PN}.desktop << EOF

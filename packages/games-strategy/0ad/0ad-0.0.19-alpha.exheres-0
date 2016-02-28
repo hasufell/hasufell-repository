@@ -41,19 +41,6 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    editor? (
-        build+run:
-            x11-libs/wxGTK:3.0
-    )
-    lobby? (
-        build+run:
-            net-libs/gloox
-    )
-    sound? (
-        build+run:
-            media-libs/libvorbis
-            media-libs/openal
-    )
     build:
         dev-lang/python:*[>=2.7]
         virtual/pkg-config
@@ -62,8 +49,6 @@ DEPENDENCIES="
         dev-libs/icu:=
         dev-libs/libxml2:2.0
         dev-libs/nspr
-        providers:ijg-jpeg? ( media-libs/jpeg )
-        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         media-libs/libpng:=
         media-libs/SDL:2[X]
         net-libs/enet
@@ -72,6 +57,14 @@ DEPENDENCIES="
         x11-dri/mesa
         x11-libs/libX11
         x11-libs/libXcursor
+        editor? ( x11-libs/wxGTK:3.0 )
+        lobby? ( net-libs/gloox )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+        sound? (
+            media-libs/libvorbis
+            media-libs/openal
+        )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(

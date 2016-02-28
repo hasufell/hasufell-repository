@@ -1,5 +1,6 @@
 Author: hasufell <hasufell@gentoo.org>
 Date:   Wed Jul 10 01:25:27 2013 +0200
+Upstream: no, they don't care
 
     respect CFLAGS/LDFLAGS
 

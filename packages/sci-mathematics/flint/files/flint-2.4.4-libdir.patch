@@ -2,6 +2,7 @@ From 27eb23c1844029ee64907500bd8aa87097ffcd32 Mon Sep 17 00:00:00 2001
 From: Julian Ospald <hasufell@hasufell.de>
 Date: Sun, 18 May 2014 18:46:24 +0200
 Subject: [PATCH] Allow to control LIBDIR
+Upstream: yes, https://github.com/wbhart/flint2/commit/27eb23c1844029ee64907500bd8aa87097ffcd32
 
 Some distributions have lib32/lib64 and need to control
 the destination properly.

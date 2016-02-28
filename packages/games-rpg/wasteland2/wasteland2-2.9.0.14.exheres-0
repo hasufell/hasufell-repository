@@ -14,6 +14,8 @@ MYOPTIONS=""
 RESTRICT="bindist fetch mirror"
 
 DEPENDENCIES="
+    build:
+        virtual/unzip
     run:
         dev-libs/atk
         dev-libs/glib:2
@@ -29,8 +31,6 @@ DEPENDENCIES="
         x11-libs/libXcursor
         x11-libs/libXext
         x11-libs/libXrandr
-    build:
-        virtual/unzip
 "
 
 WORK="${WORKBASE}/data/noarch"

@@ -1,6 +1,7 @@
 From: Julian Ospald <hasufell@gentoo.org>
 Date: Tue Sep  8 01:22:40 UTC 2015
 Subject: fix compatibility with libressl
+Upstream: not yet
 
 --- a/eventlib/green/socket.py
 +++ b/eventlib/green/socket.py

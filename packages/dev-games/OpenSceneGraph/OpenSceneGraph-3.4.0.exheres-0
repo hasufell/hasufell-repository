@@ -17,9 +17,9 @@ DESCRIPTION="
 "
 
 MY_PN="OpenSceneGraph"
-MY_P=${MY_PN}-${PV}
+MY_PNV=${MY_PN}-${PV}
 HOMEPAGE="http://${PN}.org"
-DOWNLOADS="http://trac.openscenegraph.org/downloads/developer_releases/${MY_P}.zip"
+DOWNLOADS="http://trac.openscenegraph.org/downloads/developer_releases/${MY_PNV}.zip"
 
 LICENCES="wxWinLL-3 LGPL-2.1"
 SLOT="0"
@@ -87,3 +87,4 @@ src_prepare() {
 
     cmake_src_prepare
 }
+

@@ -29,8 +29,6 @@ DEPENDENCIES="
         media-libs/freealut[>=1.1.0]
         media-libs/freetype:2
         media-libs/glew
-        providers:ijg-jpeg? ( media-libs/jpeg )
-        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         media-libs/libogg[>=1.2.2]
         media-libs/libpng:=
         media-libs/libvorbis[>=1.3.2]
@@ -44,6 +42,8 @@ DEPENDENCIES="
         x11-libs/gtk+:3
         x11-libs/libX11
         x11-libs/libXrandr
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
     test:
         dev-cpp/gtest
 "

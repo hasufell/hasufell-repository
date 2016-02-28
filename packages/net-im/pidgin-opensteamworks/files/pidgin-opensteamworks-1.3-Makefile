@@ -1,3 +1,8 @@
+# Source: Gentoo
+# Upstream: no, but we tried, see https://code.google.com/p/pidgin-opensteamworks/issues/detail?id=31
+# Reason: provide an actual working Makefile
+
+
 CC ?= gcc
 PKG_CONFIG ?= pkg-config
 INSTALL = install

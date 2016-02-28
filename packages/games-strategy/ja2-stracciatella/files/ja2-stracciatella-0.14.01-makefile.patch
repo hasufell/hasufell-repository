@@ -1,4 +1,6 @@
-Fix install permissions
+Author: Julian Ospald <hasufell@posteo.de>
+Upstream: not yet
+Reason: Fix install permissions
 
 diff --git a/Makefile b/Makefile
 index 27ef953..cc1e2cd 100644

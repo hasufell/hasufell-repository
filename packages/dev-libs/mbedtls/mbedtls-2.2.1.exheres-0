@@ -44,9 +44,9 @@ CMAKE_SRC_CONFIGURE_TESTS=(
 enable_mbedtls_option() {
     local myopt="$@"
     # check that config.h syntax is the same at version bump
-    sed -i \
+    edo sed -i \
         -e "s://#define ${myopt}:#define ${myopt}:" \
-        include/mbedtls/config.h || die
+        include/mbedtls/config.h
 }
 
 src_prepare() {

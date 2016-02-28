@@ -15,10 +15,10 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-		media-libs/SDL:0[X]
-		media-libs/SDL_image:1
-		media-libs/SDL_mixer:0[ogg]
-		x11-libs/libX11
+        media-libs/SDL:0[X]
+        media-libs/SDL_image:1
+        media-libs/SDL_mixer:0[ogg]
+        x11-libs/libX11
         sys-libs/zlib
         x11-dri/glu
         x11-dri/mesa
@@ -30,12 +30,12 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${PN}
 
 src_prepare() {
-	edo rm -r sauerbraten_unix bin_unix src/{include,lib,vcpp}
+    edo rm -r sauerbraten_unix bin_unix src/{include,lib,vcpp}
 
     default
 
-	# Fix links so they point to the correct directory
-	edo sed -i -e 's:docs/::' README.html
+    # Fix links so they point to the correct directory
+    edo sed -i -e 's:docs/::' README.html
 }
 
 src_compile() {
@@ -44,8 +44,8 @@ src_compile() {
 
 src_install() {
     local LIBEXECDIR="/usr/$(exhost --target)/libexec/${PN}"
-	local DATADIR="/usr/share/${PN}"
-	local STATEDIR="/var/lib/${PN}"
+    local DATADIR="/usr/share/${PN}"
+    local STATEDIR="/var/lib/${PN}"
 
     # Install the game data
     insinto "${DATADIR}"
@@ -77,14 +77,14 @@ Icon=${PN}
 Categories=Game;ActionGame;
 EOF
 
-	# Install the server config files
-	insinto "${STATEDIR}"
-	doins "server-init.cfg"
+    # Install the server config files
+    insinto "${STATEDIR}"
+    doins "server-init.cfg"
 
-	# Install the server executables
-	exeinto "${LIBEXECDIR}"
-	doexe src/sauer_master
-	doexe src/sauer_server
+    # Install the server executables
+    exeinto "${LIBEXECDIR}"
+    doexe src/sauer_master
+    doexe src/sauer_server
 
     herebin ${PN}-server <<EOF
 #!/bin/sh
@@ -96,30 +96,30 @@ exec "${LIBEXECDIR}/sauer_master" ${STATEDIR} "\$@"
 EOF
 
     # Install the server init script
-	edo cp "${FILES}"/${PN}.init "${TEMP}"
-	edo sed -i \
-		-e "s:%SYSCONFDIR%:${STATEDIR}:g" \
-		-e "s:%LIBEXECDIR%:${LIBEXECDIR}:g" \
-		"${TEMP}"/${PN}.init
-	newinitd "${TEMP}"/${PN}.init ${PN}
-	edo cp "${FILES}"/${PN}.conf "${TEMP}"
-	edo sed -i \
-		-e "s:%SYSCONFDIR%:${STATEDIR}:g" \
-		-e "s:%LIBEXECDIR%:${LIBEXECDIR}:g" \
-		"${TEMP}"/${PN}.conf
-	newconfd "${TEMP}"/${PN}.conf ${PN}
+    edo cp "${FILES}"/${PN}.init "${TEMP}"
+    edo sed -i \
+        -e "s:%SYSCONFDIR%:${STATEDIR}:g" \
+        -e "s:%LIBEXECDIR%:${LIBEXECDIR}:g" \
+        "${TEMP}"/${PN}.init
+    newinitd "${TEMP}"/${PN}.init ${PN}
+    edo cp "${FILES}"/${PN}.conf "${TEMP}"
+    edo sed -i \
+        -e "s:%SYSCONFDIR%:${STATEDIR}:g" \
+        -e "s:%LIBEXECDIR%:${LIBEXECDIR}:g" \
+        "${TEMP}"/${PN}.conf
+    newconfd "${TEMP}"/${PN}.conf ${PN}
 
-	dodoc src/*.txt docs/dev/*.txt
+    dodoc src/*.txt docs/dev/*.txt
 
     insinto /usr/share/doc/${PNVR}/html
     doins -r README.html docs/*
 
-	edo chown sauerbraten:sauerbraten "${IMAGE%/}/${STATEDIR}"
+    edo chown sauerbraten:sauerbraten "${IMAGE%/}/${STATEDIR}"
 }
 
 pkg_postinst() {
-	elog "If you plan to use map editor feature copy all map data from ${DATADIR}"
-	elog "to corresponding folder in your HOME/.${PN}"
+    elog "If you plan to use map editor feature copy all map data from ${DATADIR}"
+    elog "to corresponding folder in your HOME/.${PN}"
 
     gtk-icon-cache_pkg_postinst
 }

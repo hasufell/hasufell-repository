@@ -1,6 +1,7 @@
 From: Julian Ospald <hasufell@gentoo.org>
 Date: Fri Jun 15 10:42:42 UTC 2012
 Subject: build system
+Upstream: no
 
 fix underlinking
 

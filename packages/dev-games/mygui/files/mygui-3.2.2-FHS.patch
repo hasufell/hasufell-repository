@@ -1,6 +1,7 @@
 From: Julian Ospald <hasufell@gentoo.org>
 Date: Sat Oct 27 22:39:31 UTC 2012
 Subject: FHS
+Upstream: no
 
 paths hardcoded until upstream fixed the logic
 

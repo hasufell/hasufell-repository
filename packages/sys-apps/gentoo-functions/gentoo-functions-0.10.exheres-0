@@ -7,7 +7,6 @@
 
 require flag-o-matic
 
-
 HOMEPAGE="https://www.gentoo.org"
 DOWNLOADS="https://github.com/gentoo/${PN}/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
 
@@ -26,3 +25,4 @@ src_prepare() {
     export CC=$(exhost --tool-prefix)cc
     append-cppflags -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 }
+

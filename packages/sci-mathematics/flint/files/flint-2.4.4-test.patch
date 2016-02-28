@@ -1,6 +1,7 @@
 commit 5e3d4a0504158f70d227e7cfc03985fe9a646797
 Author: Julian Ospald <hasufell@hasufell.de>
 Date:   Wed Jul 2 12:58:50 2014 +0200
+Upstream: yes, https://github.com/wbhart/flint2/commit/5e3d4a0504158f70d227e7cfc03985fe9a646797
 
     Fix NTL test build
 

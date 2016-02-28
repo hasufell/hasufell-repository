@@ -1,6 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require lua [ whitelist="5.1" multibuild=false ]
 require cmake
 
 SUMMARY="An open-source Zelda-like 2D game engine"
@@ -14,7 +15,6 @@ PLATFORMS="~amd64 ~x86"
 DEPENDENCIES="
     build+run:
         dev-games/physfs
-        dev-lang/lua:5.1
         media-libs/libmodplug
         media-libs/libvorbis
         media-libs/openal

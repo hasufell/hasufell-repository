@@ -7,7 +7,7 @@ DATA_PV=${PV//./}
 ENGINE_PV=${PV//./}
 ENGINE_P=${PN}_${ENGINE_PV}_sdk
 
-DESCRIPTION="Multiplayer FPS based on the QFusion engine (evolved from Quake 2)"
+SUMMARY="Multiplayer FPS based on the QFusion engine (evolved from Quake 2)"
 HOMEPAGE="http://www.warsow.net/"
 DOWNLOADS="http://mirror.null.one/${ENGINE_P}.tar.gz
     http://mirror.null.one/warsow_${DATA_PV}_unified.tar.gz
@@ -27,17 +27,17 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
+        media-libs/SDL:2[X]
         media-libs/freetype
         media-libs/libogg
         media-libs/libpng:=
         media-libs/libtheora
         media-libs/libvorbis
         media-libs/openal
-        media-libs/SDL:2[X]
         net-misc/curl
         sys-libs/zlib
         x11-dri/mesa
-        providers:ijg-jpeg? ( media-libs/jpeg )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 

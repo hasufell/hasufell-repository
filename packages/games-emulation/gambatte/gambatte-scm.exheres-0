@@ -33,64 +33,64 @@ DEPENDENCIES="
 "
 
 fix_scons() {
-	local i
-	for i; do
-		cat >> $i << END || die
+    local i
+    for i; do
+        cat >> $i << END || die
 import os
 import SCons.Util
 
 if os.environ.has_key('AR'):
-	env['AR'] = os.environ['AR']
+    env['AR'] = os.environ['AR']
 if os.environ.has_key('RANLIB'):
-	env['RANLIB'] = os.environ['RANLIB']
+    env['RANLIB'] = os.environ['RANLIB']
 if os.environ.has_key('CC'):
-	env['CC'] = os.environ['CC']
+    env['CC'] = os.environ['CC']
 if os.environ.has_key('CFLAGS'):
-	env['CCFLAGS'] += SCons.Util.CLVar(os.environ['CFLAGS'])
+    env['CCFLAGS'] += SCons.Util.CLVar(os.environ['CFLAGS'])
 if os.environ.has_key('CXX'):
-	env['CXX'] = os.environ['CXX']
+    env['CXX'] = os.environ['CXX']
 if os.environ.has_key('CXXFLAGS'):
-	env['CXXFLAGS'] += SCons.Util.CLVar(os.environ['CXXFLAGS'])
+    env['CXXFLAGS'] += SCons.Util.CLVar(os.environ['CXXFLAGS'])
 if os.environ.has_key('CPPFLAGS'):
-	env['CCFLAGS'] += SCons.Util.CLVar(os.environ['CPPFLAGS'])
+    env['CCFLAGS'] += SCons.Util.CLVar(os.environ['CPPFLAGS'])
 if os.environ.has_key('LDFLAGS'):
-	env['LINKFLAGS'] += SCons.Util.CLVar(os.environ['LDFLAGS'])
+    env['LINKFLAGS'] += SCons.Util.CLVar(os.environ['LDFLAGS'])
 END
-	done
+    done
 }
 
 src_prepare() {
-	fix_scons {gambatte_sdl,libgambatte}/SConstruct
+    fix_scons {gambatte_sdl,libgambatte}/SConstruct
 }
 
 src_configure() {
-	if option qt4; then
-		edo cd "${WORK}"/gambatte_qt
-		eqmake ${PN}_qt.pro
-	fi
+    if option qt4; then
+        edo cd "${WORK}"/gambatte_qt
+        eqmake ${PN}_qt.pro
+    fi
 }
 
 src_compile() {
-	# build core library
-	edo cd "${WORK}"/libgambatte
-	escons
+    # build core library
+    edo cd "${WORK}"/libgambatte
+    escons
 
-	# build sdl frontend
-	if option sdl; then
-		edo cd "${WORK}"/gambatte_sdl
-		escons
-	fi
+    # build sdl frontend
+    if option sdl; then
+        edo cd "${WORK}"/gambatte_sdl
+        escons
+    fi
 
-	# build qt frontend
-	if option qt4; then
-		emake -C "${WORK}"/gambatte_qt
-	fi
+    # build qt frontend
+    if option qt4; then
+        emake -C "${WORK}"/gambatte_qt
+    fi
 }
 
 src_install() {
-	option sdl && dobin gambatte_sdl/gambatte_sdl
-	option qt4 && dobin gambatte_qt/bin/gambatte_qt
+    option sdl && dobin gambatte_sdl/gambatte_sdl
+    option qt4 && dobin gambatte_qt/bin/gambatte_qt
 
-	nonfatal dodoc README changelog
+    nonfatal dodoc README changelog
 }
 

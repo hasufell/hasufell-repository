@@ -27,10 +27,6 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    editor? (
-        build+run:
-            x11-libs/qt:4[opengl]
-    )
     build:
         dev-libs/boost
         sys-devel/gettext
@@ -45,6 +41,7 @@ DEPENDENCIES="
         x11-dri/glu
         x11-dri/mesa
         x11-libs/libX11
+        editor? ( x11-libs/qt:4[opengl] )
 "
 
 CMAKE_SOURCE=${WORKBASE}/${MY_PNV}

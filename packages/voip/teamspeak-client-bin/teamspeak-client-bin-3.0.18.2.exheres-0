@@ -18,7 +18,6 @@ MYOPTIONS="
 "
 RESTRICT="mirror strip"
 
-
 DEPENDENCIES="
     run:
         app-arch/quazip[qt5]
@@ -27,7 +26,6 @@ DEPENDENCIES="
         alsa? ( sys-sound/alsa-lib )
         pulseaudio? ( media-sound/pulseaudio )
 "
-
 
 WORK="${WORKBASE}"
 

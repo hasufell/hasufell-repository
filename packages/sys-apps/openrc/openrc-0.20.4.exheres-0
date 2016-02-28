@@ -36,13 +36,14 @@ DEPENDENCIES="
     build+run:
         ncurses? ( sys-libs/ncurses )
         pam? ( sys-libs/pam )
+    run:
+        providers:runit? ( sys-apps/runit )
+        providers:sinit? ( sys-apps/sinit )
+        providers:sysvinit? ( sys-apps/sysvinit )
     suggestion:
         net-misc/netifrc [[ description = [
             Network Interface Management Scripts
         ] ]]
-    providers:runit? ( sys-apps/runit )
-    providers:sinit? ( sys-apps/sinit )
-    providers:sysvinit? ( sys-apps/sysvinit )
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=(

@@ -29,6 +29,9 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        dev-libs/glm
+        virtual/pkg-config
     build+run:
         dev-libs/pcre[>=5.0]
         media-libs/freetype:2[>=0.15.0]
@@ -48,9 +51,6 @@ DEPENDENCIES="
         )
         tinyxml? ( dev-libs/tinyxml )
         xerces? ( dev-libs/xerces-c )
-    build:
-        dev-libs/glm
-        virtual/pkg-config
 "
 
 # TODO: python
@@ -94,3 +94,4 @@ CMAKE_SRC_CONFIGURE_OPTIONS=(
 src_prepare() {
     edo sed -i -e '/CEGUI_LIB_INSTALL_DIR/s#lib64#lib#' CMakeLists.txt
 }
+

@@ -8,7 +8,7 @@
 
 require cmake
 
-MY_P=${PN}-${PV/_rc/rc}
+MY_PNV=${PN}-${PV/_rc/rc}
 SUMMARY="Peer-to-peer VPN, NCD scripting language, tun2socks proxifier"
 DESCRIPTION="
     BadVPN is an open-source peer-to-peer VPN system. It provides a
@@ -41,6 +41,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        virtual/pkg-config
     build+run:
         dev-libs/nspr
         dev-libs/nss
@@ -54,11 +56,9 @@ DEPENDENCIES="
             providers:eudev? ( sys-apps/eudev )
             providers:systemd? ( sys-apps/systemd )
         )
-    build:
-        virtual/pkg-config
 "
 
-WORK=${WORKBASE}/${MY_P}
+WORK=${WORKBASE}/${MY_PNV}
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBUILD_NOTHING_BY_DEFAULT=1
@@ -73,20 +73,20 @@ CMAKE_SRC_CONFIGURE_OPTIONS=(
 )
 
 src_install() {
-	cmake_src_install
-	dodoc ChangeLog
+    cmake_src_install
+    dodoc ChangeLog
 
     exeinto /etc/init.d
     newexe "${FILES}"/${PN}-server.init ${PN}-server
     insinto /etc/conf.d
     newins "${FILES}"/${PN}-server.conf ${PN}-server
 
-	if option ncd; then
+    if option ncd; then
         exeinto /etc/init.d
-		newexe "${FILES}"/${PN}-1.999.127-ncd.init ${PN}-ncd
+        newexe "${FILES}"/${PN}-1.999.127-ncd.init ${PN}-ncd
         insinto /etc/conf.d
-		newins "${FILES}"/${PN}-ncd.conf ${PN}-ncd
+        newins "${FILES}"/${PN}-ncd.conf ${PN}-ncd
         install_systemd_files
-	fi
+    fi
 }
 

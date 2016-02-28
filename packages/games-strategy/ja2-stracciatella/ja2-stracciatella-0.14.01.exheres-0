@@ -24,7 +24,7 @@ src_unpack() {
 
 src_configure() {
     # not an autoconf script
-    ./configure --prefix=/usr
+    edo ./configure --prefix=/usr
 }
 
 src_compile() {

@@ -1,10 +1,7 @@
-From: Julian Ospald <hasufell@gentoo.org>
+From: Julian Ospald <hasufell@posteo.de>
 Date: Tue Sep  8 10:10:18 UTC 2015
 Subject: Fix data path fallback
-
-Distutils installs into "/usr/share/blink", but
-blink was unable to find it on gentoo, probably due
-to python-exec magic.
+Upstream: no, correct fix pending since 'sys.prefix' is broken in exherbo
 
 --- blink-1.4.1/blink/resources.py
 +++ blink-1.4.1/blink/resources.py

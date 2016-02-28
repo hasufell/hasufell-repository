@@ -51,33 +51,33 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${MY_PN}
 
 src_prepare() {
-	edo sed -i \
-		-e "/^EXE_/s:darkplaces:${PN}:" \
-		-e "s:-O3:${CFLAGS}:" \
-		-e "/-lm/s:$: ${LDFLAGS}:" \
-		-e '/^STRIP/s/strip/true/' \
-		source/darkplaces/makefile.inc
+    edo sed -i \
+        -e "/^EXE_/s:darkplaces:${PN}:" \
+        -e "s:-O3:${CFLAGS}:" \
+        -e "/-lm/s:$: ${LDFLAGS}:" \
+        -e '/^STRIP/s/strip/true/' \
+        source/darkplaces/makefile.inc
 
-	if ! option alsa; then
-		edo sed -i \
-			-e "/DEFAULT_SNDAPI/s:ALSA:OSS:" \
-			source/darkplaces/makefile
-	fi
+    if ! option alsa; then
+        edo sed -i \
+            -e "/DEFAULT_SNDAPI/s:ALSA:OSS:" \
+            source/darkplaces/makefile
+    fi
 }
 
 src_compile() {
-	local i
+    local i
 
-	export CC=${CC} CXX=${CXX} LD=${LD} AR=${AR} RANLIB=${RANLIB}
+    export CC=${CC} CXX=${CXX} LD=${LD} AR=${AR} RANLIB=${RANLIB}
 
-	# fixes parallel build issues
-	for i in sv-release cl-release sdl-release ; do
-		emake \
-			-C source/darkplaces \
-			DP_LINK_TO_LIBJPEG=1 \
-			DP_FS_BASEDIR="/usr/share/${PN}" \
-			${i}
-	done
+    # fixes parallel build issues
+    for i in sv-release cl-release sdl-release ; do
+        emake \
+            -C source/darkplaces \
+            DP_LINK_TO_LIBJPEG=1 \
+            DP_FS_BASEDIR="/usr/share/${PN}" \
+            ${i}
+    done
 }
 
 src_install() {
@@ -109,11 +109,11 @@ EOF
 
     dobin source/darkplaces/${PN}-glx
     dobin source/darkplaces/${PN}-sdl
-	dobin source/darkplaces/${PN}-dedicated
+    dobin source/darkplaces/${PN}-dedicated
 
-	dodoc Docs/*.txt
+    dodoc Docs/*.txt
 
-	insinto /usr/share/${PN}
-	doins -r key_0.d0pk server data
+    insinto /usr/share/${PN}
+    doins -r key_0.d0pk server data
 }
 

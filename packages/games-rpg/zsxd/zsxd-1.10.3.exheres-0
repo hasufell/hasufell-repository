@@ -12,10 +12,10 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
-    run:
-        games-engines/solarus[~>1.4.0]
     build:
         app-arch/zip
+    run:
+        games-engines/solarus[~>1.4.0]
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(

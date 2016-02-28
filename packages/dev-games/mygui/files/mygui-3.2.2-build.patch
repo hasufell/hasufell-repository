@@ -1,4 +1,6 @@
-Fix installation destination
+Source: Julian Ospald <hasufell@posteo.de>
+Upstream: no
+Reason: Fix installation destination
 
 diff -ru mygui-MyGUI3.2.2.orig/CMake/ConfigureBuild.cmake mygui-MyGUI3.2.2/CMake/ConfigureBuild.cmake
 --- mygui-MyGUI3.2.2.orig/CMake/ConfigureBuild.cmake	2015-01-26 10:32:35.000000000 -0500

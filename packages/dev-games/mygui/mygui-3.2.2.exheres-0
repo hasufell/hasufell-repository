@@ -1,23 +1,19 @@
-# Copyright 2014 Julian Ospald <hasufell@posteo.de>
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-
 MY_PN=MyGUI
-MY_P=${MY_PN}${PV}
-WORK="${WORKBASE}/${PN}-${MY_P}"
-
+MY_PNV=${MY_PN}${PV}
+WORK="${WORKBASE}/${PN}-${MY_PNV}"
 
 require cmake [ api=2 ]
 
-
 SUMMARY="A library for creating GUIs for games"
 HOMEPAGE="http://mygui.info/"
-DOWNLOADS="https://github.com/MyGUI/mygui/archive/${MY_P}.tar.gz"
+DOWNLOADS="https://github.com/MyGUI/mygui/archive/${MY_PNV}.tar.gz"
 
 LICENCES="MIT"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-
 
 DEPENDENCIES="
     build+run:
@@ -62,3 +58,4 @@ src_install() {
     # wrapper not available for linux, remove related media
     edo rm -rf "${IMAGE}"/usr/share/MYGUI/Media/Wrapper
 }
+

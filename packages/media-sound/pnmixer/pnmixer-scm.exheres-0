@@ -30,7 +30,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
-    libnotify
+    'libnotify'
     'providers:gtk3 gtk3'
 )
 
@@ -38,3 +38,4 @@ src_prepare() {
     edo intltoolize --force --copy
     autotools_src_prepare
 }
+

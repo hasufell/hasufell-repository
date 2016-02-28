@@ -1,7 +1,6 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-
 SUMMARY="Synchronize local workstation with time offered by remote webservers"
 HOMEPAGE="http://www.vervest.org/fiki/bin/view/HTP/DownloadC"
 DOWNLOADS="http://www.vervest.org/htp/archive/c/${PNV}.tar.gz"

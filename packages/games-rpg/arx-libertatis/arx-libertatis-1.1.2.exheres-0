@@ -12,15 +12,15 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
+    build:
+        dev-libs/boost
+        virtual/pkg-config
     build+run:
         media-libs/freetype:2
         media-libs/glew
         media-libs/openal
         media-libs/SDL:0[X]
         sys-libs/zlib
-    build:
-        dev-libs/boost
-        virtual/pkg-config
     suggestion:
         app-arch/innoextract [[ description = [ For extracting game files
                                                 from CD, used by the
