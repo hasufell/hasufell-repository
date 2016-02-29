@@ -1,0 +1,45 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache
+require qmake [ slot=4 ]
+
+MY_PNV=${PN}-v${PV}
+
+SUMMARY="Qt-based client for the pump.io distributed social network"
+HOMEPAGE="http://dianara.nongnu.org/"
+DOWNLOADS="http://download.savannah.gnu.org/releases/dianara/${MY_PNV}.tar.gz"
+
+LICENCES="|| ( GPL-2 GPL-3 )"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        app-crypt/qca:2[qt4]
+        dev-libs/qjson
+        sys-apps/file
+        sys-auth/qoauth
+        x11-libs/qt:4
+"
+
+WORK=${WORKBASE}/${MY_PNV}
+
+EQMAKE_SOURCES=( Dianara.pro )
+
+src_install() {
+    dobin dianara
+
+    doman manual/*
+    dodoc README TODO CHANGELOG BUGS
+
+    insinto /usr/share/icons/hicolor/32x32/apps
+    doins icon/32x32/${PN}.png
+    insinto /usr/share/icons/hicolor/64x64/apps
+    doins icon/64x64/${PN}.png
+
+    insinto /usr/share/applications
+    doins ${PN}.desktop
+}
+
