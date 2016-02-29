@@ -59,12 +59,12 @@ install_desktop_entry() {
 
     while [[ $# -gt 0 ]] ; do
         case $1 in
-            Name=*)       Name=${1##*=}       ; shift ;;
-            Comment=*)    Comment=${1##*=}    ; shift ;;
-            Exec=*)       Exec=${1##*=}       ; shift ;;
-            TryExec=*)    TryExec=${1##*=}    ; shift ;;
-            Icon=*)       Icon=${1##*=}       ; shift ;;
-            Categories=*) Categories=${1##*=} ; shift ;;
+            Name=*)       Name=${1#*=}       ; shift ;;
+            Comment=*)    Comment=${1#*=}    ; shift ;;
+            Exec=*)       Exec=${1#*=}       ; shift ;;
+            TryExec=*)    TryExec=${1#*=}    ; shift ;;
+            Icon=*)       Icon=${1#*=}       ; shift ;;
+            Categories=*) Categories=${1#*=} ; shift ;;
             *=*)
                 if has ${1%%=*} ${OtherValidFields[@]} ; then
                     AddFields+="\n${1}"
