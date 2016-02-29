@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require desktop-utils gtk-icon-cache freedesktop-desktop freedesktop-mime
+require lua [ whitelist="5.1" multibuild=false ]
 
 SUMMARY="A free RTS engine supporting games like Command & Conquer and Red Alert"
 HOMEPAGE="http://www.openra.net/"
@@ -54,19 +55,17 @@ MYOPTIONS="
     ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
-LUA_SLOT="5.1"
 DEPENDENCIES="
     build:
         virtual/unzip
     build+run:
         dev-dotnet/libgdiplus
-        dev-lang/lua:${LUA_SLOT}
         dev-lang/mono[>=3.2]
         media-libs/freetype:2
         media-libs/SDL:2[X]
         media-libs/openal
         x11-dri/mesa
-        providers:ijg-jpeg? ( media-libs/jpeg )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
@@ -108,7 +107,7 @@ src_prepare() {
     emake VERSION="${PV}" version
 
     edo sed \
-        -e "s/@LIBLUA51@/liblua${LUA_SLOT}.so/" \
+        -e "s/@LIBLUA51@/liblua5.1.so/" \
         "${WORK}"/thirdparty/Eluant.dll.config.in > Eluant.dll.config
 
     edo cd "${WORK}"/thirdparty/download
