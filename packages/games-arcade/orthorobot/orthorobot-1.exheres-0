@@ -1,0 +1,13 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require love-app [ loveslot="0.7" lovezip=true lovepn="Ortho Robot" ]
+
+SUMMARY="A perspective based puzzle game, where you flatten the view to move across gaps"
+HOMEPAGE="http://stabyourself.net/orthorobot/"
+DOWNLOADS="http://stabyourself.net/dl.php?file=orthorobot/orthorobot-linux.zip -> ${PNV}.zip"
+
+LICENCES="CCPL-Attribution-NonCommercial-ShareAlike-3.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
