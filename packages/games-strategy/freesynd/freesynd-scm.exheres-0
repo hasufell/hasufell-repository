@@ -22,9 +22,9 @@ DEPENDENCIES="
         media-libs/SDL:0[X]
         media-libs/SDL_image:1
         media-libs/SDL_mixer:0[ogg]
+        media-libs/libogg
         media-libs/libpng:=
         media-libs/libvorbis
-        media-libs/libogg
 "
 
 src_install() {
