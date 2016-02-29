@@ -1,0 +1,44 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_SVN_RAW_URI=1
+SCM_REPOSITORY="http://svn.code.sf.net/p/freesynd/code/freesynd/trunk"
+
+require desktop-utils
+require gtk-icon-cache
+require cmake [ out_of_source=false ]
+require scm-svn
+
+SUMMARY="A cross-platform reimplementation of engine for the classic Bullfrog game, Syndicate"
+HOMEPAGE="http://freesynd.sourceforge.net/"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/SDL_image:1
+        media-libs/SDL_mixer:0[ogg]
+        media-libs/libpng:=
+        media-libs/libvorbis
+        media-libs/libogg
+"
+
+src_install() {
+    dobin src/${PN}
+    insinto /usr/share/${PN}
+    doins -r data
+    insinto /usr/share/icons/hicolor/128x128/apps
+    newins icon/sword.png ${PN}.png
+    install_desktop_entry
+    dodoc NEWS README INSTALL AUTHORS
+}
+
+pkg_postinst() {
+    elog "You have to set \"data_dir = /my/path/to/synd-data\""
+    elog "in \"~/.${PN}/${PN}.ini\"."
+}
+
