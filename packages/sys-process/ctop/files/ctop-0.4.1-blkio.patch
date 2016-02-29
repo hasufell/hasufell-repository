@@ -1,0 +1,38 @@
+From 093d4c2b604f6e94d01420c0937d5fe574c49a40 Mon Sep 17 00:00:00 2001
+From: Jean-Tiare Le Bigot <jt@yadutaf.fr>
+Date: Tue, 19 Jan 2016 08:36:07 +0100
+Subject: [PATCH] workaround broken blkio on some system. Fixes #15
+
+---
+ cgroup_top.py | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/cgroup_top.py b/cgroup_top.py
+index fece4a6..8bbb8f0 100755
+--- a/cgroup_top.py
++++ b/cgroup_top.py
+@@ -26,6 +26,7 @@
+ import pwd
+ import time
+ import pty
++import errno
+ import subprocess
+ import multiprocessing
+ 
+@@ -346,8 +347,14 @@ def collect(measures):
+             collect_ensure_common(cur[cgroup.name], cgroup)
+ 
+             # Collect BlockIO stats
+-            cur[cgroup.name]['blkio.throttle.io_service_bytes'] = cgroup['blkio.throttle.io_service_bytes']
+-            cur[cgroup.name]['blkio.throttle.io_service_bytes.diff'] = {'total':0}
++            try:
++                cur[cgroup.name]['blkio.throttle.io_service_bytes'] = cgroup['blkio.throttle.io_service_bytes']
++                cur[cgroup.name]['blkio.throttle.io_service_bytes.diff'] = {'total':0}
++            except IOError as e:
++                # Workaround broken systems (see #15)
++                if e.errno == errno.ENOENT:
++                    continue
++                raise
+ 
+             # Collect BlockIO increase on run > 1
+             if cgroup.name in prev:

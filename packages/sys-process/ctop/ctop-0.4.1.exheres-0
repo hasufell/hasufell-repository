@@ -1,0 +1,20 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=setuptools multibuild=false ]
+
+SUMMARY="A lightweight top like monitor for linux CGroups"
+HOMEPAGE="https://github.com/yadutaf/ctop https://pypi.python.org/pypi/ctop"
+DOWNLOADS="https://github.com/yadutaf/ctop/archive/v${PV}.tar.gz -> ${PNV}.tar.gz"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+# upstream backports
+DEFAULT_SRC_PREPARE_PATCHES=(
+	"${FILES}"/${PNV}-rel-paths.patch
+	"${FILES}"/${PNV}-blkio.patch
+)
+
