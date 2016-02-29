@@ -23,7 +23,7 @@ DEPENDENCIES="
         dev-python/python-application[python_abis:*(-)?]
         media-libs/libvpx
         media-libs/v4l-utils
-        media/ffmpeg
+        media/ffmpeg[h264]
         sys-apps/util-linux
         sys-sound/alsa-lib
         providers:libressl? ( dev-libs/libressl:= )
