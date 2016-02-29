@@ -22,7 +22,6 @@ LICENCES="GPL-2 GPL-3 CCPL-Attribution-ShareAlike-3.0 CCPL-Attribution-3.0 CC0 O
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-    debug
     editor
 "
 
@@ -53,13 +52,8 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 )
 
 CMAKE_SRC_CONFIGURE_OPTIONS=(
-    'debug DEBUG_FEATURES'
     'editor EDITOR_SUPPORT'
 )
-
-pkg_preinst() {
-    gtk-icon-cache_pkg_preinst
-}
 
 pkg_postinst() {
     gtk-icon-cache_pkg_postinst
