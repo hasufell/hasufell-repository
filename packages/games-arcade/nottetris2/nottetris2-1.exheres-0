@@ -1,0 +1,13 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require love-app [ loveslot="0.7" lovezip=true lovepn="Not Tetris 2" ]
+
+SUMMARY="The spiritual successor of the classic Tetris mixed with physics"
+HOMEPAGE="http://stabyourself.net/nottetris2/"
+DOWNLOADS="http://stabyourself.net/dl.php?file=nottetris2/nottetris2-linux.zip -> ${PNV}.zip"
+
+LICENCES="CCPL-Attribution-NonCommercial-ShareAlike-3.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
