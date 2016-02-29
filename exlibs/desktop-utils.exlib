@@ -16,9 +16,9 @@ DEPENDENCIES+="
 # Like 'herebin', but for desktop entry files.
 #
 # Arguments: <filename>
-# Side-effects: installs the desktop entry via 'here_desktop_entry'
+# Side-effects: installs the desktop entry
 # Inspection: $TEMP, $IMAGE
-# Errors: according to 'desktop-file-validate'
+# Errors: according to 'desktop-file-validate', on missing argument
 here_desktop_entry() {
     if [[ ${#} -ne 1 ]]; then
         die "exactly one argument needed."
