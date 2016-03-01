@@ -2,7 +2,7 @@ From 864a0ea28f64421c66d711eb4eee2865a0a0efc2 Mon Sep 17 00:00:00 2001
 From: Julian Ospald <hasufell@gentoo.org>
 Date: Tue, 1 Mar 2016 14:49:41 +0100
 Subject: [PATCH] CMAKE: use GNUInstallDirs
-Upstream: not yet, https://github.com/mhogomchungu/zuluCrypt/pull/29
+Upstream: yes, https://github.com/mhogomchungu/zuluCrypt/pull/29
 
 This fixes various problems of misplaced files in
 distributions that have a non-standard filesystem
