@@ -119,8 +119,6 @@ src_install() {
     insinto /etc/logrotate.d
     newins "${FILES}"/openrc.logrotate openrc
 
-    newpamd "${FILES}"/start-stop-daemon.pam start-stop-daemon
-
     dodoc ChangeLog *.md
     if option newnet; then
         dodoc README.newnet
