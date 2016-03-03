@@ -28,12 +28,10 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 SCONS_SRC_CONFIGURE_PARAMS=(
-		APPEND_CCFLAGS="${CFLAGS}"
-		APPEND_LINKFLAGS="${LDFLAGS}"
-		libkate=0
-		mandir=/usr/share/man
-        destdir=${IMAGE}
-        prefix=/usr/$(exhost --target)
+    libkate=0
+    bindir="${IMAGE}/usr/$(exhost --target)/bin"
+    destdir=${IMAGE}
+    prefix=/usr
 )
 SCONS_SRC_COMPILE_PARAMS=( "${SCONS_SRC_CONFIGURE_PARAMS[@]}" )
 SCONS_SRC_INSTALL_PARAMS=( "${SCONS_SRC_CONFIGURE_PARAMS[@]}" )
