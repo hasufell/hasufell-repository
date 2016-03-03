@@ -1,0 +1,45 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require scons
+
+SUMMARY="A simple converter to create Ogg Theora files"
+HOMEPAGE="http://www.v2v.cc/~j/ffmpeg2theora/"
+DOWNLOADS="http://www.v2v.cc/~j/${PN}/downloads/${PNV}.tar.bz2"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        media/ffmpeg
+        media-libs/libvorbis
+        media-libs/libogg
+        media-libs/libtheora
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PN}-0.30-underlinking.patch
+    -p1 "${FILES}"/${PN}-0.30-build.patch
+)
+
+SCONS_SRC_CONFIGURE_PARAMS=(
+		APPEND_CCFLAGS="${CFLAGS}"
+		APPEND_LINKFLAGS="${LDFLAGS}"
+		libkate=0
+		mandir=/usr/share/man
+        destdir=${IMAGE}
+        prefix=/usr/$(exhost --target)
+)
+SCONS_SRC_COMPILE_PARAMS=( "${SCONS_SRC_CONFIGURE_PARAMS[@]}" )
+SCONS_SRC_INSTALL_PARAMS=( "${SCONS_SRC_CONFIGURE_PARAMS[@]}" )
+
+src_install() {
+    scons_src_install
+	dodoc AUTHORS ChangeLog README subtitles.txt TODO
+}
+

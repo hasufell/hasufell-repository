@@ -1,0 +1,17 @@
+Source: Gentoo
+Upstream: unknown
+Reason: fix underlinking
+
+--- SConstruct
++++ SConstruct
+@@ -206,9 +206,8 @@
+   if env['crossmingw']:
+       env.Append(CCFLAGS=['-Wl,-subsystem,windows'])
+       env.Append(LIBS=['m'])
+-  elif env['static']:
+-      env.Append(LIBS=['m', 'dl'])
+ 
++  env.Append(LIBS=['m', 'dl'])
+ 
+ env = conf.Finish()
+ 

@@ -1,0 +1,76 @@
+Source: Julian Ospald <hasufell@posteo.de>
+Upstream: no
+Reason: fix build by respecting pkg-config, CC etc
+
+diff --git a/SConstruct b/SConstruct
+index 2458096..eda1c41 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -4,6 +4,7 @@ from glob import glob
+ import os
+ 
+ import SCons
++import SCons.Util
+ 
+ def version():
+     #return "0.29"
+@@ -41,6 +42,27 @@ opts.AddVariables(
+ env = Environment(options = opts)
+ Help(opts.GenerateHelpText(env))
+ 
++if os.environ.has_key('AR'):
++    env['AR'] = os.environ['AR']
++if os.environ.has_key('RANLIB'):
++    env['RANLIB'] = os.environ['RANLIB']
++if os.environ.has_key('CC'):
++    env['CC'] = os.environ['CC']
++if os.environ.has_key('CFLAGS'):
++    env['CCFLAGS'] += SCons.Util.CLVar(os.environ['CFLAGS'])
++if os.environ.has_key('CXX'):
++    env['CXX'] = os.environ['CXX']
++if os.environ.has_key('CXXFLAGS'):
++    env['CXXFLAGS'] += SCons.Util.CLVar(os.environ['CXXFLAGS'])
++if os.environ.has_key('CPPFLAGS'):
++    env['CCFLAGS'] += SCons.Util.CLVar(os.environ['CPPFLAGS'])
++if os.environ.has_key('LDFLAGS'):
++    env['LINKFLAGS'] += SCons.Util.CLVar(os.environ['LDFLAGS'])
++if os.environ.has_key('PKG_CONFIG'):
++    env['PKG_CONFIG'] = os.environ['PKG_CONFIG']
++else:
++    env['PKG_CONFIG'] = 'pkg-config'
++
+ pkg_flags="--cflags --libs"
+ if env['static']:
+   pkg_flags+=" --static"
+@@ -75,9 +97,9 @@ if GetOption("help"):
+ 
+ def ParsePKGConfig(env, name): 
+   if os.environ.get('PKG_CONFIG_PATH', ''):
+-    action = 'PKG_CONFIG_PATH=%s pkg-config %s "%s"' % (os.environ['PKG_CONFIG_PATH'], pkg_flags, name)
++    action = 'PKG_CONFIG_PATH=%s %s %s "%s"' % (os.environ['PKG_CONFIG_PATH'], env['PKG_CONFIG'], pkg_flags, name)
+   else:
+-    action = 'pkg-config %s "%s"' % (pkg_flags, name)
++    action = '%s %s "%s"' % (env['PKG_CONFIG'], pkg_flags, name)
+   return env.ParseConfig(action)
+ 
+ def TryAction(action):
+@@ -89,16 +111,16 @@ def TryAction(action):
+ 
+ def CheckPKGConfig(context, version): 
+   context.Message( 'Checking for pkg-config... ' ) 
+-  ret = TryAction('pkg-config --atleast-pkgconfig-version=%s' % version)[0] 
++  ret = TryAction('%s --atleast-pkgconfig-version=%s' % (env['PKG_CONFIG'], version))[0] 
+   context.Result( ret ) 
+   return ret 
+ 
+ def CheckPKG(context, name): 
+   context.Message( 'Checking for %s... ' % name )
+   if os.environ.get('PKG_CONFIG_PATH', ''):
+-    action = 'PKG_CONFIG_PATH=%s pkg-config --exists "%s"' % (os.environ['PKG_CONFIG_PATH'], name)
++    action = 'PKG_CONFIG_PATH=%s %s --exists "%s"' % (os.environ['PKG_CONFIG_PATH'], env['PKG_CONFIG'], name)
+   else:
+-    action = 'pkg-config --exists "%s"' % name
++    action = '%s --exists "%s"' % (env['PKG_CONFIG'], name)
+   ret = TryAction(action)[0]
+   context.Result( ret ) 
+   return ret
