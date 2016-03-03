@@ -6,7 +6,7 @@ require cmake
 
 SUMMARY="A realtime strategy game engine"
 HOMEPAGE="http://stratagus.sourceforge.net/"
-DOWNLOADS="http://launchpad.net/stratagus/trunk/${PV}/+download/stratagus_${PV}.orig.tar.gz"
+DOWNLOADS="https://launchpad.net/stratagus/trunk/${PV%.*}/+download/stratagus_${PV}.orig.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -21,7 +21,6 @@ DEPENDENCIES="
         dev-db/sqlite:3
         dev-lang/toluapp
         media-libs/SDL:0[X]
-        media-libs/libmikmod
         media-libs/libmng
         media-libs/libogg
         media-libs/libpng:=
@@ -35,17 +34,27 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${PN}_${PV}.orig
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DBINDIR=/usr/$(exhost --target)/bin
+    -DBINDIR="/usr/$(exhost --target)/bin"
     -DDOCDIR="/usr/share/doc/${PNVR}"
-    -DGAMEDIR=/usr/$(exhost --target)/bin
-    -DSBINDIR=/usr/$(exhost --target)/bin
+    -DGAMEDIR="/usr/$(exhost --target)/bin"
+    -DMANDIR="/usr/share/man/man6"
+    -DPIXMAPSDIR="/usr/share/pixmaps"
+    -DSBINDIR="/usr/$(exhost --target)/bin"
+    -DSTRATAGUS_HEADERS="/usr/$(exhost --target)/include"
 
     -DENABLE_DEV=ON
     -DENABLE_DOC=OFF
+    -DENABLE_STATIC=OFF
+    -DENABLE_STRIP=OFF
+    -DENABLE_USEGAMEDIR=OFF
     -DWITH_BZIP2=ON
-    -DWITH_MIKMOD=ON
+    -DWITH_FLUIDSYNTH=OFF
+    -DWITH_MIKMOD=OFF
     -DWITH_MNG=ON
     -DWITH_OGGVORBIS=ON
+    -DWITH_RENDERER=OpenGL
+    -DWITH_STACKTRACE=OFF
     -DWITH_THEORA=ON
+    -DWITH_X11=ON
 )
 
