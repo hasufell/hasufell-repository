@@ -52,7 +52,9 @@ pkg_postinst() {
     elog "You need the Warcraft II game data in"
     elog "  ~/.stratagus/wargus/"
     elog "unpacked via:"
-    elog "  /usr/$(exhost --target)/bin/wartool -m -v -r \"<cdrom>/data\" ~/.stratagus/wargus/"
+    elog "  /usr/$(exhost --target)/bin/wartool -v \"<cdrom>/data\" ~/.stratagus/wc2/"
+    elog "Then start the game via"
+    elog "  cd ~/.stratagus/wc2/ && wargus"
 
     gtk-icon-cache_pkg_postinst
 }
