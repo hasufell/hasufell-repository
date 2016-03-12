@@ -1,0 +1,23 @@
+From 446316ba82ffb6f07dbba83879d0534e3257e890 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Sat, 12 Mar 2016 18:05:17 +0100
+Subject: [PATCH 2/2] Respect system LDFLAGS
+
+https://github.com/EionRobb/pidgin-opensteamworks/pull/139
+---
+ steam-mobile/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/steam-mobile/Makefile b/steam-mobile/Makefile
+index 1de0c50..ac06361 100644
+--- a/steam-mobile/Makefile
++++ b/steam-mobile/Makefile
+@@ -48,4 +48,4 @@ clean:
+ 	rm -f libsteam.so
+ 
+ libsteam.so: $(STEAM_SOURCES)
+-	$(CC) -Wall -I. -fPIC $(CFLAGS) $(STEAM_SOURCES) -o $@ $(LIBPURPLE_CFLAGS) $(LIBPURPLE_LIBS) -shared
++	$(CC) -Wall -I. -fPIC $(CFLAGS) $(STEAM_SOURCES) -o $@ $(LDFLAGS) $(LIBPURPLE_CFLAGS) $(LIBPURPLE_LIBS) -shared
+-- 
+2.7.2
+

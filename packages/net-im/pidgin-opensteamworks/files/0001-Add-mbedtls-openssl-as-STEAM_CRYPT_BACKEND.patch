@@ -1,0 +1,46 @@
+From 01cb534f1a9d2b161768c8294875700de060f63a Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Sat, 12 Mar 2016 18:04:53 +0100
+Subject: [PATCH 1/2] Add mbedtls/openssl as STEAM_CRYPT_BACKEND
+
+Also fix the ifdef check to include linux systems.
+
+https://github.com/EionRobb/pidgin-opensteamworks/pull/139
+---
+ steam-mobile/Makefile    | 6 ++++++
+ steam-mobile/steam_rsa.c | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/steam-mobile/Makefile b/steam-mobile/Makefile
+index 3f66ee1..1de0c50 100644
+--- a/steam-mobile/Makefile
++++ b/steam-mobile/Makefile
+@@ -21,6 +21,12 @@ ifeq ($(STEAM_CRYPT_BACKEND), nss)
+ else ifeq ($(STEAM_CRYPT_BACKEND), gcrypt)
+ 	LIBPURPLE_CFLAGS += $(shell libgcrypt-config --cflags) -DUSE_GCRYPT_CRYPTO
+ 	LIBPURPLE_LIBS += $(shell libgcrypt-config --libs)
++else ifeq ($(STEAM_CRYPT_BACKEND), mbedtls)
++	LIBPURPLE_CFLAGS += -DUSE_MBEDTLS_CRYPTO
++	LIBPURPLE_LIBS += -lmbedtls -lmbedcrypto -lmbedx509
++else ifeq ($(STEAM_CRYPT_BACKEND), openssl)
++	LIBPURPLE_CFLAGS += $(shell ${PKG_CONFIG} --cflags openssl) -DUSE_OPENSSL_CRYPTO
++	LIBPURPLE_LIBS += $(shell ${PKG_CONFIG} --libs openssl)
+ endif
+ 
+ STEAM_SOURCES = \
+diff --git a/steam-mobile/steam_rsa.c b/steam-mobile/steam_rsa.c
+index c14196e..650baa9 100644
+--- a/steam-mobile/steam_rsa.c
++++ b/steam-mobile/steam_rsa.c
+@@ -9,7 +9,7 @@ password=<base64rsaencryptedpwd>&username=<steamusername>&emailauth=&captchagid=
+ 
+ */
+ 
+-#if defined USE_OPENSSL_CRYPTO && !(defined __APPLE__ || defined __FreeBSD__ || defined __OpenBSD__)
++#if defined USE_OPENSSL_CRYPTO && !(defined __APPLE__ || defined __unix__)
+ #	undef USE_OPENSSL_CRYPTO
+ #endif
+ 
+-- 
+2.7.2
+
