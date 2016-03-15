@@ -21,7 +21,7 @@ DEPENDENCIES="
         x11-apps/xdg-utils
     build+run:
         gnome-bindings/pygtk:2[python_abis:*(-)?]
-	    gnome-bindings/pygobject:2[python_abis:*(-)?]
+        gnome-bindings/pygobject:2[python_abis:*(-)?]
     suggestion:
         app-text/dvipng
         app-text/texlive-core
