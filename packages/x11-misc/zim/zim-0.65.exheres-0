@@ -1,0 +1,50 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtk-icon-cache freedesktop-desktop
+require setup-py [ import=distutils blacklist="3" multibuild=false python_opts='[sqlite]' ]
+
+SUMMARY="A desktop wiki"
+HOMEPAGE="http://zim-wiki.org/"
+DOWNLOADS="http://zim-wiki.org/downloads/${PNV}.tar.gz"
+
+LICENCES="
+    BSD
+    || ( GPL-2 GPL-3 )
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        x11-apps/xdg-utils
+    build+run:
+        gnome-bindings/pygtk:2[python_abis:*(-)?]
+	    gnome-bindings/pygobject:2[python_abis:*(-)?]
+    suggestion:
+        app-text/dvipng
+        app-text/texlive-core
+        dev-libs/zeitgeist
+        dev-scm/bzr
+        media-gfx/ImageMagick
+        media-gfx/graphviz
+        media-gfx/scrot
+        media-sound/lilypond
+        sci-apps/gnuplot
+"
+
+SETUP_PY_SRC_INSTALL_PARAMS=(
+    --skip-xdg-cmd
+)
+
+pkg_postinst() {
+    freedesktop-desktop_pkg_postinst
+    gtk-icon-cache_pkg_postinst
+}
+
+pkg_postrm() {
+    freedesktop-desktop_pkg_postrm
+    gtk-icon-cache_pkg_postrm
+}
+
