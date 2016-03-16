@@ -40,6 +40,7 @@ DEPENDENCIES="
         dev-python/python-otr[python_abis:*(-)?]
         dev-python/python-xcaplib[python_abis:*(-)?]
         dev-python/zopeinterface[python_abis:*(-)?]
+        media-libs/x264[-10bit]
         net-twisted/TwistedCore[python_abis:*(-)?]
 "
 
