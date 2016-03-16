@@ -1,0 +1,23 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require pypi setup-py [ import=distutils blacklist="3" ]
+
+SUMMARY="Off-The-Record Messaging protocol implementation for Python"
+HOMEPAGE="https://github.com/AGProjects/python-otr"
+
+LICENCES="LGPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/cryptography[python_abis:*(-)?]
+        dev-python/enum34[python_abis:*(-)?]
+        dev-python/gmpy2[python_abis:*(-)?]
+        dev-python/python-application[python_abis:*(-)?]
+        dev-python/zopeinterface[python_abis:*(-)?]
+        net-libs/libotr
+"
+
