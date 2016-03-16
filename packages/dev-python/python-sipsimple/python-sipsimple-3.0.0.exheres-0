@@ -20,7 +20,7 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         dev-db/sqlite:3
-        dev-python/python-application[python_abis:*(-)?]
+        dev-python/python-application[python_abis:*(-)?][>=2.0.0]
         media-libs/libvpx
         media-libs/v4l-utils
         media/ffmpeg[h264]
@@ -36,7 +36,8 @@ DEPENDENCIES="
         dev-python/python-dateutil[python_abis:*(-)?]
         dev-python/python-eventlib[python_abis:*(-)?]
         dev-python/python-gnutls[python_abis:*(-)?]
-        dev-python/python-msrplib[python_abis:*(-)?]
+        dev-python/python-msrplib[python_abis:*(-)?][>=0.19.0]
+        dev-python/python-otr[python_abis:*(-)?]
         dev-python/python-xcaplib[python_abis:*(-)?]
         dev-python/zopeinterface[python_abis:*(-)?]
         net-twisted/TwistedCore[python_abis:*(-)?]
