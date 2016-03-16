@@ -25,7 +25,7 @@ DEPENDENCIES="
         dev-python/python-cjson[python_abis:*(-)?]
         dev-python/python-dateutil[python_abis:*(-)?]
         dev-python/python-eventlib[python_abis:*(-)?]
-        dev-python/python-sipsimple[python_abis:*(-)?][>=2.6.0]
+        dev-python/python-sipsimple[python_abis:*(-)?][>=3.0.0]
         dev-python/zopeinterface[python_abis:*(-)?]
         net-twisted/TwistedCore[python_abis:*(-)?]
 "
@@ -55,12 +55,5 @@ TryExec=${PN}
 Icon=${PN}
 Categories=Network;Telephony;
 EOF
-}
-
-pkg_postinst() {
-    gtk-icon-cache_pkg_postinst
-    elog "You need to run:"
-    elog "  eclectic x264 set 8bit"
-    elog "otherwise blink will break at runtime."
 }
 
