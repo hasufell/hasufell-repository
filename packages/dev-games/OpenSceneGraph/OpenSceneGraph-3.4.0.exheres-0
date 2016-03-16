@@ -1,0 +1,87 @@
+# Copyright 2013-2014 Thomas Witt
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake [ api=2 ]
+
+SUMMARY="High performance 3D graphics toolkit"
+DESCRIPTION="
+    The OpenSceneGraph is an open source high performance 3D graphics toolkit,
+    used by application developers in fields such as visual simulation, games,
+    virtual reality, scientific visualization and modelling. Written entirely
+    in Standard C++ and OpenGL it runs on all Windows platforms, OSX, GNU/Linux,
+    IRIX, Solaris, HP-Ux, AIX and FreeBSD operating systems. The OpenSceneGraph
+    is now well established as the world leading scene graph technology, used
+    widely in the vis-sim, space, scientific, oil-gas, games and virtual reality
+    industries.
+"
+
+MY_PN="OpenSceneGraph"
+MY_PNV=${MY_PN}-${PV}
+HOMEPAGE="http://${PN}.org"
+DOWNLOADS="http://trac.openscenegraph.org/downloads/developer_releases/${MY_PNV}.zip"
+
+LICENCES="wxWinLL-3 LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+    build+run:
+        app-text/poppler[cairo]
+        dev-libs/glib:2
+        media/ffmpeg
+        media-libs/freetype:2
+        media-libs/giflib:=
+        media-libs/gstreamer:1.0
+        media-libs/ilmbase
+        media-libs/jasper
+        media-libs/libpng:=
+        media-libs/openexr
+        media-libs/SDL:0
+        media-libs/tiff
+        media-plugins/gst-plugins-base:1.0
+        net-misc/curl
+        sys-libs/zlib
+        x11-dri/mesa
+        x11-libs/cairo
+        x11-libs/libX11
+        x11-libs/libXrandr
+        x11-libs/qtbase:5
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-Fix-wrong-jpeg-boolean-handling.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DCMAKE_DISABLE_FIND_PACKAGE_Asio=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_COLLADA=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_FBX=
+    -DCMAKE_DISABLE_FIND_PACKAGE_Xine=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_OpenVRML=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_Performer=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_GDAL=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_LibVNCServer=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_OurDCMTK=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_RSVG=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_NVTT=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_LIBLAS=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_Lua51=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_Lua52=1
+    -DCMAKE_DISABLE_FIND_PACKAGE_SDL2=1
+    -DOSG_USE_QT=ON
+    -DOSG_USE_LOCAL_LUA_SOURCE=OFF
+    -DDESIRED_QT_VERSION=5
+    -DOPENGL_PROFILE=GL2
+    -DDYNAMIC_OPENSCENEGRAPH=ON
+    -DLIB_POSTFIX=""
+)
+
