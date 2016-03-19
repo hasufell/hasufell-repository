@@ -38,7 +38,7 @@ src_install() {
     default
 
     exeinto /etc/init.d
-    doexe "${FILES}"/umurmurd.initd umurmurd
+    newexe "${FILES}"/umurmurd.initd umurmurd
     insinto /etc/conf.d
     newins "${FILES}"/umurmurd.confd umurmurd
     install_systemd_files
