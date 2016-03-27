@@ -17,10 +17,6 @@ DEPENDENCIES="
 
 WORK=${WORKBASE}/sdk
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-install.patch
-)
-
 src_compile() {
     export CXX=${CXX} AR=${AR} RANLIB=${RANLIB}
     emake -C ${PN}/projects/gnuc \
@@ -29,10 +25,10 @@ src_compile() {
 
 src_install() {
     emake -C ${PN}/projects/gnuc \
-        LIBRARYDEST="${IMAGE}"/usr/$(exhost --target)/lib \
-        INCLUDEDEST="${IMAGE}"/usr/$(exhost --target)/include/ install
-
-    insinto /usr/share/doc/${PNVR}/html
-    doins -r "${WORK}"/docs/*
+        DESTDIR=${IMAGE} \
+        LIBDIR_DEST=usr/$(exhost --target)/lib \
+        INCLUDEDIR_DEST=usr/$(exhost --target)/include/ \
+        DOCDIR_BASEDIR=usr/share/docs/${PNVR} \
+        install install_docs
 }
 
