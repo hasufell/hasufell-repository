@@ -1,11 +1,11 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require setup-py [ import=distutils work=pygame-sdl2-for-renpy-${PV} ]
+require setup-py [ import=distutils work=pygame_sdl2-2.1.0-for-renpy-${PV} ]
 
 SUMMARY="Reimplementation of portions of the pygame API using SDL2"
 HOMEPAGE="https://github.com/renpy/pygame_sdl2"
-DOWNLOADS="http://www.renpy.org/dl/${PV}/pygame_sdl2-for-renpy-${PV}.tar.bz2"
+DOWNLOADS="http://www.renpy.org/dl/${PV}/pygame_sdl2-2.1.0-for-renpy-${PV}.tar.gz"
 
 LICENCES="LGPL-2.1 ZLIB"
 SLOT="0"
@@ -27,4 +27,10 @@ DEPENDENCIES="
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
+
+prepare_one_multibuild() {
+    edo rm -r gen{,3}
+
+    setup-py_prepare_one_multibuild
+}
 
