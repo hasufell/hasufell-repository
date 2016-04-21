@@ -1,0 +1,60 @@
+# Copyright 2016 Julian Ospald
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=christopho tag=v${PV} ] \
+    cmake [ api=2 ] \
+    lua [ whitelist="5.1" multibuild=false ] \
+    gtk-icon-cache
+
+SUMMARY="GUI to edit quests for the Solarus engine"
+HOMEPAGE="https://github.com/christopho/solarus-quest-editor"
+
+LICENCES="
+    GPL-3 [[ note = [ original source code ] ]]
+    CCPL-Attribution-ShareAlike-3.0 [[ note = [ images in the editor ] ]]
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-games/physfs
+        games-engines/solarus[~${PV}]
+        media-libs/SDL:2
+        media-libs/SDL_image:2
+        media-libs/SDL_ttf:2
+        media-libs/libmodplug[>=0.8.8.4]
+        media-libs/libvorbis
+        media-libs/openal
+        x11-libs/qtbase:5
+        x11-libs/qttools:5
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DSOLARUS_USE_LUAJIT=OFF
+    -DSOLARUS_INCLUDE_DIR="/usr/$(exhost --target)/include/solarus"
+    -DSOLARUS_LIBRARY="/usr/$(exhost --target)/lib/libsolarus.so"
+)
+
+src_prepare() {
+    cmake_src_prepare
+
+    edo sed -i \
+        -e "s#^Exec=.*#Exec=${PN}#" \
+        -e "s#^Icon=.*#Icon=${PN}#" \
+        "${CMAKE_SOURCE}"/resources/solarus-quest-editor.desktop
+}
+
+src_install() {
+    dobin solarus-quest-editor
+
+    insinto /usr/share/applications
+    doins "${CMAKE_SOURCE}"/resources/solarus-quest-editor.desktop
+
+    insinto /usr/share/icons/hicolor/128x128/apps
+    newins "${CMAKE_SOURCE}"/images/icon/sqe-icon-png-128px.png ${PN}.png
+}
+
