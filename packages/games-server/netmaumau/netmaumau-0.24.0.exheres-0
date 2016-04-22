@@ -76,15 +76,7 @@ src_install() {
 }
 
 pkg_postinst() {
-    # if there is a running nmm-server started by xinetd
-    # than it get stopped, so the next connection attempt
-    # will use the newly installed instance
-    if [ -n "`pgrep -f "nmm-server"`" ]; then
-                if [ -n "`pgrep -f "inetd"`" ]; then
-            elog "Detected a NetMauMau server started from (x)inetd."
-                        elog "Stopping nmm-server to spawn the newly installed instance at next request …"
-                        killall nmm-server 2> /dev/null
-                fi
-    fi
+    elog "You will need to restart your server instance for"
+    elog "the changes to take effect."
 }
 
