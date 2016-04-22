@@ -77,7 +77,7 @@ love-app_src_install() {
 
     if [[ -e "${WORK}/${LOVE_PN}.love" ]] ; then
         newexe "${WORK}/${LOVE_PN}.love" ${PN}.love
-    elif [[ -e "${FETCHEDDIR}/${PNV}.love" ]] ; then
+    elif [[ -e "${FETCHEDDIR}/${LOVE_PN}.love" ]] ; then
         newexe "${FETCHEDDIR}/${LOVE_PN}.love" ${PN}.love
     else
         die "Could not find ${LOVE_PN}.love for installation!"
