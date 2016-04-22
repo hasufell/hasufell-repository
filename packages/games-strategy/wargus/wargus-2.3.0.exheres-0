@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake gtk-icon-cache
+require launchpad [ branch=trunk pv=${PV%.*} pnv=${PN}_${PV} suffix=orig.tar.gz ]
 
 SUMMARY="Warcraft II for the Stratagus game engine"
-HOMEPAGE="http://wargus.sourceforge.net/"
-DOWNLOADS="https://launchpad.net/${PN}/trunk/${PV%.*}/+download/${PN}_${PV}.orig.tar.gz"
+HOMEPAGE="https://wargus.github.io/"
 
 LICENCES="GPL-2"
 SLOT="0"

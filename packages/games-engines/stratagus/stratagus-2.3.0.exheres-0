@@ -3,10 +3,10 @@
 
 require lua [ whitelist="5.1" multibuild=false ]
 require cmake
+require launchpad [ branch=trunk pv=${PV%.*} pnv=stratagus_${PV} suffix=orig.tar.gz ]
 
 SUMMARY="A realtime strategy game engine"
-HOMEPAGE="http://stratagus.sourceforge.net/"
-DOWNLOADS="https://launchpad.net/stratagus/trunk/${PV%.*}/+download/stratagus_${PV}.orig.tar.gz"
+HOMEPAGE="https://wargus.github.io/stratagus.html"
 
 LICENCES="GPL-2"
 SLOT="0"
