@@ -22,7 +22,7 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --disable-help
-    --includedir=/usr/include
+    --includedir=/usr/$(exhost --target)/include
     --with-gtk
 )
 
