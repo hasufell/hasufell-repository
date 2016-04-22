@@ -2,12 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gtk-icon-cache
+require github [ user=SimonLarsen release=v${PV} suffix=love ]
 require love-app [ loveslot="0.10" lovepn=${PNV} ]
 
 SUMMARY="Arcade styled 2d action game centered around evacuating civilians from burning buildings"
 HOMEPAGE="http://tangramgames.dk/games/mrrescue/"
-DOWNLOADS="https://github.com/SimonLarsen/mrrescue/releases/download/v${PV}/${PNV}.love
-	https://dev.gentoo.org/~hasufell/distfiles/${PN}.png"
+DOWNLOADS+=" https://dev.gentoo.org/~hasufell/distfiles/${PN}.png"
 
 LICENCES="CCPL-Attribution-ShareAlike-3.0 MIT ZLIB"
 SLOT="0"

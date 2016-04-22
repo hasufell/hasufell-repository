@@ -2,14 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 
 
-WORK=${WORKBASE}/${PN}-${PNV}
-
 require gtk-icon-cache
+require github [ user=OpenMW tag=${PNV} ]
 require cmake [ api=2 ]
 
 SUMMARY="An open source reimplementation of TES III: Morrowind"
 HOMEPAGE="http://openmw.org/"
-DOWNLOADS="https://github.com/OpenMW/openmw/archive/${PNV}.tar.gz"
 
 LICENCES="GPL-3 MIT bitstream-font OFL-1.1"
 SLOT="0"

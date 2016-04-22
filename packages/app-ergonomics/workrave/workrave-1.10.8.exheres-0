@@ -5,6 +5,7 @@
 require python [ blacklist=3 has_lib=false multibuild=false ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require gtk-icon-cache freedesktop-desktop freedesktop-mime
+require github [ user=rcaelers tag=v${PV//./_} ]
 
 SUMMARY="Helpful utility to attack Repetitive Strain Injury (RSI)"
 DESCRIPTION="
@@ -14,7 +15,6 @@ DESCRIPTION="
     daily limit.
 "
 HOMEPAGE="http://www.workrave.org/"
-DOWNLOADS="https://github.com/rcaelers/${PN}/archive/v${PV//./_}.tar.gz -> ${PNV}.tar.gz"
 
 LICENCES="GPL-3"
 SLOT="0"

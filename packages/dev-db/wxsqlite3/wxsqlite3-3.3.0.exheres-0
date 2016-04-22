@@ -1,9 +1,9 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require github [ user=utelle tag=v${PV} ]
+
 SUMMARY="C++ wrapper around the public domain SQLite 3.x database"
-HOMEPAGE="https://github.com/utelle/wxsqlite3"
-DOWNLOADS="https://github.com/utelle/wxsqlite3/archive/v${PV}.tar.gz -> ${PNV}.tar.gz"
 
 LICENCES="wxWinLL-3"
 SLOT="3.0"

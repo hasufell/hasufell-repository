@@ -3,9 +3,9 @@
 
 MODULE_VERSION=001
 
+require github [ user=gregkh tag=v${MODULE_VERSION} ]
+
 SUMMARY="Simple alternative to vim's 'xxd -i' mode"
-HOMEPAGE="https://github.com/gregkh/xxdi"
-DOWNLOADS="https://github.com/gregkh/xxdi/archive/v${MODULE_VERSION}.tar.gz -> ${PNV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"

@@ -1,11 +1,12 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require github [ user=hawkthorne release=v${PV} pnv=hawkthorne suffix=love ]
 require love-app [ loveslot="0.9" lovepn=${PNV} ]
 
 SUMMARY="2d platformer based on the Community's Digital Estate Planning episode"
 HOMEPAGE="http://projecthawkthorne.com/"
-DOWNLOADS="https://github.com/hawkthorne/hawkthorne-journey/releases/download/v${PV}/hawkthorne.love -> ${PNV}.love"
+DOWNLOADS="${DOWNLOADS} -> ${PNV}.love"
 
 LICENCES="
     MIT [[ note = [ main game ] ]]

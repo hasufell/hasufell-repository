@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require love-app [ loveslot="0.9" lovezip=true lovepn=${PNV} ]
+require github [ user=SimonLarsen release=v${PV}b pnv=${PNV}-love suffix=zip ]
 
 SUMMARY="Free software ChuChu Rocket remake for PC"
 HOMEPAGE="http://tangramgames.dk/games/duckmarines/"
-DOWNLOADS="https://github.com/SimonLarsen/duckmarines/releases/download/v${PV}b/duckmarines-${PV}-love.zip"
 
 # no license info for Tserial.lua
 # https://love2d.org/wiki/Tserial
@@ -17,5 +17,4 @@ LICENCES="
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
-WORK=${WORKBASE}/${PNV}-love
 

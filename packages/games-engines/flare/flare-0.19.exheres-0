@@ -2,10 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake
+require github [ user=clintbellanger project=flare-engine tag=v${PV} pn=flare-engine ]
 
 SUMMARY="Free/Libre Action Roleplaying game engine"
-HOMEPAGE="https://github.com/clintbellanger/flare-engine"
-DOWNLOADS="https://github.com/clintbellanger/flare-engine/archive/v${PV}.tar.gz -> ${PNV}-engine.tar.gz"
 
 LICENCES="CCPL-Attribution-ShareAlike-3.0 GPL-3 OFL-1.1"
 SLOT="0"
@@ -18,8 +17,6 @@ DEPENDENCIES="
         media-libs/SDL_mixer:0
         media-libs/SDL_ttf:0
 "
-
-WORK=${WORKBASE}/flare-engine-${PV}
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBINDIR="/usr/$(exhost --target)/bin"

@@ -1,9 +1,9 @@
 # Copyright 2014 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require github [ user=jpfleury ]
+
 SUMMARY="GTK+ 3 port of Clearlooks, the default theme for GNOME 2"
-HOMEPAGE="https://github.com/jpfleury/clearlooks-phenix"
-DOWNLOADS="https://github.com/jpfleury/clearlooks-phenix/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
 
 LICENCES="GPL-3"
 SLOT="0"

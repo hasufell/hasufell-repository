@@ -6,10 +6,9 @@ require flag-o-matic
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require lua [ whitelist="5.1" multibuild=false ]
 require bash-completion
+require github [ user=velnias75 tag=V${PV} ]
 
 SUMMARY="Server for the popular card game Mau Mau"
-HOMEPAGE="http://sourceforge.net/projects/netmaumau"
-DOWNLOADS="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${PNV}-server.tar.gz"
 
 LICENCES="LGPL-3"
 SLOT="0"

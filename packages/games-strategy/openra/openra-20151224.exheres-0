@@ -3,10 +3,10 @@
 
 require desktop-utils gtk-icon-cache freedesktop-desktop freedesktop-mime
 require lua [ whitelist="5.1" multibuild=false ]
+require github [ user=OpenRA project=OpenRA tag=release-${PV} ]
 
 SUMMARY="A free RTS engine supporting games like Command & Conquer and Red Alert"
 HOMEPAGE="http://www.openra.net/"
-DOWNLOADS="https://github.com/OpenRA/OpenRA/archive/release-${PV}.tar.gz -> ${PNV}.tar.gz"
 
 ## this is a massive amount of 3rd party deps that would otherwise
 ## be fetched during build time
@@ -72,7 +72,7 @@ DEPENDENCIES="
 WORK=${WORKBASE}/OpenRA-release-${PV}
 
 src_unpack() {
-    unpack ${PNV}.tar.gz
+    unpack openra-release-${PV}.tar.gz
 
     # this is pure crapshit, but it will successfully die
     # if upstream has added/changed files

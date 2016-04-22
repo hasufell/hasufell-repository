@@ -1,15 +1,14 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-MY_PN=MyGUI
-MY_PNV=${MY_PN}${PV}
+MY_PNV=MyGUI${PV}
 WORK="${WORKBASE}/${PN}-${MY_PNV}"
 
 require cmake [ api=2 ]
+require github [ user=MyGUI tag=${MY_PNV} ]
 
 SUMMARY="A library for creating GUIs for games"
 HOMEPAGE="http://mygui.info/"
-DOWNLOADS="https://github.com/MyGUI/mygui/archive/${MY_PNV}.tar.gz"
 
 LICENCES="MIT"
 SLOT="0"
@@ -23,6 +22,7 @@ DEPENDENCIES="
         media-libs/glew
         x11-dri/mesa
 "
+
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p0 "${FILES}"/${PNV}-underlinking.patch

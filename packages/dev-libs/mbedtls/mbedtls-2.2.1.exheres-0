@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake
+require github [ user=ARMmbed tag=mbedtls-${PV} ]
 
 SUMMARY="Cryptographic library for embedded systems"
 HOMEPAGE="https://tls.mbed.org/"
-DOWNLOADS="https://github.com/ARMmbed/mbedtls/archive/mbedtls-${PV}.tar.gz"
 
 LICENCES="Apache-2.0"
 SLOT="0"

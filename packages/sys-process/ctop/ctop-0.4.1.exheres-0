@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require setup-py [ import=setuptools multibuild=false ]
+require github [ user=yadutaf tag=v${PV} ]
 
 SUMMARY="A lightweight top like monitor for linux CGroups"
-HOMEPAGE="https://github.com/yadutaf/ctop https://pypi.python.org/pypi/ctop"
-DOWNLOADS="https://github.com/yadutaf/ctop/archive/v${PV}.tar.gz -> ${PNV}.tar.gz"
+HOMEPAGE+=" https://pypi.python.org/pypi/ctop"
 
 LICENCES="MIT"
 SLOT="0"

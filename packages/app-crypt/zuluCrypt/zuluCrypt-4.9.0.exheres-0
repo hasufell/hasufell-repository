@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake
+require github [ user=mhogomchungu ]
 
 SUMMARY="Front end to cryptsetup"
 HOMEPAGE="http://mhogomchungu.github.io/zuluCrypt/"
-DOWNLOADS="https://github.com/mhogomchungu/zuluCrypt/releases/download/${PV}/zuluCrypt-${PV}.tar.bz2"
 
 LICENCES="|| ( GPL-2 GPL-3 )"
 SLOT="0"

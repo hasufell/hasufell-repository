@@ -6,6 +6,7 @@
 #   Distributed under the terms of the GNU General Public License v2
 #   $Id$
 
+require github [ user=ambrop72 ]
 require cmake
 
 MY_PNV=${PN}-${PV/_rc/rc}
@@ -21,8 +22,7 @@ DESCRIPTION="
     The BadVPN package also includes other network-related software,
     like tun2socks and NCD.
 "
-HOMEPAGE="https://github.com/ambrop72/badvpn https://code.google.com/p/badvpn/"
-DOWNLOADS="https://github.com/ambrop72/badvpn/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
+HOMEPAGE+=" https://code.google.com/p/badvpn/"
 
 LICENCES="BSD-3"
 PLATFORMS="~amd64 ~x86"

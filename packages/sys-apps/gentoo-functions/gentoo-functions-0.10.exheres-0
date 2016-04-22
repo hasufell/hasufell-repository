@@ -6,9 +6,9 @@
 #     Distributed under the terms of the GNU General Public License v2
 
 require flag-o-matic
+require github [ user=gentoo ]
 
 HOMEPAGE="https://www.gentoo.org"
-DOWNLOADS="https://github.com/gentoo/${PN}/archive/${PV}.tar.gz -> ${PNV}.tar.gz"
 
 SUMMARY="Base functions required by all gentoo systems"
 LICENCES="GPL-2"

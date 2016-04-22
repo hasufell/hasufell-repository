@@ -2,12 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
+require github [ user=minetest ]
 require cmake gtk-icon-cache
 
 SUMMARY="An InfiniMiner/Minecraft inspired game"
 HOMEPAGE="http://minetest.net/"
-DOWNLOADS="http://github.com/minetest/minetest/tarball/${PV} -> ${PNV}.tar.gz
-    http://github.com/minetest/minetest_game/tarball/${PV} -> minetest_game-${PV}.tar.gz"
+DOWNLOADS+=" http://github.com/minetest/minetest_game/tarball/${PV} -> minetest_game-${PV}.tar.gz"
 
 LICENCES="|| ( LGPL-2.1 LGPL-3 ) CCPL-Attribution-ShareAlike-3.0"
 SLOT="0"
@@ -66,7 +66,6 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 
 src_unpack() {
     default
-    edo mv minetest-minetest-* ${PNV}
     edo mv minetest-minetest_game-* minetest_game-${PV}
 }
 

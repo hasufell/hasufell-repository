@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ user=divVerent tag=v${PV} ]
 
 SUMMARY="Blind-ID library for user identification using RSA blind signatures"
 HOMEPAGE="http://git.xonotic.org/?p=xonotic/d0_blind_id.git;a=summary"
-DOWNLOADS="https://github.com/divVerent/d0_blind_id/archive/v${PV}.tar.gz -> ${PNV}.tar.gz"
 
 LICENCES="BSD-3"
 SLOT="0"

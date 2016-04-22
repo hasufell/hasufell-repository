@@ -2,10 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake gtk-icon-cache
+require github [ user=gerstrong tag=v${PV//./}release ]
 
 SUMMARY="Open Source Commander Keen clone (needs original game files)"
-HOMEPAGE="http://clonekeenplus.sourceforge.net"
-DOWNLOADS="https://github.com/gerstrong/${PN}/archive/v${PV//./}release.tar.gz -> ${PNV}.tar.gz"
 
 LICENCES="GPL-2 LGPL-2"
 SLOT="0"

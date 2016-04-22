@@ -1,9 +1,9 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require github [ user=EionRobb rev=5a5bebab831618b658ffdeb418b8b2e430a18dd4 ]
+
 SUMMARY="Steam protocol plugin for pidgin"
-HOMEPAGE="https://github.com/eionrobb/pidgin-opensteamworks"
-DOWNLOADS="https://github.com/EionRobb/pidgin-opensteamworks/archive/5a5bebab831618b658ffdeb418b8b2e430a18dd4.tar.gz -> ${PNV}.tar.gz"
 
 LICENCES="GPL-3"
 SLOT="0"
@@ -40,11 +40,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=(
     README.md
 )
-
-src_unpack() {
-    default
-    edo mv ${PN}-* ${PNV}
-}
 
 src_compile() {
     local STEAM_CRYPT_BACKEND=
