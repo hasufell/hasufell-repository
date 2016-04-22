@@ -3,10 +3,9 @@
 
 require gtk-icon-cache
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require sourceforge [ pnv=${PNV}-src ]
 
 SUMMARY="Updated clone of Westood Studios' Dune2"
-HOMEPAGE="http://dunelegacy.sourceforge.net"
-DOWNLOADS="mirror://sourceforge/${PN}/${PNV}-src.tar.bz2"
 
 LICENCES="GPL-2"
 SLOT="0"

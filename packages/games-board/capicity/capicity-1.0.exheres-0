@@ -3,11 +3,11 @@
 
 require gtk-icon-cache
 require qmake [ slot=4 ]
+require sourceforge [ project=capitalism pnv=CapiCity_${PV} suffix=tar.gz ]
 
 SUMMARY="A monopd compatible boardgame to play Monopoly-like games (previously named capitalism)"
 HOMEPAGE="http://linux-ecke.de/CapiCity/"
-DOWNLOADS="mirror://sourceforge/project/capitalism/Capi%20City/${PV}/Capid_${PV}.tar.gz
-    mirror://sourceforge/project/capitalism/Capi%20City/${PV}/CapiCity_${PV}.tar.gz"
+DOWNLOADS+=" mirror://sourceforge/project/capitalism/Capi%20City/${PV}/Capid_${PV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"

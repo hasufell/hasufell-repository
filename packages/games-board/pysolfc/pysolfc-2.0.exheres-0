@@ -1,14 +1,13 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require setup-py [ import=distutils multibuild=false blacklist=3 python_opts="[tk]" ]
-
 MY_PN=PySolFC
 
+require setup-py [ import=distutils multibuild=false blacklist=3 python_opts="[tk]" ]
+require sourceforge [ project=pysolfc pnv=${MY_PN}-${PV} ]
+
 SUMMARY="An exciting collection of more than 1000 solitaire card games"
-HOMEPAGE="http://pysolfc.sourceforge.net/"
-DOWNLOADS="mirror://sourceforge/${PN}/${MY_PN}-${PV}.tar.bz2
-    mirror://sourceforge/${PN}/${MY_PN}-Cardsets-${PV}.tar.bz2"
+DOWNLOADS+=" mirror://sourceforge/${PN}/${MY_PN}-Cardsets-${PV}.tar.bz2"
 
 LICENCES="GPL-3"
 SLOT="0"

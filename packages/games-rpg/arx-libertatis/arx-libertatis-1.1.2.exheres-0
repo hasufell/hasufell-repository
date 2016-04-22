@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake gtk-icon-cache
+require sourceforge [ project=arx suffix=tar.xz ]
 
 SUMMARY="Cross-platform port of Arx Fatalis, a first-person role-playing game"
 HOMEPAGE="http://arx-libertatis.org/"
-DOWNLOADS="mirror://sourceforge/arx/${PNV}/${PNV}.tar.xz"
 
 LICENCES="GPL-3"
 SLOT="0"

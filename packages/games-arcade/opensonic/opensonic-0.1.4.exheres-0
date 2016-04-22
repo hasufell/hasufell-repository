@@ -1,14 +1,13 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake
-
 MY_PN=opensnc
 MY_PNV=${MY_PN}-src-${PV}
 
+require cmake
+require sourceforge [ project=opensnc pnv=${MY_PNV} suffix=tar.gz ]
+
 SUMMARY="A free open-source game based on the Sonic the Hedgehog universe"
-HOMEPAGE="http://opensnc.sourceforge.net/"
-DOWNLOADS="mirror://sourceforge/opensnc/Open%20Sonic/${PV}/${MY_PNV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"

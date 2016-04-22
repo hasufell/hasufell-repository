@@ -1,9 +1,9 @@
 # Copyright 2014 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require sourceforge [ project=pio suffix=tar.gz ]
+
 SUMMARY="A clone of the popular board game The Settlers of Catan"
-HOMEPAGE="http://pio.sourceforge.net/"
-DOWNLOADS="mirror://sourceforge/pio/${PNV}.tar.gz"
 
 LICENCES="GPL-2 CCPL-Attribution-ShareAlike-4.0"
 SLOT="0"

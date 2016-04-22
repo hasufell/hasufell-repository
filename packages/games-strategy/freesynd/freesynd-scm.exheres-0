@@ -7,10 +7,10 @@ SCM_REPOSITORY="http://svn.code.sf.net/p/freesynd/code/freesynd/trunk"
 require desktop-utils
 require gtk-icon-cache
 require cmake [ out_of_source=false ]
+require sourceforge
 require scm-svn
 
 SUMMARY="A cross-platform reimplementation of engine for the classic Bullfrog game, Syndicate"
-HOMEPAGE="http://freesynd.sourceforge.net/"
 
 LICENCES="GPL-3"
 SLOT="0"

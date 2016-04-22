@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake gtk-icon-cache flag-o-matic
+require sourceforge [ pnv=${PNV//_/-}-src ]
 
 SUMMARY="A multi-player, 3D action role-playing game"
 HOMEPAGE="http://sumwars.org"
-DOWNLOADS="mirror://sourceforge/sumwars/${PNV//_/-}-src.tar.bz2"
 
 LICENCES="GPL-3 CCPL-Attribution-ShareAlike-3.0"
 SLOT="0"

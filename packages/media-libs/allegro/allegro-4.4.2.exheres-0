@@ -3,10 +3,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake [ out_of_source=false ]
+require sourceforge [ project=alleg suffix=tar.gz ]
 
 SUMMARY="cross-platform multimedia library"
-HOMEPAGE="http://alleg.sourceforge.net/"
-DOWNLOADS="mirror://sourceforge/alleg/${PNV}.tar.gz"
 
 LICENCES="Allegro MIT GPL-2 ZLIB"
 SLOT="0"

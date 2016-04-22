@@ -1,12 +1,13 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
-
 EDITION="collect_edition"
+
+require gtk-icon-cache \
+    sourceforge [ pnv=sauerbraten_${PV//./_}_${EDITION}_linux ]
+
 SUMMARY="Cube 2: Sauerbraten is an open source game engine (Cube 2) with freeware game data (Sauerbraten)"
 HOMEPAGE="http://sauerbraten.org/"
-DOWNLOADS="mirror://sourceforge/sauerbraten/sauerbraten/2013_01_04/sauerbraten_${PV//./_}_${EDITION}_linux.tar.bz2"
 
 LICENCES="ZLIB freedist"
 SLOT="0"
