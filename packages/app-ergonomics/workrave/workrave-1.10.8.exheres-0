@@ -23,7 +23,7 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     gnome
     pulseaudio
-    xfce [[ description = [ Add support for XFCE panel ] ]]
+    xfce4-panel [[ description = [ Add support for XFCE panel ] ]]
 "
 
 DEPENDENCIES="
@@ -54,8 +54,8 @@ DEPENDENCIES="
         x11-libs/libXtst
         gnome? ( gnome-base/gnome-shell )
         pulseaudio? ( media-sound/pulseaudio )
-        xfce? (
-            x11-libs/gtk+:2[introspection?]
+        xfce4-panel? (
+            x11-libs/gtk+:2[gobject-introspection]
             xfce-base/xfce4-panel
         )
 "
@@ -81,7 +81,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     'gnome gnome3'
     'pulseaudio pulse'
-    'xfce'
+    'xfce4-panel xfce'
 )
 
 DEFAULT_SRC_CONFIGURE_TESTS=(
