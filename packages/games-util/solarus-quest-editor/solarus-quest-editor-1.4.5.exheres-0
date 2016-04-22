@@ -7,7 +7,6 @@ require github [ user=christopho tag=v${PV} ] \
     gtk-icon-cache
 
 SUMMARY="GUI to edit quests for the Solarus engine"
-HOMEPAGE="https://github.com/christopho/solarus-quest-editor"
 
 LICENCES="
     GPL-3 [[ note = [ original source code ] ]]
