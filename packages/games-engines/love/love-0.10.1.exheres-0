@@ -1,17 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-LOVE_AUTOCONF="yes"
-
 require love
-
-DOWNLOADS="https://bitbucket.org/rude/love/get/${PV}.tar.bz2 -> ${PNV}.tar.bz2"
 
 PLATFORMS="~amd64 ~x86"
 SLOT="0.10"
-
-src_unpack() {
-    default
-    edo mv rude-love-* "${WORK}"
-}
 

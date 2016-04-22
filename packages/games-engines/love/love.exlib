@@ -5,10 +5,10 @@
 # Maintainer: Julian Ospald <hasufell@posteo.de>
 # Exports: src_prepare src_install pkg_postinst
 # Side-effects: - adds build and runtime dependencies
-#               - sets $SUMMARY, $WORK, $HOMEPAGE, $DOWNLOADS, $LICENCES,
+#               - sets $SUMMARY, $HOMEPAGE, $DOWNLOADS, $LICENCES,
 #                      $DEFAULT_SRC_CONFIGURE_PARAMS,
 #                      $DEFAULT_SRC_INSTALL_EXTRA_DOCS,
-#               - imports alternatives, lua,
+#               - imports alternatives, lua, bitbucket
 #                         autotools depending on $LOVE_AUTOCONF
 #
 # Usage
@@ -16,6 +16,7 @@
 
 require alternatives
 require lua [ whitelist="5.1" multibuild="false" ]
+require bitbucket [ user=rude pn=love download=love-${PV}-linux-src ]
 
 if [[ -n ${LOVE_AUTOCONF} ]]; then
     require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
@@ -25,7 +26,6 @@ export_exlib_phases src_prepare src_install pkg_postinst
 
 SUMMARY="A framework for 2D games in Lua"
 HOMEPAGE="http://love2d.org/"
-DOWNLOADS="https://bitbucket.org/rude/love/downloads/love-${PV}-linux-src.tar.gz"
 
 LICENCES="ZLIB"
 

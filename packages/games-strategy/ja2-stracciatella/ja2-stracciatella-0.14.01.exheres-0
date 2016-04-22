@@ -1,10 +1,11 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require bitbucket [ user=gennady tag=v${PV} ]
+
 SUMMARY="A port of Jagged Alliance 2 to SDL"
-HOMEPAGE="https://bitbucket.org/gennady/ja2-stracciatella http://tron.homeunix.org/ja2/"
-DOWNLOADS="https://bitbucket.org/gennady/ja2-stracciatella/get/v${PV}.tar.gz -> ${PNV}.tar.gz
-    mirror://gentoo/editor.slf.gz"
+HOMEPAGE+=" http://tron.homeunix.org/ja2/"
+DOWNLOADS+=" mirror://gentoo/editor.slf.gz"
 
 LICENCES="SFI-SCLA"
 SLOT="0"
@@ -19,7 +20,7 @@ DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-makefile.patch )
 
 src_unpack() {
     default
-    edo mv gennady-ja2-stracciatella-* ${PNV}
+    edo mv gennady-ja2-stracciatella-* ${WORK}
 }
 
 src_configure() {
