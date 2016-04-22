@@ -9,7 +9,7 @@ HOMEPAGE="http://zim-wiki.org/"
 DOWNLOADS="http://zim-wiki.org/downloads/${PNV}.tar.gz"
 
 LICENCES="
-    BSD
+    BSD-3
     || ( GPL-2 GPL-3 )
 "
 SLOT="0"
