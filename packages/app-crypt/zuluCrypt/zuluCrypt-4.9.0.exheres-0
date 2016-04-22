@@ -16,8 +16,6 @@ MYOPTIONS="
     gui [[ description = [ Whether to build the QT gui ] ]]
     kde [[ requires = [ gui ]
            description = [ Enable support for KDE, e.g. via kwallet ] ]]
-    udev [[ description = [ Whether udev will be consulted when deciding
-                            if a volume is system or not ] ]]
    ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "
 
@@ -38,10 +36,8 @@ DEPENDENCIES="
             kde/kde-runtime:4
         )
     run:
-        udev? (
-            providers:eudev? ( sys-apps/eudev )
-            providers:systemd? ( sys-apps/systemd )
-        )
+        providers:eudev? ( sys-apps/eudev )
+        providers:systemd? ( sys-apps/systemd )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
@@ -49,12 +45,12 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DQT5=ON
     -DCMAKE_INSTALL_DOCDIR="/usr/share/doc/${PNVR}"
+    -DQT5=ON
+    -DUDEVSUPPORT=ON
 )
 
 CMAKE_SRC_CONFIGURE_OPTIONS=(
-    'udev   UDEVSUPPORT'
     '!gnome NOGNOME'
     '!gui   NOGUI'
     'gui    WITH_PWQUALITY'
