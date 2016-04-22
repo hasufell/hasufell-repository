@@ -5,7 +5,7 @@ require setup-py [ import=distutils blacklist="3" ]
 
 SUMMARY="Client library for MSRP protocol and its relay extension"
 HOMEPAGE="http://sipsimpleclient.org"
-DOWNLOADS="http://download.ag-projects.com/MSRP/python-msrplib-${PV}.tar.gz"
+DOWNLOADS="http://download.ag-projects.com/MSRP/${PNV}.tar.gz"
 
 LICENCES="LGPL-2"
 SLOT="0"
