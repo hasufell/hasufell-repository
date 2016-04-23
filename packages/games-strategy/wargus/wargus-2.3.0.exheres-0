@@ -30,6 +30,8 @@ DEPENDENCIES="
         media/cdparanoia [[ description = [ Needed for rip audio CD tracks ] ]]
 "
 
+REMOTE_IDS+=" sourceforge:${PN} github:Wargus/${PN}"
+
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DGAMEDIR="/usr/$(exhost --target)/bin"
     -DBINDIR="/usr/$(exhost --target)/bin"

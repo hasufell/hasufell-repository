@@ -25,6 +25,8 @@ DEPENDENCIES="
         espeak? ( app-accessibility/espeak )
 "
 
+REMOTE_IDS+=" sourceforge:${PN}"
+
 WORK=${WORKBASE}/NetMauMau-Qt-Client-${PV}
 
 src_configure() {

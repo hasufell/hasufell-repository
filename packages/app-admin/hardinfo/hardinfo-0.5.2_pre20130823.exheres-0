@@ -23,6 +23,8 @@ DEPENDENCIES="
         x11-libs/pango
 "
 
+REMOTE_IDS="github:lpereira/${PN}"
+
 src_prepare() {
     edo sed -i \
         -e '/PREFIX/s:@CMAKE_INSTALL_PREFIX@/share:@CMAKE_INSTALL_DATAROOTDIR@:' \

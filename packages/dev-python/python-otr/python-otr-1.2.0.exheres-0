@@ -21,3 +21,5 @@ DEPENDENCIES="
         net-libs/libotr
 "
 
+REMOTE_IDS+=" github:AGProjects/${PN}"
+

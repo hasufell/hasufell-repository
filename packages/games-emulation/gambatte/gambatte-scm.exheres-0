@@ -6,7 +6,7 @@ require scons
 require github [ user=sinamas ]
 
 SUMMARY="An accuracy-focused Gameboy / Gameboy Color emulator"
-HOMEPAGE="http://sourceforge.net/projects/gambatte"
+HOMEPAGE+=" http://sourceforge.net/projects/gambatte"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -31,6 +31,8 @@ DEPENDENCIES="
         )
         sdl? ( media-libs/SDL:0[X] )
 "
+
+REMOTE_IDS+=" sourceforge:${PN}"
 
 fix_scons() {
     local i

@@ -28,6 +28,8 @@ DEPENDENCIES="
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
+REMOTE_IDS+=" github:renpy/${PN}"
+
 prepare_one_multibuild() {
     edo rm -r gen{,3}
 

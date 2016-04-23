@@ -33,6 +33,8 @@ DEPENDENCIES="
         x11-libs/libX11
 "
 
+REMOTE_IDS+=" sourceforge:${PN} github:Wargus/${PN}"
+
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBINDIR="/usr/$(exhost --target)/bin"
     -DDOCDIR="/usr/share/doc/${PNVR}"
