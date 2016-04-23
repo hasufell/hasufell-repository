@@ -65,5 +65,7 @@ pkg_postinst() {
     elog
     elog "Then create the folder ~/.CommanderGenius/games"
     elog "and drop your keen game folders into it."
+
+    gtk-icon-cache_pkg_postinst
 }
 
