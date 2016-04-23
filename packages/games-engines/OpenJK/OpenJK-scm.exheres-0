@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require desktop-utils github [ user=JACoders ] cmake [ api=2 ]
+require gtk-icon-cache
 
 SUMMARY="Open Source Jedi Academy and Jedi Outcast games engine"
 
@@ -71,11 +72,16 @@ EOF
         "Exec=openjk_sp" \
         "TryExec=openjk_sp" \
         "Icon=OpenJK"
+
+    insinto /usr/share/icons/hicolor/128x128/apps
+    newins "${CMAKE_SOURCE}"/shared/icons/OpenJK_Icon_128.png ${PN}.png
 }
 
 pkg_postinst() {
     elog "You need to copy GameData/base/*.{pk3,cfg} from either your"
     elog "installation media or your hard drive to"
     elog "~/.local/share/openjk/base before running the game."
+
+    gtk-icon-cache_pkg_postinst
 }
 
