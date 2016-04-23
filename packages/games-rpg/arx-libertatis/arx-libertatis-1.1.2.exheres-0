@@ -27,6 +27,10 @@ DEPENDENCIES="
                                                 arx-install-data tool ] ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-fix-cmake-build.patch
+)
+
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBUILD_EDITOR=OFF
     -DCMAKE_INSTALL_DATAROOTDIR="/usr/share"
