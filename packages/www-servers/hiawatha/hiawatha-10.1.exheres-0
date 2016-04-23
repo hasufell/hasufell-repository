@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake systemd-service
+require cmake [ api=2 ] systemd-service
 
 SUMMARY="Advanced and secure webserver"
 HOMEPAGE="http://www.hiawatha-webserver.org"
@@ -69,7 +69,7 @@ CMAKE_SRC_CONFIGURE_TESTS=(
 )
 
 src_prepare() {
-    default
+    cmake_src_prepare
 
     edo grep -E "^#ServerId =.*$" "config/hiawatha.conf.in" 1>/dev/null
     edo sed -r -i -e "s|^#ServerId =.*$|ServerId = hiawatha|" \

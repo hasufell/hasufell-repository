@@ -1,8 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake
 require github [ user=clintbellanger project=flare-engine tag=v${PV} pn=flare-engine ]
+require cmake [ api=2 ]
 
 SUMMARY="Free/Libre Action Roleplaying game engine"
 

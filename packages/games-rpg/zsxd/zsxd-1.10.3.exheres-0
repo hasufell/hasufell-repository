@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake
+require cmake [ api=2 ]
 
 SUMMARY="A free 2D Zelda fangame parody"
 HOMEPAGE="http://www.solarus-games.org/"
@@ -27,9 +27,9 @@ src_install() {
     cmake_src_install
 
     insinto /usr/share/icons/hicolor/256x256/apps
-    newins build/icons/${PN}_icon_256.png ${PN}.png
+    newins "${CMAKE_SOURCE}"/build/icons/${PN}_icon_256.png ${PN}.png
     insinto /usr/share/icons/hicolor/48x48/apps
-    newins build/icons/${PN}_icon_48.png ${PN}.png
+    newins "${CMAKE_SOURCE}"/build/icons/${PN}_icon_48.png ${PN}.png
 
     # install proper wrapper script
     edo rm -f "${IMAGE%/}"/usr/share/${PN}

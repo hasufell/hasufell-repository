@@ -6,7 +6,7 @@ SCM_REPOSITORY="http://svn.code.sf.net/p/freesynd/code/freesynd/trunk"
 
 require desktop-utils
 require gtk-icon-cache
-require cmake [ out_of_source=false ]
+require cmake [ api=2 out_of_source=false ]
 require sourceforge
 require scm-svn
 

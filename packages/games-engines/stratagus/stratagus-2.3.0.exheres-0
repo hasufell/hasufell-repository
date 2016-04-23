@@ -1,8 +1,10 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+WORK=${WORKBASE}/${PN}_${PV}.orig
+
 require lua [ whitelist="5.1" multibuild=false ]
-require cmake
+require cmake [ api=2 ]
 require launchpad [ branch=trunk pv=${PV%.*} pnv=stratagus_${PV} suffix=orig.tar.gz ]
 
 SUMMARY="A realtime strategy game engine"
@@ -30,8 +32,6 @@ DEPENDENCIES="
         x11-dri/mesa
         x11-libs/libX11
 "
-
-WORK=${WORKBASE}/${PN}_${PV}.orig
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBINDIR="/usr/$(exhost --target)/bin"

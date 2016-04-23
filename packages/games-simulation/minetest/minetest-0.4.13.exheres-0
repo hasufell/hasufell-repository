@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
+require cmake [ api=2 ] gtk-icon-cache
 require github [ user=minetest ]
-require cmake gtk-icon-cache
 
 SUMMARY="An InfiniMiner/Minecraft inspired game"
 HOMEPAGE="http://minetest.net/"

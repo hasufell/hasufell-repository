@@ -4,7 +4,9 @@
 MY_PN=opensnc
 MY_PNV=${MY_PN}-src-${PV}
 
-require cmake
+WORK=${WORKBASE}/${MY_PNV}
+
+require cmake [ api=2 ]
 require sourceforge [ project=opensnc pnv=${MY_PNV} suffix=tar.gz ]
 
 SUMMARY="A free open-source game based on the Sonic the Hedgehog universe"
@@ -26,8 +28,6 @@ DEPENDENCIES="
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
-
-WORK=${WORKBASE}/${MY_PNV}
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p0 "${FILES}"/${PNV}-cmake.patch

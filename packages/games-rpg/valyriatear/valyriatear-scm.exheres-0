@@ -7,11 +7,11 @@ SCM_SECONDARY_REPOSITORIES="luabind"
 SCM_EXTERNAL_REFS="src/luabind:luabind"
 SCM_CHECKOUT_TO=${PN}
 
+MY_PNV=ValyriaTear-${PV}
+
 require gtk-icon-cache freedesktop-desktop
 require scm-git
-require cmake
-
-MY_PNV=ValyriaTear-${PV}
+require cmake [ api=2 ]
 
 SUMMARY="A free 2D J-RPG based on the Hero of Allacrost engine"
 HOMEPAGE="http://valyriatear.blogspot.de/
@@ -42,8 +42,6 @@ DEPENDENCIES="
         x11-libs/libX11
         editor? ( x11-libs/qt:4[opengl] )
 "
-
-CMAKE_SOURCE=${WORKBASE}/${MY_PNV}
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DPKG_BINDIR=/usr/$(exhost --target)/bin

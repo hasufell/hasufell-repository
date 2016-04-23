@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require lua [ whitelist="5.1" multibuild=false ]
-require cmake
+require cmake [ api=2 ]
 
 SUMMARY="An open-source Zelda-like 2D game engine"
 HOMEPAGE="http://www.solarus-games.org/"
@@ -30,6 +30,6 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 
 src_install() {
     cmake_src_install
-    doman solarus.6
+    doman "${CMAKE_SOURCE}"/solarus.6
 }
 

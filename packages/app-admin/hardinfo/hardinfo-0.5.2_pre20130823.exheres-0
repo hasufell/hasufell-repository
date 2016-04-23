@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake
+require cmake [ api=2 ]
 
 SUMMARY="A system information and benchmark tool for Linux systems"
 HOMEPAGE="http://hardinfo.org/"
@@ -26,7 +26,7 @@ DEPENDENCIES="
 src_prepare() {
     edo sed -i \
         -e '/PREFIX/s:@CMAKE_INSTALL_PREFIX@/share:@CMAKE_INSTALL_DATAROOTDIR@:' \
-        config.h.cmake
-    default
+        "${CMAKE_SOURCE}"/config.h.cmake
+    cmake_src_prepare
 }
 

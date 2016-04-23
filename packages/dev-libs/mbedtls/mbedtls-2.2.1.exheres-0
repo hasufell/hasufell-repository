@@ -1,8 +1,10 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake
+WORK=${WORKBASE}/${PN}-${PNV}
+
 require github [ user=ARMmbed tag=mbedtls-${PV} ]
+require cmake [ api=2 ]
 
 SUMMARY="Cryptographic library for embedded systems"
 HOMEPAGE="https://tls.mbed.org/"
@@ -26,8 +28,6 @@ DEPENDENCIES="
         dev-lang/perl
 "
 
-WORK=${WORKBASE}/${PN}-${PNV}
-
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DENABLE_PROGRAMS=OFF
     -DUSE_SHARED_MBEDTLS_LIBRARY=ON
@@ -46,7 +46,7 @@ enable_mbedtls_option() {
     # check that config.h syntax is the same at version bump
     edo sed -i \
         -e "s://#define ${myopt}:#define ${myopt}:" \
-        include/mbedtls/config.h
+        "${CMAKE_SOURCE}"/include/mbedtls/config.h
 }
 
 src_prepare() {
@@ -55,6 +55,7 @@ src_prepare() {
     option havege && enable_mbedtls_option MBEDTLS_HAVEGE_C
     option threads && enable_mbedtls_option MBEDTLS_THREADING_C
     option threads && enable_mbedtls_option MBEDTLS_THREADING_PTHREAD
+    cmake_src_prepare
 }
 
 src_test() {

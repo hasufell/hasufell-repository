@@ -6,10 +6,10 @@
 #   Distributed under the terms of the GNU General Public License v2
 #   $Id$
 
-require github [ user=ambrop72 ]
-require cmake
 
-MY_PNV=${PN}-${PV/_rc/rc}
+require github [ user=ambrop72 ]
+require cmake [ api=2 ]
+
 SUMMARY="Peer-to-peer VPN, NCD scripting language, tun2socks proxifier"
 DESCRIPTION="
     BadVPN is an open-source peer-to-peer VPN system. It provides a
@@ -58,8 +58,6 @@ DEPENDENCIES="
         )
 "
 
-WORK=${WORKBASE}/${MY_PNV}
-
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBUILD_NOTHING_BY_DEFAULT=1
     -DBUILD_CLIENT=ON
@@ -74,7 +72,7 @@ CMAKE_SRC_CONFIGURE_OPTIONS=(
 
 src_install() {
     cmake_src_install
-    dodoc ChangeLog
+    dodoc "${CMAKE_SOURCE}"/ChangeLog
 
     exeinto /etc/init.d
     newexe "${FILES}"/${PN}-server.init ${PN}-server

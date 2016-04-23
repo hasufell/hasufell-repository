@@ -1,7 +1,9 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake gtk-icon-cache
+WORK=${WORKBASE}/source/source
+
+require cmake [ api=2 ] gtk-icon-cache
 
 DATA_PV=${PV//./}
 ENGINE_PV=${PV//./}
@@ -41,7 +43,6 @@ DEPENDENCIES="
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
-WORK=${WORKBASE}/source/source
 DATA_S=${WORKBASE}/${PN}_${DATA_PV:0:2}
 
 src_install() {
@@ -65,7 +66,7 @@ EOF
     insinto /usr/share/${PN}
     doins -r "${DATA_S}"/basewsw
 
-    edo cd build
+    edo cd "${CMAKE_SOURCE}"/build
 
     exeinto /usr/$(exhost --target)/libexec/${PN}/
     doexe */*.so

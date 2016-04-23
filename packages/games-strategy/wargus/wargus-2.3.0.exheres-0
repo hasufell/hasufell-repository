@@ -1,7 +1,9 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake gtk-icon-cache
+WORK=${WORKBASE}/${PN}_${PV}.orig
+
+require cmake [ api=2 ] gtk-icon-cache
 require launchpad [ branch=trunk pv=${PV%.*} pnv=${PN}_${PV} suffix=orig.tar.gz ]
 
 SUMMARY="Warcraft II for the Stratagus game engine"
@@ -27,8 +29,6 @@ DEPENDENCIES="
         media-video/ffmpeg2theora [[ description = [ Needed for convert extracted audio CD tracks and video files ] ]]
         media/cdparanoia [[ description = [ Needed for rip audio CD tracks ] ]]
 "
-
-WORK=${WORKBASE}/${PN}_${PV}.orig
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DGAMEDIR="/usr/$(exhost --target)/bin"
