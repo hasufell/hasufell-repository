@@ -40,10 +40,6 @@ DEPENDENCIES="
         providers:systemd? ( sys-apps/systemd )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-CMAKE-use-GNUInstallDirs.patch
-)
-
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DCMAKE_INSTALL_DOCDIR="/usr/share/doc/${PNVR}"
     -DQT5=ON
