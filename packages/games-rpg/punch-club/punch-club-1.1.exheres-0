@@ -5,7 +5,8 @@ require gtk-icon-cache
 
 SUMMARY="Punch Club is a boxing tycoon management game with multiple branching story lines"
 HOMEPAGE="https://www.gog.com/game/punch_club"
-DOWNLOADS="manual: gog_punch_club_2.1.0.2.sh"
+GOG_SH="gog_punch_club_2.2.0.3.sh"
+DOWNLOADS="manual: ${GOG_SH}"
 
 LICENCES="all-rights-reserved GOG-EULA"
 SLOT="0"
@@ -33,7 +34,7 @@ WORK="${WORKBASE}/data/noarch"
 
 pkg_nofetch() {
     einfo
-    einfo "Please buy & download \"${DOWNLOADS}\""
+    einfo "Please buy & download \"${GOG_SH}\""
     einfo "from:"
     einfo "  ${HOMEPAGE}"
     einfo "and move/link it to \"${FETCHEDDIR}\""
@@ -46,8 +47,8 @@ pkg_setup() {
 
 src_unpack() {
     # unzip
-    unzip -qo "${FETCHEDDIR}/${DOWNLOADS}"
-    [[ $? -le 1 ]] || die "unpacking ${DOWNLOADS} failed!"
+    unzip -qo "${FETCHEDDIR}/${GOG_SH}"
+    [[ $? -le 1 ]] || die "unpacking ${GOG_SH} failed!"
 }
 
 src_install() {
