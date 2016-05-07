@@ -12,14 +12,12 @@ LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
-    (
-      qt4 [[ description = [ build qt4 frontend with real GUI ] ]]
-      sdl [[ description = [ build sdl fronted, start via cli ] ]]
-    ) [[ number-selected = at-least-one ]]
+    qt4 [[ description = [ build qt4 GUI frontend ] ]]
 "
 
 DEPENDENCIES="
     build+run:
+        media-libs/SDL:0[X]
         sys-libs/zlib
         qt4? (
             sys-sound/alsa-lib
@@ -29,7 +27,6 @@ DEPENDENCIES="
             x11-libs/libXv
             x11-libs/qt:4[opengl]
         )
-        sdl? ( media-libs/SDL:0[X] )
 "
 
 REMOTE_IDS+=" sourceforge:${PN}"
@@ -78,10 +75,8 @@ src_compile() {
     escons
 
     # build sdl frontend
-    if option sdl; then
-        edo cd "${WORK}"/gambatte_sdl
-        escons
-    fi
+    edo cd "${WORK}"/gambatte_sdl
+    escons
 
     # build qt frontend
     if option qt4; then
@@ -90,7 +85,7 @@ src_compile() {
 }
 
 src_install() {
-    option sdl && dobin gambatte_sdl/gambatte_sdl
+    dobin gambatte_sdl/gambatte_sdl
     option qt4 && dobin gambatte_qt/bin/gambatte_qt
 
     nonfatal dodoc README changelog
