@@ -1,0 +1,38 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+
+require github [ user="elixir-lang" tag=v${PV} ]
+
+SUMMARY="Elixir programming language"
+HOMEPAGE="http://elixir-lang.org"
+
+LICENCES="Apache-2.0 ErlPL-1.1"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/erlang[>=18]
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Allow-to-set-BINDIR-for-binaries-and-SHARE_PREFIX-fo.patch
+)
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    Q=""
+)
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    PREFIX="/usr/$(exhost --target)"
+    SHARE_PREFIX="/usr/share"
+)
+
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=(
+    README.md
+    CHANGELOG.md
+    CONTRIBUTING.md
+)
+
