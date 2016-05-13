@@ -13,6 +13,14 @@ MY_PNV=${MY_PN}-${PV}
 
 require freedesktop-desktop gtk-icon-cache python [ has_lib=false ] toolchain-funcs
 
+myexparam patchset=
+
+exparam -v PATCHSET patchset
+
+if [[ -z $(exparam patchset) ]]; then
+    die "patchset exparam needs to be set!"
+fi
+
 export_exlib_phases pkg_setup src_prepare src_configure src_compile src_test src_install pkg_postinst pkg_postrm
 
 SUMMARY="The open-source project behind Google Chrome"
@@ -21,6 +29,7 @@ HOMEPAGE="https://www.chromium.org/Home"
 DOWNLOADS="
     https://storage.googleapis.com/chromium-browser-official/${MY_PNV}.tar.xz
     https://gsdview.appspot.com/chromium-browser-official/${MY_PNV}.tar.xz
+    https://github.com/gcarq/inox-patchset/archive/${PATCHSET}.tar.gz -> inox-patches-${PATCHSET}.tar.gz
 "
 
 LICENCES="
@@ -151,6 +160,13 @@ inox_pkg_setup() {
 }
 
 inox_src_prepare() {
+    # odd upstream git versioning
+    edo rm -r "${WORKBASE}"/inox-patchset-${PATCHSET}/archive
+    # this one is unneded and doesn't apply cleanly
+    edo rm "${WORKBASE}"/inox-patchset-${PATCHSET}/launcher-branding.patch
+    # fire up the inox patches
+    expatch "${WORKBASE}"/inox-patchset-${PATCHSET}/
+
     default
 
     edo sed \
