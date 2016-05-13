@@ -21,7 +21,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 MYOPTIONS="
-    gnome [[ description = [ Compile with gnome3 support ] ]]
+    gnome [[ description = [ Add support for gnome panel ] ]]
     pulseaudio
     xfce4-panel [[ description = [ Add support for XFCE panel ] ]]
 "
