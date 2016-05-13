@@ -65,7 +65,7 @@ src_unpack() {
 }
 
 src_compile() {
-    env -u TARGETS -u PLATFORM emake \
+    edo env -u TARGETS -u PLATFORM emake \
         ARCH=$(option platform:amd64 "x86_64" "i386") \
         PLATFORM=linux \
         DEFAULT_BASEDIR="/usr/share/${PN}" \

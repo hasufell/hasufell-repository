@@ -68,8 +68,6 @@ src_prepare() {
 src_compile() {
     local i
 
-    export CC=${CC} CXX=${CXX} LD=${LD} AR=${AR} RANLIB=${RANLIB}
-
     # fixes parallel build issues
     for i in sv-release cl-release sdl-release ; do
         emake \

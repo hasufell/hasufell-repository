@@ -43,7 +43,12 @@ MYOPTIONS="
     tools [[ description = [ Build several tools for modding and
                              development ] ]]
     vpx [[ description = [ Enable support for WebM VP8 Codecs ] ]]
-    ( opl-musicpack sc55-musicpack ) [[ number-selected = at-most-one ]]
+    (
+      opl-musicpack [[ description = [ Include optional OPL (AdLib)
+                                       music pack ] ]]
+      sc55-musicpack [[ description = [ Include optional Roland SC-55
+                                        music pack ] ]]
+    ) [[ number-selected = at-most-one ]]
 "
 
 DEPENDENCIES="

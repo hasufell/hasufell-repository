@@ -37,14 +37,8 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     -p2 "${FILES}"/0002-Respect-system-LDFLAGS.patch
 )
 
-DEFAULT_SRC_INSTALL_EXTRA_DOCS=(
-    README.md
-)
-
 src_compile() {
     local STEAM_CRYPT_BACKEND=
-
-    export CC=${CC} PKG_CONFIG=${PKG_CONFIG}
 
     if option providers:nss ; then
         STEAM_CRYPT_BACKEND=nss

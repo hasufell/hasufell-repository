@@ -287,19 +287,19 @@ inox_src_configure() {
         enable_hidpi=0
 
         # inox specific
-		enable_webrtc=0
-		enable_google_now=0
-		enable_remoting=0
-		safe_browsing_mode=0
-		enable_rlz=0
-		enable_hangout_services_extension=0
-		branding=Chromium
-		google_chrome_build=0
-		enable_web_speech=1
-		enable_wifi_bootstrapping=0
-		enable_speech_input=0
-		enable_pre_sync_backup=0
-		enable_print_preview=0
+        enable_webrtc=0
+        enable_google_now=0
+        enable_remoting=0
+        safe_browsing_mode=0
+        enable_rlz=0
+        enable_hangout_services_extension=0
+        branding=Chromium
+        google_chrome_build=0
+        enable_web_speech=1
+        enable_wifi_bootstrapping=0
+        enable_speech_input=0
+        enable_pre_sync_backup=0
+        enable_print_preview=0
     )
 
     if [[ ${CHROMIUM_CHANNEL} == "stable" ]]; then

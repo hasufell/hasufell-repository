@@ -18,7 +18,6 @@ DEPENDENCIES="
 WORK=${WORKBASE}/sdk
 
 src_compile() {
-    export CXX=${CXX} AR=${AR} RANLIB=${RANLIB}
     emake -C ${PN}/projects/gnuc \
         LIBRARYDEST=
 }

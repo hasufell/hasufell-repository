@@ -5,7 +5,7 @@ require alternatives
 require setup-py [ import=distutils multibuild=false blacklist=3 ]
 require gtk-icon-cache
 
-export_exlib_phases src_prepare src_install pkg_postinst
+export_exlib_phases src_prepare src_install
 
 SUMMARY="Visual novel engine written in python"
 DESCRIPTION="
@@ -102,9 +102,5 @@ EOF
     for (( i = 0; i < ${#binaries[@]}; i++ )); do
         alternatives_for _${host}_renpy ${SLOT} ${SLOT} /usr/${host}/bin/${binaries[i]} /usr/${host}/bin/${binaries[++i]}
     done
-}
-
-renpy_pkg_postinst() {
-    alternatives_pkg_postinst
 }
 

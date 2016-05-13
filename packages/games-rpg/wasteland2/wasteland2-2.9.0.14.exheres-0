@@ -11,7 +11,7 @@ LICENCES="all-rights-reserved"
 SLOT="0"
 PLATFORMS="-* ~x86"
 MYOPTIONS=""
-RESTRICT="bindist fetch mirror"
+RESTRICT="fetch"
 
 DEPENDENCIES="
     build:

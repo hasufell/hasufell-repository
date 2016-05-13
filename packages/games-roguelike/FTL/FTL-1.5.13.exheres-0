@@ -11,7 +11,7 @@ PLATFORMS="-* ~amd64 ~x86"
 MYOPTIONS="
     ( platform: amd64 x86 )
 "
-RESTRICT="fetch bindist"
+RESTRICT="fetch"
 
 DEPENDENCIES="
     run:

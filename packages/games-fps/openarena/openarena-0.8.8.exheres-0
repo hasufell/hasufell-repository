@@ -46,8 +46,6 @@ src_prepare() {
 }
 
 src_compile() {
-    export CC=${CC} CXX=${CXX} LD=${LD} AR=${AR} RANLIB=${RANLIB}
-
     emake -C ${MY_S} \
         V=1 \
         DEFAULT_BASEDIR="${OA_SHARE_DIR}" \

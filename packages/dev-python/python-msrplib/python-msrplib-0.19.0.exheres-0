@@ -16,7 +16,7 @@ DEPENDENCIES="
     run:
         dev-python/python-application[python_abis:*(-)?]
         dev-python/python-eventlib[python_abis:*(-)?]
-        dev-python/python-gnutls[python_abis:*(-)?][>=3.0.0]
+        dev-python/python-gnutls[>=3.0.0][python_abis:*(-)?]
         net-twisted/TwistedCore[python_abis:*(-)?]
         net-twisted/TwistedNames[python_abis:*(-)?]
 "

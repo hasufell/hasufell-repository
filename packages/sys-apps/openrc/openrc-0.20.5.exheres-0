@@ -45,7 +45,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=(
-    LIBNAME=${LIBDIR}
+    LIBNAME=lib
     LIBEXECDIR=/usr/$(exhost --target)/libexec/rc
     OS=Linux
 )
@@ -85,12 +85,12 @@ src_compile() {
 
     MAKE_ARGS="
         ${DEFAULT_SRC_COMPILE_PARAMS[@]}
-        MKNET=$(option newnet)
+        MKNET=$(option newnet yes no)
         MKSELINUX=no
         MKAUDIT=no
         MKPAM=$(optionv pam)
         MKSTATICLIBS=no
-        MKTOOLS=$(option tools)
+        MKTOOLS=$(option tools yes no)
     "
 
     emake ${MAKE_ARGS}

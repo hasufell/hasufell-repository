@@ -10,7 +10,7 @@ LICENCES="DUKE3D GOG-EULA"
 SLOT="0"
 PLATFORMS="amd64 hppa ppc x86"
 MYOPTIONS=""
-RESTRICT="mirror bindist fetch"
+RESTRICT="fetch"
 
 DEPENDENCIES="
     build:

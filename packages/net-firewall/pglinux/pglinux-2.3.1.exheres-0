@@ -3,6 +3,7 @@
 
 MY_PNV="pgl-${PV}"
 
+require systemd-service
 require gtk-icon-cache
 require sourceforge [ project=peerguardian suffix=tar.gz ]
 
@@ -38,7 +39,7 @@ DEPENDENCIES="
         app-arch/p7zip [[ description = [ needed for blocklists packed as .7z ] ]]
         net-apps/NetworkManager [[ description = [ pglinux provides a
                                                    networkmanager script ]  ]]
-        virtual/cron
+        virtual/cron [[ description = [ to send daily reports ] ]]
         virtual/mta [[ description = [ needed to send informational (blocklist
                                        updates) and warning mails (if pglcmd.wd
                                        detects a problem.) ] ]]

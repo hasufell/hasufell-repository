@@ -31,8 +31,8 @@ src_configure() {
         --with-gmp="/usr" \
         --with-mpfr="/usr" \
         --disable-static \
-        CC=${CC} \
-        CXX=${CXX} \
-        AR=${AR}
+        CC="${CC}" \
+        CXX="${CXX}" \
+        AR="${AR}"
 }
 

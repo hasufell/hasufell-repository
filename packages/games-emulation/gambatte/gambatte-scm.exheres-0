@@ -88,6 +88,6 @@ src_install() {
     dobin gambatte_sdl/gambatte_sdl
     option qt4 && dobin gambatte_qt/bin/gambatte_qt
 
-    nonfatal dodoc README changelog
+    nonfatal emagicdocs
 }
 

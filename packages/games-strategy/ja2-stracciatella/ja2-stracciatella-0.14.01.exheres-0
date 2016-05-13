@@ -20,7 +20,7 @@ DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-makefile.patch )
 
 src_unpack() {
     default
-    edo mv gennady-ja2-stracciatella-* ${WORK}
+    edo mv gennady-ja2-stracciatella-* "${WORK}"
 }
 
 src_configure() {

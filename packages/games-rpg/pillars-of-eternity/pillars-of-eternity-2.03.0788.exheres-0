@@ -26,7 +26,7 @@ MYOPTIONS="
     dlc2 [[ description = [ Install the Kickstarter Bonus Pet ] ]]
     dlc3 [[ description = [ Install the Pre-Order Bonus Item and Pet ] ]]
 "
-RESTRICT="fetch bindist"
+RESTRICT="fetch"
 
 DEPENDENCIES="
     build:

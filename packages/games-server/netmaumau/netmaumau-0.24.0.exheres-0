@@ -59,7 +59,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
-    "http zlib ${ROOT}/usr/$(exhost --target)"
+    "http zlib /usr/$(exhost --target)"
 )
 
 src_configure() {

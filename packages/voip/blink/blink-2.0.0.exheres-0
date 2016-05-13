@@ -25,7 +25,7 @@ DEPENDENCIES="
         dev-python/python-cjson[python_abis:*(-)?]
         dev-python/python-dateutil[python_abis:*(-)?]
         dev-python/python-eventlib[python_abis:*(-)?]
-        dev-python/python-sipsimple[python_abis:*(-)?][>=3.0.0]
+        dev-python/python-sipsimple[>=3.0.0][python_abis:*(-)?]
         dev-python/zopeinterface[python_abis:*(-)?]
         net-twisted/TwistedCore[python_abis:*(-)?]
 "

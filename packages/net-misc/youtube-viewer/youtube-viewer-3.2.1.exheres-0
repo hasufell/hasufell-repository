@@ -46,7 +46,8 @@ DEPENDENCIES="
             media/mpv
             media/smplayer
             media/vlc
-        ) [[ *description = [ video player backend ] ]]
+        ) [[ *description = [ video player backend, you probably want
+                              at least one ] ]]
 
 
 "

@@ -11,7 +11,7 @@ DOWNLOADS="manual: ${GOG_SH}"
 LICENCES="all-rights-reserved GOG-EULA"
 SLOT="0"
 PLATFORMS="-* ~amd64 ~x86"
-RESTRICT="fetch mirror"
+RESTRICT="fetch"
 
 MYOPTIONS="
     ( platform: amd64 x86 )

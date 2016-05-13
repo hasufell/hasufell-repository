@@ -3,7 +3,7 @@
 
 # Purpose: an exlib dealing with installation of the love engine
 # Maintainer: Julian Ospald <hasufell@posteo.de>
-# Exports: src_prepare src_install pkg_postinst
+# Exports: src_prepare src_install
 # Side-effects: - adds build and runtime dependencies
 #               - sets $SUMMARY, $HOMEPAGE, $DOWNLOADS, $LICENCES,
 #                      $DEFAULT_SRC_CONFIGURE_PARAMS,
@@ -22,7 +22,7 @@ if [[ -n ${LOVE_AUTOCONF} ]]; then
     require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 fi
 
-export_exlib_phases src_prepare src_install pkg_postinst
+export_exlib_phases src_prepare src_install
 
 SUMMARY="A framework for 2D games in Lua"
 HOMEPAGE="http://love2d.org/"
@@ -80,10 +80,5 @@ love_src_install() {
     for (( i = 0; i < ${#binaries[@]}; i++ )); do
         alternatives_for _${host}_love ${SLOT} ${SLOT} /usr/${host}/bin/${binaries[i]} /usr/${host}/bin/${binaries[++i]}
     done
-}
-
-# Exported 'pkg_postinst'.
-love_pkg_postinst() {
-    alternatives_pkg_postinst
 }
 

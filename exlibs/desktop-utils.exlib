@@ -30,7 +30,7 @@ here_desktop_entry() {
     doins "${TEMP}/${1}"
     )
 
-    if ! desktop-file-validate ${IMAGE}/usr/share/applications/${1} ; then
+    if ! desktop-file-validate "${IMAGE}/usr/share/applications/${1}" ; then
         eerror "${1} does not pass desktop file validation"
         die_unless_nonfatal "${1} does not pass desktop file validation"
     fi

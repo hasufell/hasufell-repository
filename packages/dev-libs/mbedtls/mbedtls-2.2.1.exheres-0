@@ -16,7 +16,9 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     havege [[ description = [ Enable the HAVEGE random generator,
                               not suitable for virtualized environments! ] ]]
-    threads
+    threads [[ description = [ Enables the threading abstraction layer
+                               via pthread. This is used if you do intend
+                               to use contexts between threads. ] ]]
     x86_cpu_features:
         sse2
 "
@@ -25,7 +27,7 @@ DEPENDENCIES="
     build+run:
         sys-libs/zlib
     test:
-        dev-lang/perl
+        dev-lang/perl:*
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
