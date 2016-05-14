@@ -12,9 +12,3 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
-# upstream backports
-DEFAULT_SRC_PREPARE_PATCHES=(
-	"${FILES}"/${PNV}-rel-paths.patch
-	"${FILES}"/${PNV}-blkio.patch
-)
-
