@@ -1,6 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require github [ user=utelle tag=v${PV} ]
 
 SUMMARY="C++ wrapper around the public domain SQLite 3.x database"
@@ -13,10 +15,26 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        dev-util/bakefile[~0.2.9]
     build+run:
-        dev-db/sqlite:3
+        dev-db/sqlite:3[>=3.12.1]
         x11-libs/wxGTK:${SLOT}[providers:gtk3?][providers:gtk2?]
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-respect-includedir.patch
+)
+
+src_prepare() {
+    default
+    edo pushd build
+    edo bakefile_gen -f autoconf
+    edo eaclocal
+    edo eautoconf
+    edo mv configure ..
+    edo popd
+}
 
 src_configure() {
     econf \
@@ -24,7 +42,10 @@ src_configure() {
         --enable-unicode \
         --with-wx-config="/usr/$(exhost --target)/lib/wx/config/$(option providers:gtk3 'gtk3' 'gtk2')-unicode-3.0" \
         --with-wxshared \
-        --with-sqlite3-prefix="/usr/$(exhost --target)"
+        --with-sqlite3-prefix="/usr/$(exhost --target)" \
+        --includedir="/usr/$(exhost --target)/include/wx-${SLOT}/" \
+        --hates=disable-silent-rules \
+        --hates=enable-fast-install
 }
 
 src_install() {

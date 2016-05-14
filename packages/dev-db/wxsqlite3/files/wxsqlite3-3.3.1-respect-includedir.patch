@@ -1,0 +1,82 @@
+From 4674332a4edfa415cda74acbbe6552eaa938d966 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Sat, 14 May 2016 13:07:04 +0200
+Subject: [PATCH] MAKE: respect --includedir configure flag
+
+bakefile is a completely broken build system, this is the
+'cleanest' solution I could come up with.
+
+Upstream: no, in discussion https://github.com/utelle/wxsqlite3/issues/3
+---
+ build/wxsqlite3.bkl                    | 8 ++++----
+ wx                                     | 1 +
+ wxcode/bakefiles/presets/defaults.bkl  | 2 +-
+ wxcode/bakefiles/presets/templates.bkl | 4 ++--
+ 4 files changed, 8 insertions(+), 7 deletions(-)
+ create mode 120000 wx
+
+diff --git a/build/wxsqlite3.bkl b/build/wxsqlite3.bkl
+index 7d0f380..92d4b94 100644
+--- a/build/wxsqlite3.bkl
++++ b/build/wxsqlite3.bkl
+@@ -22,10 +22,10 @@
+ 
+   <!-- COMP_HDR lists the component's headers with path relative to ../include -->
+   <set var="COMP_HDR">
+-    include/wx/wxsqlite3def.h
+-	include/wx/wxsqlite3.h
+-	include/wx/wxsqlite3dyn.h
+-	include/wx/wxsqlite3opt.h
++    wx/wxsqlite3def.h
++	wx/wxsqlite3.h
++	wx/wxsqlite3dyn.h
++	wx/wxsqlite3opt.h
+   </set>
+   
+   <set var="USE_DYNAMIC_SQLITE3_LOAD_DEFAULT">0</set>
+diff --git a/wx b/wx
+new file mode 120000
+index 0000000..b00f3db
+--- /dev/null
++++ b/wx
+@@ -0,0 +1 @@
++include/wx
+\ No newline at end of file
+diff --git a/wxcode/bakefiles/presets/defaults.bkl b/wxcode/bakefiles/presets/defaults.bkl
+index f653bad..37ab793 100644
+--- a/wxcode/bakefiles/presets/defaults.bkl
++++ b/wxcode/bakefiles/presets/defaults.bkl
+@@ -23,7 +23,7 @@
+          you can set them once in these vars and wxcode-* templates will automatically
+          use them. -->
+     <set var="COMP_SRC" overwrite="0">$(fileList('src/*.c*'))</set>
+-    <set var="COMP_HDR" overwrite="0">$(fileList('include/wx/*.h'))</set>
++    <set var="COMP_HDR" overwrite="0">$(fileList('wx/*.h'))</set>
+ 
+ 
+     <!--    A simple variable used to understand if we are          -->
+diff --git a/wxcode/bakefiles/presets/templates.bkl b/wxcode/bakefiles/presets/templates.bkl
+index a18433f..d33cdf8 100644
+--- a/wxcode/bakefiles/presets/templates.bkl
++++ b/wxcode/bakefiles/presets/templates.bkl
+@@ -54,7 +54,7 @@
+ 
+     <template id="wxcode-lib" template="wx-lib,wxlike,wxcode-basic">
+         <install-to>$(LIBDIR)</install-to>
+-        <install-headers-to>$(PREFIX)</install-headers-to>
++        <install-headers-to>$(INCLUDEDIR)</install-headers-to>
+ 
+         <wxcode-dirname>$(SRCDIR)/lib</wxcode-dirname>
+         <wxlike-libname prefix="wxcode">$(COMP_NAME)</wxlike-libname>
+@@ -65,7 +65,7 @@
+ 
+     <template id="wxcode-dll" template="wx,wxlike,wxcode-basic">
+         <install-to>$(LIBDIR)</install-to>
+-        <install-headers-to>$(PREFIX)</install-headers-to>
++        <install-headers-to>$(INCLUDEDIR)</install-headers-to>
+ 
+         <wxlike-dirname>$(SRCDIR)/lib</wxlike-dirname>
+         <wxlike-dllname prefix="wxcode">$(COMP_NAME)</wxlike-dllname>
+-- 
+2.8.1
+
