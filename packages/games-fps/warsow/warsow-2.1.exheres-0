@@ -1,13 +1,13 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-WORK=${WORKBASE}/source/source
-
-require cmake [ api=2 ] gtk-icon-cache
-
 DATA_PV=${PV//./}
 ENGINE_PV=${PV//./}
 ENGINE_P=${PN}_${ENGINE_PV}_sdk
+
+WORK=${WORKBASE}/${ENGINE_P}/source/source
+
+require cmake [ api=2 ] gtk-icon-cache
 
 SUMMARY="Multiplayer FPS based on the QFusion engine (evolved from Quake 2)"
 HOMEPAGE="http://www.warsow.net/"
@@ -44,6 +44,11 @@ DEPENDENCIES="
 "
 
 DATA_S=${WORKBASE}/${PN}_${DATA_PV:0:2}
+
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DQFUSION_GAME=Warsow
+)
 
 src_install() {
     dobin_wrapper() {
