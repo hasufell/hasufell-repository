@@ -19,15 +19,18 @@ MaxMind_Db="${NG_SRC}/MaxMind.Db/1.1.0.0 -> MaxMind_Db-1.1.0.0.zip"
 Newtonsoft_Json="${NG_SRC}/Newtonsoft.Json/7.0.1 -> Newtonsoft_Json-7.0.1.zip"
 RestSharp="${NG_SRC}/RestSharp/105.2.3 -> RestSharp-105.2.3.zip"
 MaxMind_GeoIP2="${NG_SRC}/MaxMind.GeoIP2/2.3.1 -> MaxMind_GeoIP2-2.3.1.zip"
-SharpFont="${NG_SRC}/SharpFont/3.0.1 -> SharpFont-3.0.1.zip"
-NUnit="${NG_SRC}/NUnit/2.6.4 -> NUnit-2.6.4.zip"
-Mono_Nat="${NG_SRC}/Mono.Nat/1.2.21 -> Mono_Nat-1.2.21.zip"
+SharpFont="${NG_SRC}/SharpFont/3.1.0 -> SharpFont-3.1.0.zip"
+NUnit="${NG_SRC}/NUnit/3.0.1 -> NUnit-3.0.1.zip"
+NUnit_Console="${NG_SRC}/NUnit.Console/3.0.1 -> NUnit_Console-3.0.1.zip"
+Mono_Nat="${NG_SRC}/Mono.Nat/1.2.24 -> Mono_Nat-1.2.24.zip"
 FuzzyLogicLibrary="${NG_SRC}/FuzzyLogicLibrary/1.2.0 -> FuzzyLogicLibrary-1.2.0.zip"
 SDL2CS="https://github.com/OpenRA/SDL2-CS/releases/download/20150709/SDL2-CS.dll -> SDL2-CS.dll.20150709"
 Eluant="https://github.com/OpenRA/Eluant/releases/download/20140425/Eluant.dll -> Eluant.dll.20140425"
 SmartIrc4net="${NG_SRC}/SmartIrc4net/0.4.5.1 -> SmartIrc4net-0.4.5.1.zip"
 # unfortunately, this may randomly change
 GEO_IP_DB="http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz -> GeoLite2-Country-2015-10-18.mmdb.gz"
+OpenAL_CS="https://github.com/OpenRA/OpenAL-CS/releases/download/20151227/OpenAL-CS.dll -> OpenAL-CS-20151227.dll"
+OpenAL_CS_config="https://github.com/OpenRA/OpenAL-CS/releases/download/20151227/OpenAL-CS.dll.config -> OpenAL-CS-20151227.dll.config"
 
 DOWNLOADS="${DOWNLOADS}
 ${StyleCopPlus_MSBuild}
@@ -39,12 +42,15 @@ ${RestSharp}
 ${MaxMind_GeoIP2}
 ${SharpFont}
 ${NUnit}
+${NUnit_Console}
 ${Mono_Nat}
 ${FuzzyLogicLibrary}
 ${SDL2CS}
 ${Eluant}
 ${SmartIrc4net}
 ${GEO_IP_DB}
+${OpenAL_CS}
+${OpenAL_CS_config}
 "
 
 LICENCES="GPL-3"
@@ -60,13 +66,17 @@ DEPENDENCIES="
         virtual/unzip
     build+run:
         dev-dotnet/libgdiplus
-        dev-lang/mono[>=3.2]
-        media-libs/freetype:2
+        dev-lang/mono[>=4.2]
         media-libs/SDL:2[X]
+        media-libs/freetype:2
         media-libs/openal
         x11-dri/mesa
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+    run:
+        x11-apps/xdg-utils
+    suggestion:
+        gnome-desktop/zenity [[ description = [ Graphical error dialogs ] ]]
 "
 
 WORK=${WORKBASE}/OpenRA-release-${PV}
@@ -98,6 +108,8 @@ src_unpack() {
     edo cp "${FETCHEDDIR}"/${SDL2CS##* } ./SDL2-CS.dll
     edo cp "${FETCHEDDIR}"/${Eluant##* } ./Eluant.dll
     edo cp "${FETCHEDDIR}"/${GEO_IP_DB##* } ./GeoLite2-Country.mmdb.gz
+    edo cp "${FETCHEDDIR}"/${OpenAL_CS##* } ./OpenAL-CS.dll
+    edo cp "${FETCHEDDIR}"/${OpenAL_CS_config##* } ./OpenAL-CS.dll.config
 }
 
 src_configure() { :; }
