@@ -12,10 +12,10 @@ PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
     build+run:
-        media-libs/SDL:0[X]
-        media-libs/SDL_image:1
-        media-libs/SDL_mixer:0
-        media-libs/SDL_ttf:0
+        media-libs/SDL:2[X]
+        media-libs/SDL_image:2
+        media-libs/SDL_mixer:2
+        media-libs/SDL_ttf:2
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
