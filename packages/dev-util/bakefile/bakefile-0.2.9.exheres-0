@@ -1,0 +1,23 @@
+# Copyright 2016 Julian Ospald
+# Distributed under the terms of the GNU General Public License v2
+
+require python [ blacklist=3 has_bin=true has_lib=true multibuild=false ]
+require sourceforge [ suffix=tar.gz ]
+
+SUMMARY="Bakefile makefiles generator"
+HOMEPAGE="http://bakefile.org/"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-Fix-searchPath-locations.patch
+)
+

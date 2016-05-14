@@ -1,0 +1,26 @@
+From 4c46fc8c21beb9a0cdcba6faec501af680964289 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Sat, 14 May 2016 12:41:28 +0200
+Subject: [PATCH] Fix searchPath locations
+Upstream: no, this version is not maintained anymore, but used by wxGTK/wxsqlite3
+
+---
+ src/config.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/config.py b/src/config.py
+index d325fe4..7e8df3d 100644
+--- a/src/config.py
++++ b/src/config.py
+@@ -43,7 +43,7 @@ searchPath = os.getenv('BAKEFILE_PATHS', '').split(os.pathsep)
+ if searchPath == ['']: searchPath = []
+ 
+ progdir = os.path.dirname(os.path.realpath(sys.argv[0]))
+-datadir = os.path.join(progdir, '..', '..', 'share', 'bakefile')
++datadir = os.path.join('/', 'usr', 'share', 'bakefile')
+ if not os.path.isfile(os.path.join(datadir, 'rules', 'FORMATS.bkmanifest')):
+     datadir = os.path.join(progdir, '..')
+ searchPath.append(os.path.normpath(os.path.join(datadir, 'rules')))
+-- 
+2.8.1
+
