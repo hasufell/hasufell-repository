@@ -32,6 +32,7 @@ DEPENDENCIES="
         media-libs/libvorbis
         media-libs/openal
         net-misc/curl
+        sys-libs/ncurses
         sys-libs/zlib
         x11-dri/mesa
         x11-libs/libX11
@@ -46,6 +47,7 @@ DEPENDENCIES="
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBUILD_SERVER=ON
     -DBUILD_CLIENT=ON
+    -DCMAKE_INSTALL_PREFIX="/usr"
     -DCUSTOM_BINDIR="/usr/$(exhost --target)/bin"
     -DCUSTOM_DOCDIR="/usr/share/doc/${PNVR}"
     -DCUSTOM_LOCALEDIR="/usr/share/locale"
