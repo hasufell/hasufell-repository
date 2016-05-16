@@ -1,8 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require love-app [ loveslot="0.9" lovezip=true lovepn=${PNV} ]
-require github [ user=SimonLarsen release=v${PV}b pnv=${PNV}-love suffix=zip ]
+require github [ user=SimonLarsen release=v${PV} suffix=love ]
+require love-app [ loveslot="0.10" lovepn=${PNV} ]
 
 SUMMARY="Free software ChuChu Rocket remake for PC"
 HOMEPAGE="http://tangramgames.dk/games/duckmarines/"
