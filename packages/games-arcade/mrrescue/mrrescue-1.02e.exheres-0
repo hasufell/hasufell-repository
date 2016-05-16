@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gtk-icon-cache
-require github [ user=SimonLarsen release=v${PV} suffix=love ]
-require love-app [ loveslot="0.10" lovepn=${PNV} ]
+require github [ user=SimonLarsen release=${PV} pnv=${PN}${PV} suffix=love ]
+require love-app [ loveslot="0.10" lovepn=${PN}${PV} ]
 
 SUMMARY="Arcade styled 2d action game centered around evacuating civilians from burning buildings"
 HOMEPAGE="http://tangramgames.dk/games/mrrescue/"
