@@ -1,0 +1,64 @@
+# Copyright 2016 Julian Ospald
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=Bitmessage project=PyBitmessage tag=v${PV} ]
+require gtk-icon-cache
+require python [ blacklist=3 has_bin=true multibuild=false ]
+
+SUMMARY="P2P communications protocol"
+DESCRIPTION="
+Bitmessage is a P2P communications protocol used to send encrypted messages to
+another person or to many subscribers. It is decentralized and trustless,
+meaning that you need-not inherently trust any entities like root certificate
+authorities. It uses strong authentication, which means that the sender of a
+message cannot be spoofed, and it aims to hide 'non-content' data, like the
+sender and receiver of messages, from passive eavesdroppers like those running
+warrantless wiretapping programs.
+"
+HOMEPAGE+=" https://bitmessage.org"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    run:
+        dev-python/PyQt4[python_abis:*(-)?]
+        providers:libressl? ( dev-libs/libressl )
+        providers:openssl?  ( dev-libs/openssl  )
+    suggestion:
+        net-misc/tor [[ description = [ For running bitmessage traffic
+                                        through the tor network ] ]]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_install() {
+    local SITEDIR="$(python_get_sitedir)/${PN}"
+
+    herebin ${PN} <<EOF
+#!/bin/sh
+cd "${SITEDIR}"
+exec "${PYTHON}" "./bitmessagemain.py"
+EOF
+
+    insinto "${SITEDIR}"
+    doins -r src/*
+
+    emagicdocs
+    doman man/*
+
+    insinto /usr/share/icons/hicolor/24x24/apps
+    newins desktop/icon24.png ${PN}.png
+    insinto /usr/share/icons/hicolor/scalable/apps
+    newins desktop/can-icon.svg ${PN}.svg
+
+    insinto /usr/share/applications
+    doins desktop/${PN}.desktop
+
+    python_bytecompile
+}
+
