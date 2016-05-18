@@ -6,9 +6,9 @@ SCM_REPOSITORY="http://svn.code.sf.net/p/freesynd/code/freesynd/trunk"
 
 require desktop-utils
 require gtk-icon-cache
-require cmake [ api=2 out_of_source=false ]
-require sourceforge
 require scm-svn
+require cmake [ api=2 ]
+require sourceforge
 
 SUMMARY="A cross-platform reimplementation of engine for the classic Bullfrog game, Syndicate"
 
@@ -22,23 +22,23 @@ DEPENDENCIES="
         media-libs/SDL:0[X]
         media-libs/SDL_image:1
         media-libs/SDL_mixer:0[ogg]
-        media-libs/libogg
         media-libs/libpng:=
-        media-libs/libvorbis
 "
 
 src_install() {
     dobin src/${PN}
     insinto /usr/share/${PN}
-    doins -r data
+    doins -r "${CMAKE_SOURCE}"/data
     insinto /usr/share/icons/hicolor/128x128/apps
-    newins icon/sword.png ${PN}.png
+    newins "${CMAKE_SOURCE}"/icon/sword.png ${PN}.png
     install_desktop_entry
-    dodoc NEWS README INSTALL AUTHORS
+    dodoc "${CMAKE_SOURCE}"/{NEWS,README,INSTALL,AUTHORS}
 }
 
 pkg_postinst() {
     elog "You have to set \"data_dir = /my/path/to/synd-data\""
     elog "in \"~/.${PN}/${PN}.ini\"."
+
+    gtk-icon-cache_pkg_postinst
 }
 
