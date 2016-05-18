@@ -1,0 +1,40 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require desktop-utils
+require gtk-icon-cache
+require cmake [ api=2 ]
+require sourceforge [ suffix=tar.gz ]
+
+SUMMARY="A cross-platform reimplementation of engine for the classic Bullfrog game, Syndicate"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/SDL_image:1
+        media-libs/SDL_mixer:0[ogg]
+        media-libs/libpng:=
+"
+
+src_install() {
+    dobin src/${PN}
+    insinto /usr/share/${PN}
+    doins -r "${CMAKE_SOURCE}"/data
+    insinto /usr/share/icons/hicolor/128x128/apps
+    newins "${CMAKE_SOURCE}"/icon/sword.png ${PN}.png
+    install_desktop_entry
+    dodoc "${CMAKE_SOURCE}"/{NEWS,README,INSTALL,AUTHORS}
+}
+
+pkg_postinst() {
+    elog "You have to set \"data_dir = /my/path/to/synd-data\""
+    elog "in \"~/.${PN}/${PN}.ini\"."
+
+    gtk-icon-cache_pkg_postinst
+}
+
