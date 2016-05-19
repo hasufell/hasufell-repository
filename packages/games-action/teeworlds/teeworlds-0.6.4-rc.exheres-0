@@ -1,0 +1,84 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require desktop-utils
+require github [ user=teeworlds ]
+require gtk-icon-cache
+
+SUMMARY="Online multi-player platform 2D shooter"
+HOMEPAGE+=" http://www.teeworlds.com/"
+
+LICENCES="
+    ZLIB
+    BSD-3 [[ note = [ bundled wavpack ] ]]
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-util/bam
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/freetype:2
+        sys-libs/zlib
+        x11-dri/glu
+        x11-dri/mesa
+        x11-libs/libX11
+"
+
+src_prepare() {
+    # use system zlib
+    edo rm -r src/engine/external/zlib
+    edo sed -i \
+        -e 's/config.zlib.value == 1/true/' \
+        bam.lua
+
+    default
+
+    # bam sucks, this is beyond patchable
+    # https://github.com/matricks/bam/issues/93
+    edo cat << __EOF__ > "${WORK}/exherbo.lua"
+    function addSettings(settings)
+        print("Adding Exherbo settings")
+        settings.optimize = 0
+        settings.cc.exe_c = "${CC}"
+        settings.cc.exe_cxx = "${CXX}"
+        settings.cc.flags_c:Add("${CFLAGS}")
+        settings.cc.flags_cxx:Add("${CXXFLAGS}")
+        settings.link.exe = "${CXX}"
+        settings.link.flags:Add("${LDFLAGS}")
+    end
+__EOF__
+
+    edo sed -i \
+        -e '/if family == "unix" then/a \\t\tdofile("exherbo.lua") addSettings(settings)' \
+        bam.lua
+
+    edo sed -i \
+        -e "s#g++#${CXX}#" \
+        configure.lua
+}
+
+src_configure() {
+    edo bam -v config
+}
+
+src_compile() {
+    edo bam -v -a -j ${EXJOBS:-1} client_release server_release
+}
+
+src_install() {
+    dobin ${PN} ${PN}_srv
+
+    insinto /usr/share/teeworlds
+    doins -r data
+
+    insinto /usr/share/icons/hicolor/256x256/apps
+    doins "${FILES}"/${PN}.png
+    install_desktop_entry
+
+    emagicdocs
+}
+
