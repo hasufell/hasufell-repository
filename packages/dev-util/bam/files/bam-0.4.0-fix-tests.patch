@@ -1,0 +1,23 @@
+From 4b186524ba0b9956147e040a006c9805aec20678 Mon Sep 17 00:00:00 2001
+From: Magnus Auvinen <magnus.auvinen@gmail.com>
+Date: Mon, 2 May 2011 19:18:53 +0200
+Subject: [PATCH] fixed so that test.py exits with errors codes (thanks to
+ debfx)
+
+---
+ scripts/test.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/scripts/test.py b/scripts/test.py
+index 078e633..90b9b26 100755
+--- a/scripts/test.py
++++ b/scripts/test.py
+@@ -246,6 +246,8 @@ def __init__(self):
+ 	print "FAILED TESTS:"
+ 	for t in failed_tests:
+ 		print "\t"+t
++	sys.exit(1)
+ else:
+ 	print "ALL TESTS PASSED!"
++	sys.exit(0)
+ 

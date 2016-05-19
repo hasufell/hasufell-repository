@@ -1,0 +1,67 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require lua [ multibuild=false whitelist="5.1" ]
+require github [ user=matricks suffix=tar.gz ]
+
+SUMMARY="Fast and flexible Lua-based build system"
+
+LICENCES="ZLIB"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    test:
+        dev-lang/python:2.7
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-fix-tests.patch
+    "${FILES}"/${PNV}-Add-Makefile.patch
+)
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    INSTALL_BINDIR="/usr/$(exhost --target)/bin"
+)
+
+src_compile() {
+    emake \
+        LUA_LIBS="$(${PKG_CONFIG} --libs lua-$(lua_get_abi))" \
+        LUA_CFLAGS="$(${PKG_CONFIG} --cflags lua-$(lua_get_abi))"
+}
+
+src_test() {
+    # don't ask
+    # https://github.com/matricks/bam/issues/93
+    local i
+    for i in tests/*/bam.lua ; do
+        edo sed -i -e "/^s = NewSettings/a s.optimize = 0\n\
+s.cc.exe_c = \"${CC}\"\n\
+s.cc.exe_cxx = \"${CXX}\"\n\
+s.cc.flags_c:Add(\"${CFLAGS}\")\n\
+s.cc.flags_cxx:Add(\"${CXXFLAGS}\")\n\
+s.link.exe = \"${CXX}\"\n\
+s.link.flags:Add(\"${LDFLAGS}\")\n\
+s.dll.exe = \"${CXX}\"\n\
+s.lib.exe = \"${AR}\"" \
+                   -e "/^settings = NewSettings/a settings.optimize = 0\n\
+settings.cc.exe_c = \"${CC}\"\n\
+settings.cc.exe_cxx = \"${CXX}\"\n\
+settings.cc.flags_c:Add(\"${CFLAGS}\")\n\
+settings.cc.flags_cxx:Add(\"${CXXFLAGS}\")\n\
+settings.link.exe = \"${CXX}\"\n\
+settings.link.flags:Add(\"${LDFLAGS}\")\n\
+settings.dll.exe = \"${CXX}\"\n\
+settings.lib.exe = \"${AR}\"\n" ${i}
+    done
+
+    emake \
+        LUA_LIBS="$(${PKG_CONFIG} --libs lua-$(lua_get_abi))" \
+        LUA_CFLAGS="$(${PKG_CONFIG} --cflags lua-$(lua_get_abi))" \
+        PYTHON="python2.7" \
+        test
+}
+
