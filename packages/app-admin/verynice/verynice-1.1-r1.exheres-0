@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require systemd-service
+require openrc-service systemd-service
 
 SUMMARY="A tool for dynamically adjusting the nice-level of processes"
 HOMEPAGE="http://thermal.cnde.iastate.edu/~sdh4/verynice/"
@@ -27,8 +27,7 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 
 src_install(){
     default
-    exeinto /etc/init.d
-    doexe "${FILES}"/verynice
     install_systemd_files
+    install_openrc_files
 }
 
