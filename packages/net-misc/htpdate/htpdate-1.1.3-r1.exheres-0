@@ -1,6 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
+
 SUMMARY="Synchronize local workstation with time offered by remote webservers"
 HOMEPAGE="http://www.vervest.org/fiki/bin/view/HTP/DownloadC"
 DOWNLOADS="http://www.vervest.org/htp/archive/c/${PNV}.tar.gz"
@@ -26,7 +28,6 @@ src_install() {
     doman htpdate.8
     dodoc README Changelog
 
-    newconfd "${FILES}"/htpdate.conf htpdate
-    newinitd "${FILES}"/htpdate.init-r1 htpdate
+    install_openrc_files
 }
 
