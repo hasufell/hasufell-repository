@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake [ api=2 ] systemd-service
+require cmake [ api=2 ] openrc-service [ openrc_initd_files=[ "${TEMP}/hiawatha" ] ] systemd-service
 
 SUMMARY="Advanced and secure webserver"
 HOMEPAGE="http://www.hiawatha-webserver.org"
@@ -77,7 +77,7 @@ src_prepare() {
 
     edo grep -E "@HIAWATHA_PID_DIR@" "${FILES}/hiawatha.initd" 1>/dev/null
     edo sed -r -e "s|@HIAWATHA_PID_DIR@|${HIAWATHA_PID_DIR}|" \
-        "${FILES}/hiawatha.initd" > "${TEMP}/hiawatha.initd"
+        "${FILES}/hiawatha.initd" > "${TEMP}/hiawatha"
 }
 
 src_install() {
@@ -85,9 +85,8 @@ src_install() {
 
     edo rm -r "${IMAGE%/}${HIAWATHA_WEBROOT_DIR}"/*
 
-    exeinto /etc/init.d
-    newexe "${TEMP}"/hiawatha.initd hiawatha
     install_systemd_files
+    install_openrc_files
 
     local i
     for i in "${HIAWATHA_LOG_DIR}" "${HIAWATHA_WORK_DIR}" ; do
