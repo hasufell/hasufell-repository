@@ -20,7 +20,9 @@ HOMEPAGE="http://www.renpy.org"
 DOWNLOADS="http://www.renpy.org/dl/${PV}/${PNV}-source.tar.bz2"
 
 LICENCES="MIT"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: ffmpeg libav ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build:
@@ -31,8 +33,9 @@ DEPENDENCIES="
         media-libs/freetype:2
         media-libs/glew
         media-libs/libpng:=
-        media/ffmpeg
         sys-libs/zlib
+        providers:ffmpeg? ( media/ffmpeg )
+        providers:libav? ( media/libav )
 "
 
 if ever at_least 6.99.0; then
