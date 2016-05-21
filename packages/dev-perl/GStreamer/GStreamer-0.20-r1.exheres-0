@@ -11,8 +11,8 @@ PLATFORMS="~amd64"
 
 DEPENDENCIES="
     build:
+        dev-lang/perl[>=5.22]
         dev-perl/ExtUtils-Depends
-        dev-perl/ExtUtils-MakeMaker
         dev-perl/ExtUtils-PkgConfig
         virtual/pkg-config
     build+run:
