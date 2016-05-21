@@ -12,7 +12,9 @@ HOMEPAGE="http://openmw.org/"
 LICENCES="GPL-3 MIT bitstream-font OFL-1.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: ffmpeg libav ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build:
@@ -26,9 +28,10 @@ DEPENDENCIES="
         media-libs/SDL:2[X]
         media-libs/freetype:2
         media-libs/openal
-        media/ffmpeg
         sci-physics/bullet[>=2.80]
         x11-libs/qtbase:5
+        providers:ffmpeg? ( media/ffmpeg )
+        providers:libav? ( media/libav )
 "
 
 
