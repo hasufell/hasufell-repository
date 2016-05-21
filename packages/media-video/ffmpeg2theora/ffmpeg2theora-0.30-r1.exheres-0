@@ -10,16 +10,19 @@ DOWNLOADS="http://www.v2v.cc/~j/${PN}/downloads/${PNV}.tar.bz2"
 LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: ffmpeg libav ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build:
         virtual/pkg-config
     build+run:
-        media/ffmpeg
         media-libs/libvorbis
         media-libs/libogg
         media-libs/libtheora
+        providers:ffmpeg? ( media/ffmpeg )
+        providers:libav? ( media/libav )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
