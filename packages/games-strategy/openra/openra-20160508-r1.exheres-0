@@ -116,7 +116,7 @@ src_configure() { :; }
 
 src_prepare() {
     # register game-version
-    emake VERSION="${PV}" version
+    emake VERSION="release-${PV}" version
 
     edo sed \
         -e "s/@LIBLUA51@/liblua5.1.so/" \
@@ -127,7 +127,7 @@ src_prepare() {
 }
 
 src_compile() {
-    emake VERSION="${PV}" core tools
+    emake VERSION="release-${PV}" core tools
 }
 
 src_install() {
@@ -135,7 +135,7 @@ src_install() {
         datadir="/usr/share" \
         bindir="/usr/$(exhost --target)/bin" \
         libdir="/usr/$(exhost --target)/libexec" \
-        VERSION="${PV}" \
+        VERSION="release-${PV}" \
         DESTDIR="${IMAGE}" \
         install-all install-linux-scripts install-linux-mime install-linux-icons
 
