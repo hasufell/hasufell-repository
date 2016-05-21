@@ -12,6 +12,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+    ( providers: ffmpeg libav ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -23,9 +24,10 @@ DEPENDENCIES="
         dev-python/python-application[>=2.0.0][python_abis:*(-)?]
         media-libs/libvpx
         media-libs/v4l-utils
-        media/ffmpeg[h264]
         sys-apps/util-linux
         sys-sound/alsa-lib
+        providers:ffmpeg? ( media/ffmpeg[h264] )
+        providers:libav? ( media/libav[h264] )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
     run:
