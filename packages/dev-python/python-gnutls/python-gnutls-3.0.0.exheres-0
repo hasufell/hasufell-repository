@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require pypi setup-py [ import=distutils ]
+require pypi setup-py [ import=distutils blacklist="3" ]
 
 SUMMARY="High level object oriented wrapper around libgnutls"
 HOMEPAGE="http://ag-projects.com/"
