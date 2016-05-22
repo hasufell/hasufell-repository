@@ -25,6 +25,7 @@ LICENCES="wxWinLL-3 LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
+    ( providers: ffmpeg libav ) [[ number-selected = exactly-one ]]
     ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
@@ -34,7 +35,6 @@ DEPENDENCIES="
     build+run:
         app-text/poppler[cairo]
         dev-libs/glib:2
-        media/ffmpeg
         media-libs/freetype:2
         media-libs/giflib:=
         media-libs/gstreamer:1.0
@@ -52,12 +52,15 @@ DEPENDENCIES="
         x11-libs/libX11
         x11-libs/libXrandr
         x11-libs/qtbase:5
+        providers:ffmpeg? ( media/ffmpeg )
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+        providers:libav? ( media/libav )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-Fix-wrong-jpeg-boolean-handling.patch
+    "${FILES}"/${PNV}-ffmpeg-3.0.patch
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
