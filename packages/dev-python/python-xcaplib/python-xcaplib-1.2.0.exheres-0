@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require setup-py [ import=distutils ]
+require setup-py [ import=distutils blacklist="3" ]
 
 SUMMARY="Python library for managing XML documents on XCAP server"
 HOMEPAGE="http://sipsimpleclient.org"
