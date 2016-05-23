@@ -2,6 +2,10 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+MY_PN="OpenSceneGraph"
+MY_PNV=${MY_PN}-${PV}
+
+require github [ user=openscenegraph project=${MY_PN} tag=${MY_PNV} ]
 require cmake [ api=2 ]
 
 SUMMARY="High performance 3D graphics toolkit"
@@ -16,10 +20,7 @@ DESCRIPTION="
     industries.
 "
 
-MY_PN="OpenSceneGraph"
-MY_PNV=${MY_PN}-${PV}
 HOMEPAGE="http://${PN}.org"
-DOWNLOADS="http://trac.openscenegraph.org/downloads/developer_releases/${MY_PNV}.zip"
 
 LICENCES="wxWinLL-3 LGPL-2.1"
 SLOT="0"
