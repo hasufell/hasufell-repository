@@ -9,7 +9,7 @@ GROUP="sauerbraten"
 RUNSERVER="Yes"
 
 # Location of the dedicated server config directory
-SERVERCONFIG="%SYSCONFDIR%"
+SERVERCONFIG="/var/lib/sauerbraten"
 
 # Additional command line arguments to the dedicated server
 SERVERARGS=""
@@ -19,7 +19,7 @@ SERVERARGS=""
 RUNMASTER="No"
 
 # Location of the master server config directory
-MASTERCONFIG="%SYSCONFDIR%"
+MASTERCONFIG="/var/lib/sauerbraten"
 
 # What port should the masterserver use
 MASTERPORT="28787"

@@ -5,6 +5,7 @@ EDITION="collect_edition"
 
 require gtk-icon-cache \
     sourceforge [ pnv=sauerbraten_${PV//./_}_${EDITION}_linux ]
+require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 
 SUMMARY="Cube 2: Sauerbraten is an open source game engine (Cube 2) with freeware game data (Sauerbraten)"
 HOMEPAGE="http://sauerbraten.org/"
@@ -96,26 +97,14 @@ EOF
 exec "${LIBEXECDIR}/sauer_master" ${STATEDIR} "\$@"
 EOF
 
-    # Install the server init script
-    edo cp "${FILES}"/${PN}.init "${TEMP}"
-    edo sed -i \
-        -e "s:%SYSCONFDIR%:${STATEDIR}:g" \
-        -e "s:%LIBEXECDIR%:${LIBEXECDIR}:g" \
-        "${TEMP}"/${PN}.init
-    newinitd "${TEMP}"/${PN}.init ${PN}
-    edo cp "${FILES}"/${PN}.conf "${TEMP}"
-    edo sed -i \
-        -e "s:%SYSCONFDIR%:${STATEDIR}:g" \
-        -e "s:%LIBEXECDIR%:${LIBEXECDIR}:g" \
-        "${TEMP}"/${PN}.conf
-    newconfd "${TEMP}"/${PN}.conf ${PN}
-
     dodoc src/*.txt docs/dev/*.txt
 
     insinto /usr/share/doc/${PNVR}/html
     doins -r README.html docs/*
 
     edo chown sauerbraten:sauerbraten "${IMAGE%/}/${STATEDIR}"
+
+    install_openrc_files
 }
 
 pkg_postinst() {

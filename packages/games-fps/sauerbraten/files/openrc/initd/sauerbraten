@@ -16,7 +16,7 @@ start_server() {
 	ebegin "Starting Sauerbraten dedicated server"
 
 	# Make sure necessary parameters are set
-	SERVERCONFIG="${SERVERCONFIG:-%SYSCONFDIR%}"
+	SERVERCONFIG="${SERVERCONFIG:-/var/lib/sauerbraten}"
 
 	if [ ! -d ${SERVERCONFIG} ]; then
 		einfo "No ${SERVERCONFIG} around. Creating new..."
@@ -38,7 +38,7 @@ start_server() {
 		--make-pidfile \
 		--pidfile "${rundir}"/server.pid \
 		--background \
-		--exec %LIBEXECDIR%/sauer_server -- ${SERVERARGS}
+		--exec /usr/libexec/sauerbraten/sauer_server -- ${SERVERARGS}
 	eend $?
 }
 
@@ -46,7 +46,7 @@ start_master() {
 	ebegin "Starting Sauerbraten master server"
 
 	# Make sure necessary parameters are set
-	MASTERCONFIG="${MASTERCONFIG:-%SYSCONFDIR%}"
+	MASTERCONFIG="${MASTERCONFIG:-/var/lib/sauerbraten}"
 	[ -n "${MASTERIP}" ] && MASTERPORT="${MASTERPORT:-28787}"
 	MASTERARGS="${MASTERCONFIG}/ ${MASTERPORT} ${MASTERIP}"
 
@@ -69,7 +69,7 @@ start_master() {
 		--make-pidfile \
 		--pidfile "${rundir}"/master.pid \
 		--background \
-		--exec %LIBEXECDIR%/sauer_master -- ${MASTERARGS}
+		--exec /usr/libexec/sauerbraten/sauer_master -- ${MASTERARGS}
 	eend $?
 }
 
