@@ -44,6 +44,8 @@ DEPENDENCIES="
         ] ]]
 "
 
+REMOTE_IDS="github:OpenRC/${PN}"
+
 DEFAULT_SRC_COMPILE_PARAMS=(
     LIBNAME=lib
     LIBEXECDIR=/usr/$(exhost --target)/libexec/rc
