@@ -18,7 +18,7 @@ DOWNLOADS="
         dlc3? ( ${DLC3_SRC_DL} )
 "
 
-LICENCES="all-rights-reserved"
+LICENCES="all-rights-reserved GOG-EULA"
 SLOT="0"
 PLATFORMS="-* ~amd64"
 MYOPTIONS="
