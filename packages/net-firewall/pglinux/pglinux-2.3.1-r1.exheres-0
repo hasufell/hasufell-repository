@@ -4,6 +4,7 @@
 MY_PNV="pgl-${PV}"
 
 require systemd-service
+require openrc-service
 require gtk-icon-cache
 require sourceforge [ project=peerguardian suffix=tar.gz ]
 
@@ -79,5 +80,7 @@ src_install() {
     keepdir /var/{lib,log,spool}/pgl
     keepdir /etc/pgl/blocklists.local
     edo rm -r "${IMAGE%/}"/{tmp,run}
+
+    openrc_expart /etc/init.d/pgl
 }
 
