@@ -27,6 +27,8 @@ DEPENDENCIES="
                                                 arx-install-data tool ] ]]
 "
 
+REMOTE_IDS+=" github:arx/ArxLibertatis"
+
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-fix-cmake-build.patch
 )
