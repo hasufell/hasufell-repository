@@ -19,6 +19,7 @@ DEPENDENCIES="
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DCMAKE_INSTALL_PREFIX="/usr"
     -DBINDIR="/usr/$(exhost --target)/bin"
     -DDATADIR=/usr/share/${PN}
 )
