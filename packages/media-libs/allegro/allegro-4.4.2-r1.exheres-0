@@ -54,9 +54,9 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     "-DCMAKE_SKIP_BUILD_RPATH=TRUE"
-    "-DDOCDIR=share/doc"
-    "-DINFODIR=share/info"
-    "-DMANDIR=share/man"
+    "-DDOCDIR=/usr/share/doc"
+    "-DINFODIR=/usr/share/info"
+    "-DMANDIR=/usr/share/man"
     "-DWANT_EXAMPLES=OFF"
     "-DWANT_JPGALLEG=ON"
     "-DWANT_LINUX_CONSOLE=OFF"
