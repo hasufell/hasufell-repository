@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require sourceforge [ project=pio suffix=tar.gz ]
+require gtk-icon-cache
 
 SUMMARY="A clone of the popular board game The Settlers of Catan"
 
