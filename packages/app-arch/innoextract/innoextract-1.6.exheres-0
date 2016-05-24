@@ -17,6 +17,8 @@ DEPENDENCIES="
         dev-libs/boost
 "
 
+REMOTE_IDS="github:dscharrer/${PN}"
+
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DUSE_LZMA=ON
     -DSET_OPTIMIZATION_FLAGS=OFF
