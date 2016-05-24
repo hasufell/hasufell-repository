@@ -41,8 +41,9 @@ DEPENDENCIES="
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DPKG_BINDIR=/usr/$(exhost --target)/bin
-    -DPKG_DATADIR=/usr/share/${PN}
+    -DCMAKE_INSTALL_PREFIX="/usr"
+    -DPKG_BINDIR="/usr/$(exhost --target)/bin"
+    -DPKG_DATADIR="/usr/share/${PN}"
     -DUSE_PCH_COMPILATION=OFF
 )
 
