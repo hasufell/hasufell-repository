@@ -12,6 +12,7 @@ PLATFORMS="~amd64 ~x86"
 DEPENDENCIES="
     build:
         dev-util/gob2
+        dev-util/intltool
         sys-devel/gettext
         virtual/pkg-config
     build+run:
@@ -25,4 +26,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --includedir=/usr/$(exhost --target)/include
     --with-gtk
 )
+
+src_prepare() {
+    edo intltoolize --force --automake
+    default
+}
 
