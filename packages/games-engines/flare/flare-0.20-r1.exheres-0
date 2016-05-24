@@ -3,6 +3,7 @@
 
 require github [ user=clintbellanger project=flare-engine tag=v${PV} pn=flare-engine ]
 require cmake [ api=2 ]
+require gtk-icon-cache
 
 SUMMARY="Free/Libre Action Roleplaying game engine"
 
