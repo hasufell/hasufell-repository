@@ -31,7 +31,7 @@ exec flare --game=flare-game "\$@"
 EOF
 
     insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
+    hereins ${PN}-game.desktop <<EOF
 [Desktop Entry]
 Name=Flare (game)
 Type=Application
