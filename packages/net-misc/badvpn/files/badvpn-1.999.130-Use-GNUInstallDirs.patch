@@ -1,0 +1,154 @@
+From 93137c8b283e02e3b804f3b8df91b0b9ae7d69a5 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Tue, 24 May 2016 18:47:06 +0200
+Subject: [PATCH] Use GNUInstallDirs for controlling install destinations
+Upstream: pending, https://github.com/ambrop72/badvpn/pull/22
+
+This allows proper control over install destinations, especially
+when 'bin' has a different prefix than 'share', e.g.:
+* /usr/x86_64-pc-linux-gnu/bin/
+* /usr/share
+---
+ CMakeLists.txt             | 3 ++-
+ client/CMakeLists.txt      | 4 ++--
+ flooder/CMakeLists.txt     | 2 +-
+ ncd-request/CMakeLists.txt | 2 +-
+ ncd/CMakeLists.txt         | 2 +-
+ server/CMakeLists.txt      | 4 ++--
+ tun2socks/CMakeLists.txt   | 4 ++--
+ tunctl/CMakeLists.txt      | 2 +-
+ udpgw/CMakeLists.txt       | 2 +-
+ 9 files changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 269c526..c5776fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,7 @@ project(BADVPN C)
+ 
+ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+ 
++include(GNUInstallDirs)
+ include(TestBigEndian)
+ include(CheckIncludeFiles)
+ include(CheckSymbolExists)
+@@ -243,7 +244,7 @@ endif ()
+ # install man pages
+ install(
+     FILES badvpn.7
+-    DESTINATION share/man/man7
++	DESTINATION ${CMAKE_INSTALL_MANDIR}/man7
+ )
+ 
+ # reset variables indicating whether we're building various libraries,
+diff --git a/client/CMakeLists.txt b/client/CMakeLists.txt
+index 3cec1a9..1ea9e7e 100644
+--- a/client/CMakeLists.txt
++++ b/client/CMakeLists.txt
+@@ -21,10 +21,10 @@ target_link_libraries(badvpn-client system flow flowextra tuntap server_conectio
+ 
+ install(
+     TARGETS badvpn-client
+-    RUNTIME DESTINATION bin
++	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+ 
+ install(
+     FILES badvpn-client.8
+-    DESTINATION share/man/man8
++    DESTINATION ${CMAKE_INSTALL_MANDIR}/man8
+ )
+diff --git a/flooder/CMakeLists.txt b/flooder/CMakeLists.txt
+index 36253ab..a523244 100644
+--- a/flooder/CMakeLists.txt
++++ b/flooder/CMakeLists.txt
+@@ -3,5 +3,5 @@ target_link_libraries(badvpn-flooder system flow server_conection ${NSPR_LIBRARI
+ 
+ install(
+     TARGETS badvpn-flooder
+-    RUNTIME DESTINATION bin
++	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+diff --git a/ncd-request/CMakeLists.txt b/ncd-request/CMakeLists.txt
+index 61447fd..5a605fa 100644
+--- a/ncd-request/CMakeLists.txt
++++ b/ncd-request/CMakeLists.txt
+@@ -5,5 +5,5 @@ target_link_libraries(badvpn-ncd-request ncdrequest ncdvalgenerator ncdvalparser
+ 
+ install(
+     TARGETS badvpn-ncd-request
+-    RUNTIME DESTINATION bin
++	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+diff --git a/ncd/CMakeLists.txt b/ncd/CMakeLists.txt
+index 0582f1a..a4feb27 100644
+--- a/ncd/CMakeLists.txt
++++ b/ncd/CMakeLists.txt
+@@ -189,7 +189,7 @@ if (NOT EMSCRIPTEN)
+     
+     install(
+         TARGETS badvpn-ncd
+-        RUNTIME DESTINATION bin
++		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     )
+ endif ()
+ 
+diff --git a/server/CMakeLists.txt b/server/CMakeLists.txt
+index 1d02432..7c60a85 100644
+--- a/server/CMakeLists.txt
++++ b/server/CMakeLists.txt
+@@ -3,10 +3,10 @@ target_link_libraries(badvpn-server system flow flowextra nspr_support predicate
+ 
+ install(
+     TARGETS badvpn-server
+-    RUNTIME DESTINATION bin
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+ 
+ install(
+     FILES badvpn-server.8
+-    DESTINATION share/man/man8
++    DESTINATION ${CMAKE_INSTALL_MANDIR}/man8
+ )
+diff --git a/tun2socks/CMakeLists.txt b/tun2socks/CMakeLists.txt
+index 8c8597c..4246fd0 100644
+--- a/tun2socks/CMakeLists.txt
++++ b/tun2socks/CMakeLists.txt
+@@ -6,10 +6,10 @@ target_link_libraries(badvpn-tun2socks system flow tuntap lwip socksclient udpgw
+ 
+ install(
+     TARGETS badvpn-tun2socks
+-    RUNTIME DESTINATION bin
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+ 
+ install(
+     FILES badvpn-tun2socks.8
+-    DESTINATION share/man/man8
++    DESTINATION ${CMAKE_INSTALL_MANDIR}/man8
+ )
+diff --git a/tunctl/CMakeLists.txt b/tunctl/CMakeLists.txt
+index 4cbebc8..66d370b 100644
+--- a/tunctl/CMakeLists.txt
++++ b/tunctl/CMakeLists.txt
+@@ -2,5 +2,5 @@ add_executable(badvpn-tunctl tunctl.c)
+ 
+ install(
+     TARGETS badvpn-tunctl
+-    RUNTIME DESTINATION bin
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+diff --git a/udpgw/CMakeLists.txt b/udpgw/CMakeLists.txt
+index c8c798c..8f77d7d 100644
+--- a/udpgw/CMakeLists.txt
++++ b/udpgw/CMakeLists.txt
+@@ -5,5 +5,5 @@ target_link_libraries(badvpn-udpgw system flow flowextra)
+ 
+ install(
+     TARGETS badvpn-udpgw
+-    RUNTIME DESTINATION bin
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+-- 
+2.8.3
+
