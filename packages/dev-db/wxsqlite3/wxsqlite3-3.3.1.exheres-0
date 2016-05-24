@@ -40,7 +40,7 @@ src_configure() {
     econf \
         --enable-shared \
         --enable-unicode \
-        --with-wx-config="/usr/$(exhost --target)/lib/wx/config/$(option providers:gtk3 'gtk3' 'gtk2')-unicode-3.0" \
+        --with-wx-config="/usr/$(exhost --target)/bin/wx-config-${SLOT}" \
         --with-wxshared \
         --with-sqlite3-prefix="/usr/$(exhost --target)" \
         --includedir="/usr/$(exhost --target)/include/wx-${SLOT}/" \
@@ -58,7 +58,9 @@ src_install() {
         gtkver=2
     fi
 
-    # this is the upstream .pc file
+    # this is the upstream .pc file and it doesn't get
+    # generated properly
+    # since upstream is uncollaborative, we'll keep sedding it
     edo sed \
         -e "s:prefix=/usr:prefix=/usr/$(exhost --target):" \
         -e "s:wxcode_gtk2_wxsqlite3:wxcode_gtk${gtkver}u_wxsqlite3:" \
