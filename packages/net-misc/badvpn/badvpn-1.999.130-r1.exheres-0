@@ -9,6 +9,7 @@
 
 require github [ user=ambrop72 ]
 require cmake [ api=2 ]
+require systemd-service openrc-service
 
 SUMMARY="Peer-to-peer VPN, NCD scripting language, tun2socks proxifier"
 DESCRIPTION="
@@ -88,5 +89,8 @@ src_install() {
         newconfd "${FILES}"/${PN}-ncd.conf ${PN}-ncd
         install_systemd_files
     fi
+
+    openrc_expart /etc/init.d
+    openrc_expart /etc/conf.d
 }
 
