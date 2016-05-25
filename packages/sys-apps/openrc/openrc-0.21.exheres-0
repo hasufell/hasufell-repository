@@ -1,0 +1,156 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+#
+# Based in part upon 'openrc-0.20.4.ebuild' from Gentoo, which is:
+#     Copyright 1999-2015 Gentoo Foundation
+#     Distributed under the terms of the GNU General Public License v2
+
+HOMEPAGE="http://www.gentoo.org/proj/en/base/${PN}/"
+DOWNLOADS="http://dev.gentoo.org/~williamh/dist/${PNV}.tar.bz2"
+
+SUMMARY="A dependency-based init system that works with the system-provided init program"
+SLOT="0"
+LICENCES="BSD-2"
+
+MYOPTIONS="
+    ( providers:
+        runit
+        sinit
+        sysvinit
+    ) [[
+        *description = [ provider for the init daemon ]
+    ]]
+    ncurses
+    newnet [[ description = [
+            Enable the new network stack (experimental)
+        ] ]]
+    pam
+    tools [[ description = [ Build optional tools ]  ]]
+"
+
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        ncurses? ( sys-libs/ncurses )
+        pam? ( sys-libs/pam )
+    run:
+        providers:runit? ( sys-apps/runit )
+        providers:sinit? ( sys-apps/sinit )
+        providers:sysvinit? ( sys-apps/sysvinit )
+    suggestion:
+        net-misc/netifrc [[ description = [
+            Network Interface Management Scripts
+        ] ]]
+"
+
+REMOTE_IDS="github:OpenRC/${PN}"
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    LIBNAME=lib
+    LIBEXECDIR=/usr/$(exhost --target)/libexec/rc
+    OS=Linux
+)
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    PREFIX=/usr/$(exhost --target)
+    SBINDIR=/usr/$(exhost --target)/bin
+    SYSCONFDIR=/etc
+    UPREFIX=/usr
+    INCDIR=/usr/$(exhost --target)/include
+    INCMODE=0755
+    LIBDIR=/usr/$(exhost --target)/lib
+    SHLIBDIR=/usr/$(exhost --target)/lib
+    LIBMODE=0755
+)
+
+pkg_setup() {
+    exdirectory --allow /etc/sysctl.d
+}
+
+src_prepare() {
+    edo sed -e 's#readelf #${READELF:-readelf} #g'  \
+            -i src/test/runtests.sh
+
+    edo sed -i 's:0444:0644:' mk/sys.mk
+}
+
+src_compile() {
+    export BRANDING="Exherbo Linux"
+
+    export DEBUG=
+    export MKTERMCAP=$(optionv ncurses)
+
+    export AR=$(exhost --tool-prefix)ar
+    export RANLIB=$(exhost --tool-prefix)ranlib
+    export CC=$(exhost --tool-prefix)cc
+
+    MAKE_ARGS="
+        ${DEFAULT_SRC_COMPILE_PARAMS[@]}
+        MKNET=$(option newnet yes no)
+        MKSELINUX=no
+        MKAUDIT=no
+        MKPAM=$(optionv pam)
+        MKSTATICLIBS=no
+        MKTOOLS=$(option tools yes no)
+    "
+
+    emake ${MAKE_ARGS}
+}
+
+src_test() {
+    export READELF=$(exhost --tool-prefix)readelf
+    default
+}
+
+src_install() {
+    emake \
+        ${DEFAULT_SRC_INSTALL_PARAMS[@]} \
+        ${MAKE_ARGS} \
+        DESTDIR="${IMAGE}" install
+
+    keepdir /usr/$(exhost --target)/libexec/rc/init.d
+    keepdir /usr/$(exhost --target)/libexec/rc/tmp
+
+    dodir /usr/share/"${PN}"
+    edo cp -PR "${IMAGE}"/etc/runlevels "${IMAGE}"/usr/share/${PN}
+    rm -rf "${IMAGE}"/etc/runlevels
+
+    insinto /etc/logrotate.d
+    newins "${FILES}"/openrc.logrotate openrc
+
+    dodoc ChangeLog *.md
+    if option newnet; then
+        dodoc README.newnet
+    fi
+}
+
+pkg_postinst() {
+    # Make our runlevels if they don't exist
+    if [[ ! -e "${ROOT}"etc/runlevels ]] ||
+            [[ -e "${ROOT}"etc/runlevels/.add_boot_init.created ]] ; then
+        einfo "Copying across default runlevels"
+        cp -RPp "${ROOT}"usr/share/${PN}/runlevels "${ROOT}"etc
+        rm -f "${ROOT}"etc/runlevels/.add_boot_init.created
+    else
+        if [[ ! -e "${ROOT}"etc/runlevels/sysinit/devfs ]] ; then
+            mkdir -p "${ROOT}"etc/runlevels/sysinit
+            cp -RPp "${ROOT}"usr/share/${PN}/runlevels/sysinit/* \
+                "${ROOT}"etc/runlevels/sysinit
+        fi
+        if [[ ! -e "${ROOT}"etc/runlevels/shutdown/mount-ro ]] ; then
+            mkdir -p "${ROOT}"etc/runlevels/shutdown
+            cp -RPp "${ROOT}"usr/share/${PN}/runlevels/shutdown/* \
+                "${ROOT}"etc/runlevels/shutdown
+        fi
+        if [[ ! -e "${ROOT}"etc/runlevels/nonetwork/local ]]; then
+            cp -RPp "${ROOT}"usr/share/${PN}/runlevels/nonetwork \
+                "${ROOT}"etc/runlevels
+        fi
+    fi
+
+    # update the dependency tree after touching all files #224171
+    [[ "${ROOT}" = "/" ]] &&
+        "${ROOT}usr/$(exhost --target)/libexec"/rc/bin/rc-depend -u
+}
+
