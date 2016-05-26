@@ -1,0 +1,41 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Jagged Alliance 2 data files (GOG)"
+HOMEPAGE="https://www.gog.com/game/jagged_alliance_2"
+JA2_EXE="setup_jagged_alliance2_2.0.0.12.exe"
+DOWNLOADS="manual: ${JA2_EXE}"
+
+LICENCES="SIR-TECH GOG-EULA"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+RESTRICT="fetch"
+
+DEPENDENCIES="
+    build:
+        app-arch/innoextract
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+WORK=${WORKBASE}
+
+pkg_nofetch() {
+    einfo
+    einfo "Please buy Jagged Alliance 2 from"
+    einfo "${HOMEPAGE} and"
+    einfo "download \"${JA2_EXE}\""
+    einfo "and move/link it to \"${FETCHEDDIR}\""
+    einfo
+}
+
+src_unpack() {
+    edo innoextract --lowercase "${FETCHEDDIR}/${JA2_EXE}"
+}
+
+src_install() {
+    insinto /usr/share/ja2
+    doins -r "${WORK}"/app/data
+}
+
