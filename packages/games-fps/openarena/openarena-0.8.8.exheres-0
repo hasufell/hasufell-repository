@@ -2,6 +2,7 @@
 # Copyright 2014-2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require desktop-utils
 require sourceforge [ project=oarena pnv=${PN}-engine-source-${PV} ]
 
 SUMMARY="Open-source replacement for Quake 3 Arena"
@@ -76,16 +77,6 @@ src_install() {
     insinto /usr/share/pixmaps
     newins "${MY_S}"/misc/quake3.png ${PN}.png
 
-    insinto /usr/share/applications/
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=OpenArena
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}
-TryExec=${PN}
-Icon=${PN}
-Categories=Game;ActionGame;
-EOF
+    install_desktop_entry "Name=OpenArena"
 }
 
