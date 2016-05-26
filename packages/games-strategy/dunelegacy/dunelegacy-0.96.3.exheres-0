@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require sourceforge [ pnv=${PNV}-src ]
 
@@ -31,17 +31,7 @@ src_install() {
     insinto /usr/share/icons/hicolor/48x48/apps
     doins ${PN}.png
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Dune Legacy
-Type=Application
-Comment=Updated clone of Westood Studios' Dune2
-Exec=dunelegacy
-TryExec=dunelegacy
-Icon=dunelegacy
-Categories=Game;StrategyGame;
-EOF
+    install_desktop_entry "Name=Dune Legacy"
 }
 
 pkg_postinst() {
