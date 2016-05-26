@@ -5,6 +5,9 @@ MY_PN="t-engine4"
 MY_PV="${PV/_/}"
 MY_PV="${MY_PV/rc/RC}"
 MY_P="${MY_PN}-src-${MY_PV}"
+
+require desktop-utils
+
 SUMMARY="Topdown tactical RPG roguelike game and game engine"
 HOMEPAGE="http://te4.org"
 DOWNLOADS="http://te4.org/dl/t-engine/${MY_P}.tar.bz2"
@@ -81,16 +84,6 @@ src_install() {
     doins -r game
     newbin t-engine ${PN}
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=ToME4
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}
-TryExec=${PN}
-Icon=${PN}
-Categories=Game;RolePlaying;
-EOF
+    install_desktop_entry "Name=ToME4"
 }
 
