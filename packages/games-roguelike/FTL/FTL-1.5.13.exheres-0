@@ -1,6 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require desktop-utils
+
 SUMMARY="Faster Than Light: A spaceship simulation real-time roguelike-like game"
 HOMEPAGE="http://www.ftlgame.com/"
 DOWNLOADS="manual: FTL.${PV}.tar.gz"
@@ -58,17 +60,8 @@ fi
 exec /opt/FTL/bin/FTL "$@"
 EOF
 
-    insinto /usr/share/applications/
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=Faster Than Light
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}
-TryExec=${PN}
-Icon=/usr/share/pixmaps/FTL.bmp
-Categories=Game;RolePlaying;
-EOF
+    install_desktop_entry "Name=Faster Than Light" \
+        "Icon=/usr/share/pixmaps/FTL.bmp"
 
     insinto /usr/share/pixmaps
     newins data/resources/exe_icon.bmp FTL.bmp
