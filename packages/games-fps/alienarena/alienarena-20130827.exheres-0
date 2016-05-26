@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@poste.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 
 MY_PN=alienarena-7.66
 SUMMARY="Fast-paced multiplayer deathmatch game"
@@ -58,16 +58,6 @@ src_compile() {
 src_install() {
     default
 
-    insinto /usr/share/applications/
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=Alien Arena
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}
-TryExec=${PN}
-Icon=${PN}
-Categories=Game;ActionGame;
-EOF
+    install_desktop_entry "Name=Alien Arena"
 }
 
