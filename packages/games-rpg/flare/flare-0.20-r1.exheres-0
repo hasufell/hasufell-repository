@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require github [ user=clintbellanger project=flare-game tag=v${PV} pn=flare-game ]
-require cmake gtk-icon-cache
+require cmake desktop-utils gtk-icon-cache
 
 SUMMARY="Free/Libre Action Roleplaying game"
 
@@ -30,17 +30,7 @@ src_install() {
 exec flare --game=flare-game "\$@"
 EOF
 
-    insinto /usr/share/applications
-    hereins ${PN}-game.desktop <<EOF
-[Desktop Entry]
-Name=Flare (game)
-Type=Application
-Comment=Free/Libre Action Roleplaying game
-Exec=flare-game
-TryExec=flare-game
-Icon=flare
-Categories=Game;RolePlaying;
-EOF
+    install_desktop_entry "Name=Flare (game)" "Exec=flare-game"
 
     dodoc README
 }
