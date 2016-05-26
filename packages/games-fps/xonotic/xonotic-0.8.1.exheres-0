@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 
 MY_PN="${PN^}"
 SUMMARY="Fork of Nexuiz, Deathmatch FPS based on DarkPlaces, an advanced Quake 1 engine"
@@ -82,28 +82,8 @@ src_install() {
     insinto /usr/share/icons/hicolor/scalable/apps
     newins misc/logos/${PN}_icon.svg ${PN}.svg
 
-    insinto /usr/share/applications/
-    hereins ${PN}-glx.desktop << EOF
-[Desktop Entry]
-Name=${MY_PN} (GLX)
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}-glx
-TryExec=${PN}-glx
-Icon=${PN}
-Categories=Game;ActionGame;
-EOF
-
-    hereins ${PN}-sdl.desktop << EOF
-[Desktop Entry]
-Name=${MY_PN} (SDL)
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}-sdl
-TryExec=${PN}-sdl
-Icon=${PN}
-Categories=Game;ActionGame;
-EOF
+    install_desktop_entry "Name=${MY_PN} (GLX)" "Exec=${PN}-glx"
+    install_desktop_entry "Name=${MY_PN} (SDL)" "Exec=${PN}-sdl"
 
     dobin source/darkplaces/${PN}-glx
     dobin source/darkplaces/${PN}-sdl
