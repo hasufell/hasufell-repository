@@ -3,7 +3,7 @@
 
 require alternatives
 require setup-py [ import=distutils multibuild=false blacklist=3 ]
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 
 export_exlib_phases src_prepare src_install
 
@@ -83,17 +83,8 @@ renpy_src_install() {
 exec python2 ${renpydir}/renpy.py "\$@"
 EOF
 
-    insinto /usr/share/applications
-    hereins ${PN}-${SLOT}.desktop <<EOF
-[Desktop Entry]
-Name=Ren'Py (${SLOT})
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}-${SLOT}
-TryExec=${PN}-${SLOT}
-Icon=${PN}-${SLOT}
-Categories=Game;
-EOF
+    install_desktop_entry "Name=Ren'Py (${SLOT})" \
+        "Exec=${PN}-${SLOT}" "Icon=${PN}-${SLOT}"
 
     edo cd "${WORK}"
     SETUP_PY_SRC_INSTALL_PARAMS=( --install-lib="${renpydir}" )
