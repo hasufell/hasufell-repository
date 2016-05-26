@@ -1,0 +1,75 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=ja2-stracciatella tag=v${PV} ]
+require desktop-utils gtk-icon-cache
+
+SUMMARY="A port of Jagged Alliance 2 to SDL"
+HOMEPAGE+=" http://tron.homeunix.org/ja2/"
+DOWNLOADS+=" mirror://gentoo/editor.slf.gz"
+
+LICENCES="
+    SFI-SCLA [[ note = [ Original Jagged Alliance source codes ] ]]
+    public-domain [[ note = [ all changes since commit 8287b98 ] ]]
+    ZLIB [[ note = [ _build/lib-MicroIni ] ]]
+    LGPL-2.1 [[ note = [ _build/lib-SDL-* ] ]]
+    Boost-1.0 [[ note = [ _build/lib-boost, _build/lib-utf8cpp ] ]]
+    BSD-3 [[ note = [ _build/lib-gtest ] ]]
+    MIT [[ note = [ _build/lib-rapidjson, _build/lib-slog ] ]]
+    CCPL-Attribution-NonCommercial-2.0 [[ note = [ _build/lib-smacker ] ]]
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:0[X]
+    suggestion:
+        games-strategy/ja2-stracciatella-data [[ description = [ GOG data files
+                                                                 of ja2 ] ]]
+"
+
+src_prepare() {
+    default
+
+    # set the default datadir in ja2.ini to a sane value
+    edo sed -i \
+        -e '/fprintf(IniFile/s#/some/place/where/the/data/is#/usr/share/ja2#' \
+        sgp/SGP.cc
+}
+
+src_configure() {
+    # not an autoconf script
+    edo ./configure --prefix=/usr
+}
+
+src_compile() {
+    emake Q=""
+}
+
+src_install() {
+    emake \
+        BINARY_DIR="${IMAGE}/usr/$(exhost --target)/bin" \
+        MANPAGE_DIR="${IMAGE}/usr/share/man/man6" \
+        SHARED_DIR="${IMAGE}/usr/share" \
+        FULL_PATH_EXTRA_DATA_DIR="${IMAGE}/usr/share/ja2" \
+        install
+
+    insinto /usr/share/ja2/data
+    doins "${WORKBASE}"/editor.slf
+
+    # install our own desktop file
+    edo rm "${IMAGE}"/usr/share/applications/ja2-stracciatella.desktop
+    install_desktop_entry 'Exec=ja2'
+}
+
+pkg_postinst() {
+    elog "If you don't use games-strategy/ja2-stracciatella-data, then"
+    elog "you need to copy all files from the Data directory of"
+    elog "Jagged Alliance 2 installation to some directory and set it in"
+    elog "  ~/.ja2/ja2.ini"
+    elog "possibly utilizing app-arch/innoextract for windows .exe files."
+    elog
+    elog "Make sure the filenames are all lowercase."
+}
+
