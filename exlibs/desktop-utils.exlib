@@ -112,6 +112,8 @@ find_desktop_file_category() {
                 arcade)     subcat="ArcadeGame" ;;
                 board)      subcat="BoardGame" ;;
                 fps)        subcat="Shooter" ;;
+                roguelike)  subcat="RolePlaying";;
+                rpg)        subcat="RolePlaying";;
                 simulation) subcat="Simulation" ;;
                 sports)     subcat="SportsGame" ;;
                 strategy)   subcat="StrategyGame" ;;
