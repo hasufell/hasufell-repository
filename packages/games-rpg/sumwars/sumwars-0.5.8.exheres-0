@@ -3,7 +3,7 @@
 
 WORK=${WORKBASE}/${PN}-${PV%_*}
 
-require cmake [ api=2 ] gtk-icon-cache flag-o-matic
+require cmake [ api=2 ] desktop-utils gtk-icon-cache flag-o-matic
 require sourceforge [ pnv=${PNV//_/-}-src ]
 
 SUMMARY="A multi-player, 3D action role-playing game"
@@ -61,16 +61,6 @@ src_install() {
     insinto /usr/share/icons/hicolor/128x128/apps
     newins "${CMAKE_SOURCE}"/share/icon/SumWarsIcon_128x128.png ${PN}.png
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Summoning Wars
-Type=Application
-Comment=a multi-player, 3D action role-playing game
-Exec=sumwars
-TryExec=sumwars
-Icon=sumwars
-Categories=Game;RolePlaying;
-EOF
+    install_desktop_entry "Name=Summoning Wars"
 }
 
