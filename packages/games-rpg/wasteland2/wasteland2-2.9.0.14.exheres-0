@@ -1,11 +1,12 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 
 SUMMARY="Direct sequel to 1988's Wasteland, the first-ever post-apocalyptic computer RPG and the inspiration behind the Fallout series"
 HOMEPAGE="https://wasteland.inxile-entertainment.com/"
-DOWNLOADS="manual: gog_wasteland_2_2.9.0.14.sh"
+GOG_SH="gog_wasteland_2_2.9.0.14.sh"
+DOWNLOADS="manual: ${GOG_SH}"
 
 LICENCES="all-rights-reserved GOG-EULA"
 SLOT="0"
@@ -45,12 +46,12 @@ pkg_nofetch() {
     einfo
     einfo "Please buy Wasteland 2"
     einfo "from https://www.gog.com/ and"
-    einfo "download \"${DOWNLOADS}\""
+    einfo "download \"${GOG_SH}\""
     einfo "and move/link it to \"${FETCHEDDIR}\""
     einfo
     einfo "This exheres was tested with the CLASSICAL edition."
     einfo "If it works with the deluxe edition too, please"
-    einfo "open a bug report. If not, open a bug report too."
+    einfo "open a PR."
     einfo
 }
 
@@ -59,40 +60,28 @@ pkg_setup() {
 }
 
 src_unpack() {
-    unzip -qo "${FETCHEDDIR}/${DOWNLOADS}"
-    [[ $? -le 1 ]] || die "unpacking ${DOWNLOADS} failed!"
+    unzip -qo "${FETCHEDDIR}/${GOG_SH}"
+    [[ $? -le 1 ]] || die "unpacking ${GOG_SH} failed!"
 }
 
 src_install() {
     local dir=/opt/${PN}
 
-    # over 20GB of data
-    dodir "${dir}"
-    edo mv game/WL2_Data "${IMAGE%/}${dir}"/
+    insinto "${dir}"
+    doins -r game/WL2_Data
     exeinto "${dir}"
     doexe game/WL2
 
     insinto /usr/share/icons/hicolor/256x256/apps
     newins support/icon.png ${PN}.png
 
-    local LD_PATH="/usr/$(exhost --target)/lib/ld-linux.so.2";
     herebin ${PN} <<EOF
 #!/bin/sh
-cd "${dir}/game"
-exec ${LD_PATH} "${dir}/game/WL2" "\$@"
+cd "${dir}"
+exec "./WL2" "\$@"
 EOF
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Wasteland 2
-Type=Application
-Comment=${SUMMARY}
-Exec=/usr/$(exhost --target)/${PN}
-TryExec=/usr/$(exhost --target)/${PN}
-Icon=${PN}
-Categories=Game;RolePlaying;
-EOF
+    install_desktop_entry
 
     dodoc docs/*.pdf
 
