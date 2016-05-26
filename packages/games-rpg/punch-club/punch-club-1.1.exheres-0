@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 
 SUMMARY="Punch Club is a boxing tycoon management game with multiple branching story lines"
 HOMEPAGE="https://www.gog.com/game/punch_club"
@@ -65,17 +65,7 @@ cd "${dir}/game"
 exec "./Punch Club.${arch}" "\$@"
 EOF
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Punch Club
-Type=Application
-Comment=${SUMMARY}
-Exec=punch-club
-TryExec=punch-club
-Icon=punch-club
-Categories=Game;RolePlaying;
-EOF
+    install_desktop_entry "Name=Punch Club"
 
     edo rm "${WORK}/game/Punch Club_Data/Plugins/${arch}/libsteam_api.so" \
         "${WORK}/game/Punch Club_Data/Plugins/${arch}/libCSteamworks.so"
