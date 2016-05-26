@@ -46,7 +46,7 @@ here_desktop_entry() {
 # Inspection: $PN, $SUMMARY
 # Errors: on invalid arguments
 install_desktop_entry() {
-    local Name=${PN}
+    local Name=${PN^}
     local Comment=${SUMMARY}
     local Exec=${PN}
     local TryExec=
