@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 
 SUMMARY="Baldur's Gate2: Enhanced Edition"
 HOMEPAGE="http://www.gog.com/game/baldurs_gate_2_enhanced_edition"
@@ -81,16 +81,6 @@ fi
 exec ${LD_PATH} "${dir}/game/BaldursGateII" "\$@"
 EOF
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Baldurs Gate 2 Enhanced Edition
-Type=Application
-Comment=${SUMMARY}
-Exec=/usr/$(exhost --target)/${PN}
-TryExec=/usr/$(exhost --target)/${PN}
-Icon=${PN}
-Categories=Game;RolePlaying;
-EOF
+    install_desktop_entry "Name=Baldurs Gate 2 Enhanced Edition"
 }
 
