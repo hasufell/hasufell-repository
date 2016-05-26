@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 
 ENGINE_PV=4.2.023
 FULL_P=UrbanTerror42_full017
@@ -94,17 +94,7 @@ src_install() {
     insinto /usr/share/icons/hicolor/scalable/apps
     doins "${FETCHEDDIR}"/${PN}.svg
 
-    insinto /usr/share/applications/
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=UrbanTerror
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}
-TryExec=${PN}
-Icon=${PN}
-Categories=Game;ActionGame;
-EOF
+    install_desktop_entry "Name=UrbanTerror"
 
     newbin build/release-linux-${my_arch}/Quake3-UrT-Ded.${my_arch} \
         ${PN}-dedicated
