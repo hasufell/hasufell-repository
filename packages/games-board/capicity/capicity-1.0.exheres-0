@@ -1,7 +1,7 @@
 # Copyright 2015-2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require gtk-icon-cache
+require desktop-utils gtk-icon-cache
 require qmake [ slot=4 ]
 require sourceforge [ project=capitalism pnv=CapiCity_${PV} suffix=tar.gz ]
 
@@ -47,16 +47,6 @@ src_install() {
         newins "${WORK}"/CapiCity_${PV}/icons/${res}x${res}.png ${PN}.png
     done
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=CapiCity
-Comment=${SUMMARY}
-Exec=CapiCity
-Icon=${PN}
-Terminal=false
-Type=Application
-Categories=Game;BoardGame;
-EOF
+    install_desktop_entry "Name=CapiCity" "Exec=CapiCity"
 }
 
