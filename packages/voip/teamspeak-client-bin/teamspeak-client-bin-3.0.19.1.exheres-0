@@ -1,6 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require desktop-utils
+
 SUMMARY="TeamSpeak Client - Voice Communication Software"
 HOMEPAGE="http://www.teamspeak.com/"
 DOWNLOADS="
@@ -77,16 +79,7 @@ src_install() {
     edo ln -s ../../usr/$(exhost --target)/lib/libquazip5.so \
         "${IMAGE%/}"/opt/teamspeak3-client/libquazip.so
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=TeamSpeak3
-Type=Application
-Comment=${SUMMARY}
-Exec=teamspeak3
-TryExec=teamspeak3
-Icon=/opt/teamspeak3-client/pluginsdk/docs/client_html/images/logo.png
-Categories=Network;
-EOF
+    install_desktop_entry "Name=TeamSpeak3" "Exec=teamspeak3" \
+        "Icon=/opt/teamspeak3-client/styles/default/logo-128x128.png"
 }
 
