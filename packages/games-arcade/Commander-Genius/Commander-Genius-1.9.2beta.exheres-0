@@ -1,0 +1,71 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+WORK=${WORKBASE}/${PN}-${PV//./}
+
+require cmake [ api=2 ] gtk-icon-cache
+require github [ user=gerstrong tag=v${PV//./} ]
+
+SUMMARY="Open Source Commander Keen clone (needs original game files)"
+
+LICENCES="GPL-2 LGPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+RESTRICT="mirror" # contains keen files, but we do not install them
+
+DEPENDENCIES="
+    build:
+        dev-libs/boost
+        virtual/pkg-config
+    build+run:
+        media-libs/SDL:2[X]
+        media-libs/SDL_image:2
+        media-libs/libvorbis
+        x11-dri/mesa
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DAPPDIR="/usr/$(exhost --target)/bin"
+    -DBUILD_TARGET="LINUX"
+    -DDOCDIR="/usr/share/doc/${PNVR}"
+    -DGAMES_SHAREDIR="/usr/share"
+    -DOGG=ON
+    -DOPENGL=ON
+    -DSHAREDIR="/usr/share"
+    -DTREMOR=OFF
+    -DUSE_SDL2=1
+)
+
+src_prepare() {
+    # don't install questionable bundled keen data
+    edo rm -r vfsroot
+
+    # fixes build skew
+    edo sed -i \
+        -e '/INCLUDE(package.cmake)/d' \
+        CMakeLists.txt
+
+    cmake_src_prepare
+}
+
+src_install() {
+    cmake_src_install
+
+    insinto /usr/share/applications
+    doins share/cgenius.desktop
+
+    insinto /usr/share/icons/hicolor/512x512/apps
+    doins src/CGLogo.png
+}
+
+pkg_postinst() {
+    elog "Check your settings in ~/.CommanderGenius/cgenius.cfg"
+    elog "after you have started the game for the first time."
+    elog "You may also want to set \"OpenGL = true\""
+    elog
+    elog "Then create the folder ~/.CommanderGenius/games"
+    elog "and drop your keen game folders into it."
+
+    gtk-icon-cache_pkg_postinst
+}
+
