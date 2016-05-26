@@ -7,7 +7,7 @@ ENGINE_P=${PN}_${ENGINE_PV}_sdk
 
 WORK=${WORKBASE}/${ENGINE_P}/source/source
 
-require cmake [ api=2 ] gtk-icon-cache
+require cmake [ api=2 ] gtk-icon-cache desktop-utils
 
 SUMMARY="Multiplayer FPS based on the QFusion engine (evolved from Quake 2)"
 HOMEPAGE="http://www.warsow.net/"
@@ -89,16 +89,6 @@ EOF
 
     insinto /usr/share/icons/hicolor/48x48/apps
     doins "${FETCHEDDIR}"/${PN}.png
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Warsow
-Type=Application
-Comment=Multiplayer FPS based on the QFusion engine (evolved from Quake 2)
-Exec=warsow
-TryExec=warsow
-Icon=warsow
-Categories=Game;ActionGame;
-EOF
+    install_desktop_entry "Name=Warsow"
 }
 
