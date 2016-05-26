@@ -2,6 +2,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require desktop-utils
 require cmake [ api=2 out_of_source=false ]
 require sourceforge [ project=alleg suffix=tar.gz ]
 
@@ -96,16 +97,8 @@ src_install() {
     doins {keyboard,language,setup/setup}.dat
     insinto /usr/share/pixmaps
     newins misc/icon.png ${PN}.png
-    insinto /usr/share/applications
-    hereins ${PN}-setup.desktop << EOF
-[Desktop Entry]
-Name=Allegro Setup
-Type=Application
-Comment=${SUMMARY}
-Exec=allegro-setup
-TryExec=allegro-setup
-Icon=allegro
-Categories=Settings;
-EOF
+
+    install_desktop_entry "Name=Allegro Setup" \
+        "Exec=allegro-setup" "Categories=Settings;"
 }
 
