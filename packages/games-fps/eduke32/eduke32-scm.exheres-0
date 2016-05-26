@@ -13,7 +13,7 @@
 SCM_SVN_RAW_URI=1
 SCM_REPOSITORY="http://svn.eduke32.com/eduke32/polymer/eduke32"
 
-require gtk-icon-cache scm-svn
+require desktop-utils gtk-icon-cache scm-svn
 
 MY_PV=${PV%.*}
 MY_BUILD=${PV#*.}
@@ -192,28 +192,8 @@ src_install() {
 exec /usr/bin/eduke32.bin ${ARGS} "\$@"
 EOF
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=EDuke32
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}
-TryExec=${PN}
-Icon=${PN}
-Categories=Game;ActionGame;
-EOF
-
-    hereins mapster32.desktop << EOF
-[Desktop Entry]
-Name=Mapster32
-Type=Application
-Comment=${SUMMARY}
-Exec=mapster32
-TryExec=mapster32
-Icon=mapster32
-Categories=Game;ActionGame;
-EOF
+    install_desktop_entry "Name=EDuke32" "Exec=${PN}"
+    install_desktop_entry "Name=Mapster32" "Exec=mapster32" "Icon=mapster32"
 
     dodoc build/buildlic.txt
 }
