@@ -3,6 +3,7 @@
 
 MY_PN=PySolFC
 
+require desktop-utils
 require setup-py [ import=distutils multibuild=false blacklist=3 python_opts="[tk]" ]
 require sourceforge [ project=pysolfc pnv=${MY_PN}-${PV} ]
 
@@ -42,16 +43,7 @@ src_install() {
 
     doman docs/*.6
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop << EOF
-[Desktop Entry]
-Name=PySol Fan Club Edition
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}.py
-TryExec=${PN}.py
-Icon=pysol02
-Categories=Game;BoardGame;
-EOF
+    install_desktop_entry "Name=PySol Fan Club Edition" \
+        "Exec=pysol.py" "Icon=pysol02"
 }
 
