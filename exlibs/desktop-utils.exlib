@@ -120,6 +120,7 @@ find_desktop_file_category() {
                 *) ;;
             esac
             ;;
+        voip) maincat="Network"; subcat="Telephony";;
         *) ;;
     esac
 
