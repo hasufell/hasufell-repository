@@ -3,7 +3,7 @@
 
 EDITION="collect_edition"
 
-require gtk-icon-cache \
+require desktop-utils gtk-icon-cache \
     sourceforge [ pnv=sauerbraten_${PV//./_}_${EDITION}_linux ]
 require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 
@@ -67,17 +67,7 @@ EOF
     # Create menu entry
     insinto /usr/share/icons/hicolor/256x256/apps
     newins data/cube.png ${PN}.png
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Cube 2: Sauerbraten
-Type=Application
-Comment=${SUMMARY}
-Exec=${PN}-client
-TryExec=${PN}-client
-Icon=${PN}
-Categories=Game;ActionGame;
-EOF
+    install_desktop_entry "Name=Cube 2: Sauerbraten" "Exec=${PN}-client"
 
     # Install the server config files
     insinto "${STATEDIR}"
