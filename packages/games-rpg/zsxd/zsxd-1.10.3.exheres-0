@@ -1,6 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require desktop-utils
 require cmake [ api=2 ]
 
 SUMMARY="A free 2D Zelda fangame parody"
@@ -38,16 +39,6 @@ src_install() {
 exec solarus_run "/usr/share/solarus/${PN}" "\$@"
 EOF
 
-    insinto /usr/share/applications
-    hereins ${PN}.desktop <<EOF
-[Desktop Entry]
-Name=Zelda: Mystery of Solarus XD
-Type=Application
-Comment=A free 2D Zelda fangame parody
-Exec=zsxd
-TryExec=zsxd
-Icon=zsxd
-Categories=Game;RolePlaying;
-EOF
+    install_desktop_entry "Name=Zelda: Mystery of Solarus XD"
 }
 
