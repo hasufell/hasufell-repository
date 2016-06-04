@@ -40,7 +40,7 @@ DEPENDENCIES="
         dev-perl/JSON-XS [[ description = [ faster JSON to HASH conversion ] ]]
         dev-perl/Mozilla-CA [[ description = [ may help in case there are SSL problems ] ]]
         dev-perl/Term-ReadLine-Gnu [[ description = [ for a better STDIN support ] ]]
-        dev-perl/Text-CharWidth [[ description = [ print the results in a fixed-width format (--fixed-width, -W) ] ]]
+        dev-perl/Unicode-LineBreak [[ description = [ print the results in a fixed-width format (--fixed-width, -W) ] ]]
         (
             media-video/gnome-mplayer
             media/mpv
