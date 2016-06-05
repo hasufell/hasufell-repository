@@ -1,0 +1,50 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ user=PintaProject project=Pinta ]
+require gtk-icon-cache freedesktop-desktop freedesktop-mime
+
+SUMMARY="Simple Painting for Gtk"
+HOMEPAGE="http://pinta-project.com"
+
+LICENCES="MIT CCPL-Attribution-3.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-util/intltool
+        sys-devel/gettext
+        virtual/pkg-config
+    build+run:
+        dev-lang/mono
+        gnome-bindings/gtk-sharp:2
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/pinta-1.6-pkg-config.patch
+    "${FILES}"/pinta-1.6-mono-4.patch
+)
+
+src_prepare() {
+    default
+    edo intltoolize --force --automake
+    eautoreconf
+}
+
+pkg_postinst() {
+    freedesktop-mime_pkg_postinst
+    freedesktop-desktop_pkg_postinst
+    gtk-icon-cache_pkg_postinst
+}
+
+pkg_postrm() {
+    freedesktop-mime_pkg_postrm
+    freedesktop-desktop_pkg_postrm
+    gtk-icon-cache_pkg_postrm
+}
+

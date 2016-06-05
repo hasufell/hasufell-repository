@@ -1,0 +1,32 @@
+From 2dfeb6f3fcec7d620a5a5a6f0d6d437c55bd3109 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Sun, 5 Jun 2016 19:26:37 +0200
+Subject: [PATCH] Use PKG_PROG_PKG_CONFIG macro to check for pkg-config
+Upstream: submitted, https://github.com/PintaProject/Pinta/pull/120
+
+Using AC_PATH_PROG isn't the standard way and breaks if
+the distribution provides only prefixed (as in: <arch>-pkg-config)
+versions.
+---
+ configure.ac | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 18b7199..7eb3f93 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -7,10 +7,7 @@ YELP_HELP_INIT
+ AC_PROG_INSTALL
+ 
+ dnl pkg-config
+-AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+-if test "x$PKG_CONFIG" = "xno"; then
+-        AC_MSG_ERROR([You need to install pkg-config])
+-fi
++PKG_PROG_PKG_CONFIG([0.20])
+ 
+ AC_PATH_PROG(XBUILD, xbuild, no)
+ AC_PATH_PROG(MONO, mono, no)
+-- 
+2.8.3
+
