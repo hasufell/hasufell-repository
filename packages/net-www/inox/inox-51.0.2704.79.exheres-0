@@ -2,7 +2,7 @@
 # Copyright 2009 Heiko Przybyl <zuxez@cs.tu-berlin.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require inox [ patchset="49.0.2623.110" ]
+require inox [ patchset="51.0.2704.79" ]
 
 DESCRIPTION+="
 Chromium has three release channels: Stable, Beta, and Dev. This package corresponds to the Stable
