@@ -21,6 +21,7 @@ DEPENDENCIES="
         media-libs/SDL:2[X]
         media-libs/SDL_image:2
         media-libs/libvorbis
+        sys-libs/zlib
         x11-dri/mesa
 "
 
