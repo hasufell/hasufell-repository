@@ -1,0 +1,49 @@
+From a1f323f5283aae895f4d2dc3c5ddece22a05f4b3 Mon Sep 17 00:00:00 2001
+From: scrawl <scrawl@baseoftrash.de>
+Date: Mon, 6 Jun 2016 13:32:27 +0200
+Subject: [PATCH] Fix build against OSG 3.5.3
+
+---
+ extern/osgQt/GraphicsWindowQt     |  3 ---
+ extern/osgQt/GraphicsWindowQt.cpp | 14 --------------
+ 2 files changed, 17 deletions(-)
+
+diff --git a/extern/osgQt/GraphicsWindowQt b/extern/osgQt/GraphicsWindowQt
+index ad456ef..3be1da0 100644
+--- a/extern/osgQt/GraphicsWindowQt
++++ b/extern/osgQt/GraphicsWindowQt
+@@ -37,9 +37,6 @@ namespace osgQt
+ // forward declarations
+ class GraphicsWindowQt;
+ 
+-/// The function sets the WindowingSystem to Qt.
+-void initQtWindowingSystem();
+-
+ /** The function sets the viewer that will be used after entering
+  *  the Qt main loop (QCoreApplication::exec()).
+  *
+diff --git a/extern/osgQt/GraphicsWindowQt.cpp b/extern/osgQt/GraphicsWindowQt.cpp
+index 46df721..78a2ae6 100644
+--- a/extern/osgQt/GraphicsWindowQt.cpp
++++ b/extern/osgQt/GraphicsWindowQt.cpp
+@@ -639,20 +639,6 @@ class QtWindowingSystem : public osg::GraphicsContext::WindowingSystemInterface
+ };
+ 
+ 
+-// declare C entry point for static compilation.
+-extern "C" void graphicswindow_Qt(void)
+-{
+-    osg::GraphicsContext::setWindowingSystemInterface(QtWindowingSystem::getInterface());
+-}
+-
+-
+-void osgQt::initQtWindowingSystem()
+-{
+-    graphicswindow_Qt();
+-}
+-
+-
+-
+ void osgQt::setViewer( osgViewer::ViewerBase *viewer )
+ {
+     HeartBeat::instance()->init( viewer );

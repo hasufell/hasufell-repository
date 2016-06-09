@@ -34,6 +34,9 @@ DEPENDENCIES="
         providers:libav? ( media/libav )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-osg-3.5.3.patch
+)
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBINDIR="/usr/$(exhost --target)/bin"
