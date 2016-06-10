@@ -5,7 +5,7 @@ require desktop-utils gtk-icon-cache
 
 SUMMARY="Baldur's Gate2: Enhanced Edition"
 HOMEPAGE="http://www.gog.com/game/baldurs_gate_2_enhanced_edition"
-BG_SH="gog_baldur_s_gate_2_enhanced_edition_2.4.0.8.sh"
+BG_SH="gog_baldur_s_gate_2_enhanced_edition_2.5.0.9.sh"
 DOWNLOADS="manual: ${BG_SH}"
 
 LICENCES="all-rights-reserved GOG-EULA"
@@ -74,9 +74,9 @@ src_install() {
 #!/bin/sh
 cd "${dir}/game"
 if [ "\${LD_LIBRARY_PATH+set}" = "set" ] ; then
-export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:/opt/baldurs-gate-ee/lib"
+export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:/opt/baldurs-gate-2-ee/lib"
 else
-export LD_LIBRARY_PATH="/opt/baldurs-gate-ee/lib"
+export LD_LIBRARY_PATH="/opt/baldurs-gate-2-ee/lib"
 fi
 exec ${LD_PATH} "${dir}/game/BaldursGateII" "\$@"
 EOF
