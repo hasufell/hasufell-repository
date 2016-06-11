@@ -7,24 +7,33 @@ SUMMARY="Pillars Of Eternity"
 HOMEPAGE="http://www.gog.com/game/pillars_of_eternity_hero_edition"
 
 BASE_SRC_DL="gog_pillars_of_eternity_2.12.0.16.sh"
-DLC1_SRC_DL="gog_pillars_of_eternity_kickstarter_item_dlc_2.0.0.2.sh"
-DLC2_SRC_DL="gog_pillars_of_eternity_kickstarter_pet_dlc_2.0.0.2.sh"
-DLC3_SRC_DL="gog_pillars_of_eternity_preorder_item_and_pet_dlc_2.0.0.2.sh"
+KSI_SRC_DL="gog_pillars_of_eternity_kickstarter_item_dlc_2.0.0.2.sh"
+KSP_SRC_DL="gog_pillars_of_eternity_kickstarter_pet_dlc_2.0.0.2.sh"
+PRE_SRC_DL="gog_pillars_of_eternity_preorder_item_and_pet_dlc_2.0.0.2.sh"
+WM1_SRC_DL="gog_pillars_of_eternity_white_march_part_1_dlc_2.6.0.8.sh"
+WM2_SRC_DL="gog_pillars_of_eternity_white_march_part_2_dlc_2.2.0.3.sh"
 DOWNLOADS="
     manual:
         ${BASE_SRC_DL}
-        dlc1? ( ${DLC1_SRC_DL} )
-        dlc2? ( ${DLC2_SRC_DL} )
-        dlc3? ( ${DLC3_SRC_DL} )
+        kickstarter-item? ( ${KSI_SRC_DL} )
+        kickstarter-pet? ( ${KSP_SRC_DL} )
+        pre-order-items? ( ${PRE_SRC_DL} )
+        white-march-1? ( ${WM1_SRC_DL} )
+        white-march-2? ( ${WM2_SRC_DL} )
 "
 
 LICENCES="all-rights-reserved GOG-EULA"
 SLOT="0"
 PLATFORMS="-* ~amd64"
 MYOPTIONS="
-    dlc1 [[ description = [ Install the Kickstarter Bonus Item ] ]]
-    dlc2 [[ description = [ Install the Kickstarter Bonus Pet ] ]]
-    dlc3 [[ description = [ Install the Pre-Order Bonus Item and Pet ] ]]
+    kickstarter-item [[ description = [ Install the Kickstarter Bonus Item ] ]]
+    kickstarter-pet [[ description = [ Install the Kickstarter Bonus Pet ] ]]
+    pre-order-items [[ description = [ Install the Pre-Order Bonus Item and
+                                       Pet ] ]]
+    white-march-1 [[ description = [ Install \"The White March - Part 1\"
+                                     expansion pack ] ]]
+    white-march-2 [[ description = [ Install \"The White March - Part 2\"
+                                     expansion pack ] ]]
 "
 RESTRICT="fetch"
 
@@ -47,9 +56,9 @@ WORK="${WORKBASE}/data/noarch"
 pkg_nofetch() {
     einfo
     einfo "Please buy & download \"${BASE_SRC_DL}\""
-    option dlc1 && einfo "and \"${DLC1_SRC_DL}\""
-    option dlc2 && einfo "and \"${DLC2_SRC_DL}\""
-    option dlc3 && einfo "and \"${DLC3_SRC_DL}\""
+    option kickstarter-item && einfo "and \"${KSI_SRC_DL}\""
+    option kickstarter-pet && einfo "and \"${KSP_SRC_DL}\""
+    option pre-order-items && einfo "and \"${PRE_SRC_DL}\""
     einfo "from:"
     einfo "  ${HOMEPAGE}"
     einfo "and move/link it to \"${FETCHEDDIR}\""
@@ -73,19 +82,27 @@ src_unpack() {
 }
 
 src_unpack() {
-    if option dlc1 ; then
-        unpack_zip "${FETCHEDDIR}/${DLC1_SRC_DL}"
-    fi
-
-    if option dlc2 ; then
-        unpack_zip "${FETCHEDDIR}/${DLC2_SRC_DL}"
-    fi
-
-    if option dlc3 ; then
-        unpack_zip "${FETCHEDDIR}/${DLC3_SRC_DL}"
-    fi
-
     unpack_zip "${FETCHEDDIR}/${BASE_SRC_DL}"
+
+    if option kickstarter-item ; then
+        unpack_zip "${FETCHEDDIR}/${KSI_SRC_DL}"
+    fi
+
+    if option kickstarter-pet ; then
+        unpack_zip "${FETCHEDDIR}/${KSP_SRC_DL}"
+    fi
+
+    if option pre-order-items ; then
+        unpack_zip "${FETCHEDDIR}/${PRE_SRC_DL}"
+    fi
+
+    if option white-march-1 ; then
+        unpack_zip "${FETCHEDDIR}/${WM1_SRC_DL}"
+    fi
+
+    if option white-march-2 ; then
+        unpack_zip "${FETCHEDDIR}/${WM2_SRC_DL}"
+    fi
 }
 
 src_install() {
