@@ -1,26 +1,17 @@
-From 5d0edf0d560f52c0fce2f8ce7e03c1aea4d1eb38 Mon Sep 17 00:00:00 2001
-From: Julian Ospald <hasufell@posteo.de>
-Date: Sat, 7 May 2016 02:56:33 +0200
-Subject: [PATCH] Allow to set BINDIR for binaries and SHARE_PREFIX for
- manpages
-Upstream: no
+Author: Julian Ospald <hasufell@posteo.de>
+Reason: Allow to set BINDIR for binaries and SHARE_PREFIX for manpages
+Upstream: submitted, https://github.com/elixir-lang/elixir/pull/4887
 
----
- Makefile | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 263ea63..3d61721 100644
---- a/Makefile
-+++ b/Makefile
+--- elixir-1.3.0/Makefile
++++ elixir-1.3.0/Makefile
 @@ -1,5 +1,6 @@
  REBAR ?= "$(CURDIR)/rebar"
  PREFIX ?= /usr/local
 +SHARE_PREFIX ?= $(PREFIX)/share
- DOCS := v1.2
+ DOCS := v1.3
  CANONICAL := stable
  ELIXIRC := bin/elixirc --verbose --ignore-module-conflict
-@@ -8,6 +9,7 @@ ERL := erl -I lib/elixir/include -noshell -pa lib/elixir/ebin
+@@ -8,6 +9,7 @@
  VERSION := $(strip $(shell cat VERSION))
  Q := @
  LIBDIR := lib
@@ -28,7 +19,7 @@ index 263ea63..3d61721 100644
  INSTALL = install
  INSTALL_DIR = $(INSTALL) -m755 -d
  INSTALL_DATA = $(INSTALL) -m644
-@@ -104,9 +106,9 @@ install: compile
+@@ -105,9 +107,9 @@
  	done
  	$(Q) $(INSTALL_DIR) "$(DESTDIR)$(PREFIX)/$(LIBDIR)/elixir/bin"
  	$(Q) $(INSTALL_PROGRAM) $(filter-out %.ps1, $(filter-out %.bat, $(wildcard bin/*))) "$(DESTDIR)$(PREFIX)/$(LIBDIR)/elixir/bin"
@@ -40,7 +31,7 @@ index 263ea63..3d61721 100644
  	done
  	$(MAKE) install_man
  
-@@ -254,9 +256,9 @@ clean_man:
+@@ -255,9 +257,9 @@
  	rm -f man/iex.1
  
  install_man: build_man
@@ -55,6 +46,3 @@ index 263ea63..3d61721 100644
 +	$(Q) $(INSTALL_DATA) man/iex.1     $(DESTDIR)$(SHARE_PREFIX)/man/man1
 +	$(Q) $(INSTALL_DATA) man/mix.1     $(DESTDIR)$(SHARE_PREFIX)/man/man1
  	$(MAKE) clean_man
--- 
-2.8.1
-
