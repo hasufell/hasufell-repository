@@ -14,6 +14,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 MYOPTIONS="
+    doc
     havege [[ description = [ Enable the HAVEGE random generator,
                               not suitable for virtualized environments! ] ]]
     threads [[ description = [ Enables the threading abstraction layer
@@ -24,6 +25,11 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        doc? (
+            app-doc/doxygen[>=1.8.4]
+            media-gfx/graphviz
+        )
     build+run:
         sys-libs/zlib
     test:
@@ -43,6 +49,10 @@ CMAKE_SRC_CONFIGURE_TESTS=(
     '-DENABLE_TESTING=ON'
 )
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-platform-include.patch
+)
+
 enable_mbedtls_option() {
     local myopt="$@"
     # check that config.h syntax is the same at version bump
@@ -60,8 +70,25 @@ src_prepare() {
     cmake_src_prepare
 }
 
+src_compile() {
+    default
+
+    if option doc ; then
+        emake apidoc
+    fi
+}
+
 src_test() {
     LD_LIBRARY_PATH="${ECMAKE_BUILD_DIR}/library" \
-        cmake_src_test
+        emake test
+}
+
+src_install() {
+    cmake_src_install
+
+    if option doc ; then
+        docinto html
+        dodoc -r "${CMAKE_SOURCE}"/apidoc/*
+    fi
 }
 
