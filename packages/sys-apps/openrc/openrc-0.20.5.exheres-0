@@ -64,11 +64,17 @@ DEFAULT_SRC_INSTALL_PARAMS=(
     LIBMODE=0755
 )
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Build-fix-hardcoded-pkg-config-invocation.patch
+)
+
 pkg_setup() {
     exdirectory --allow /etc/sysctl.d
 }
 
 src_prepare() {
+    default
+
     edo sed -e 's#readelf #${READELF:-readelf} #g'  \
             -i src/test/runtests.sh
 
