@@ -1,6 +1,6 @@
 Author: Julian Ospald <hasufell@posteo.de>
 Reason: Allow to set BINDIR for binaries and SHARE_PREFIX for manpages
-Upstream: submitted, https://github.com/elixir-lang/elixir/pull/4887
+Upstream: merged, https://github.com/elixir-lang/elixir/commit/0f95aa76fbbc33494f5b01259f3eba4fd9f6bed4
 
 --- elixir-1.3.0/Makefile
 +++ elixir-1.3.0/Makefile
