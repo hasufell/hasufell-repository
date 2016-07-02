@@ -16,8 +16,3 @@ DEPENDENCIES="
         gnome-bindings/gtk-sharp:2
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/pinta-1.6-pkg-config.patch
-    "${FILES}"/pinta-1.6-mono-4.patch
-)
-
