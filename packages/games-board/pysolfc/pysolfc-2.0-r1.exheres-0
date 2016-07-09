@@ -17,7 +17,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     run:
-        dev-python/Pillow[tk][python_abis:*(-)?]
+        dev-python/Pillow[python_abis:*(-)?]
         dev-python/pygame[python_abis:*(-)?]
         dev-tcl/tktable
 "
