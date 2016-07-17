@@ -30,3 +30,23 @@ DEFAULT_SRC_INSTALL_PARAMS=(
     SHARE_PREFIX="/usr/share"
 )
 
+_set_utf8() {
+    if [[ $(locale charmap) != UTF-8 ]]; then
+        local lang locales="en_US.UTF-8 $(locale -a)"
+
+        for lang in ${locales}; do
+            if [[ $(LC_ALL=${lang} locale charmap 2>/dev/null) == UTF-8 ]]; then
+                edo export LC_ALL=${lang}
+                return 0
+            fi
+        done
+
+        die_unless_nonfatal "Could not find UTF-8 locale!"
+    fi
+}
+
+src_prepare() {
+    _set_utf8
+    default
+}
+
