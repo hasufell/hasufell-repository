@@ -16,7 +16,7 @@ DEPENDENCIES="
     build:
         app-arch/zip
     run:
-        games-engines/solarus[~>1.4.0]
+        games-engines/solarus[~>1.5.0]
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
@@ -36,7 +36,7 @@ src_install() {
     edo rm -f "${IMAGE%/}"/usr/share/${PN}
     herebin ${PN} <<EOF
 #!/bin/sh
-exec solarus_run "/usr/share/solarus/${PN}" "\$@"
+exec solarus-run "/usr/share/solarus/${PN}" "\$@"
 EOF
 
     install_desktop_entry "Name=Zelda: Mystery of Solarus DX"
