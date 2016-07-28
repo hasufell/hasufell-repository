@@ -15,12 +15,14 @@ PLATFORMS="~amd64 ~x86"
 DEPENDENCIES="
     build+run:
         dev-games/physfs
-        media-libs/libmodplug
-        media-libs/libvorbis
-        media-libs/openal
         media-libs/SDL:2[X]
         media-libs/SDL_image:2
         media-libs/SDL_ttf:2
+        media-libs/libmodplug
+        media-libs/libvorbis
+        media-libs/openal
+        x11-libs/qtbase:5
+        x11-libs/qttools:5
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
