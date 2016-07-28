@@ -13,6 +13,8 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
+    build:
+        x11-libs/qttools:5
     build+run:
         dev-games/physfs
         media-libs/SDL:2[X]
@@ -22,7 +24,6 @@ DEPENDENCIES="
         media-libs/libvorbis
         media-libs/openal
         x11-libs/qtbase:5
-        x11-libs/qttools:5
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
