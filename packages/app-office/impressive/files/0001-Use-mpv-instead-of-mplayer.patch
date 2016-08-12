@@ -1,0 +1,28 @@
+From 098dab2c37dcda09bb89f797ea07275c76844bcc Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Fri, 12 Aug 2016 12:55:50 +0200
+Subject: [PATCH] Use mpv instead of mplayer
+Upstream: no
+
+---
+ impressive.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/impressive.py b/impressive.py
+index 801b364..8a69a0b 100755
+--- a/impressive.py
++++ b/impressive.py
+@@ -169,8 +169,8 @@ if os.name == "nt":
+ else:
+     def FindBinary(x): return x
+     GhostScriptPlatformOptions = []
+-    MPlayerPath = "mplayer"
+-    MPlayerPlatformOptions = [ "-vo", "gl" ]
++    MPlayerPath = "mpv"
++    MPlayerPlatformOptions = [ "--vo=opengl" ]
+     MPlayerColorKey = False
+     pdftkPath = "pdftk"
+     FontPath = ["/usr/share/fonts", "/usr/local/share/fonts", "/usr/X11R6/lib/X11/fonts/TTF"]
+-- 
+2.9.2
+

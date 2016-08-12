@@ -1,0 +1,57 @@
+# Copyright 2016 Julian Ospald
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PNV="Impressive-${PV}"
+
+require sourceforge [ suffix=tar.gz ]
+require python [ has_bin=true multibuild=false blacklist="3" ]
+
+SUMMARY="A fancy PDF presentation program"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    run:
+        app-text/ghostscript
+        app-text/pdftk
+        dev-python/Pillow[python_abis:*(-)?]
+        dev-python/pygame[python_abis:*(-)?]
+        x11-apps/xrandr
+        x11-dri/mesa
+    suggestion:
+        app-text/mupdf [[ description = [ Alternate PDF rendering ] ]]
+        app-text/poppler [[ description = [ Alternate PDF rendering ] ]]
+        media/mpv [[ description = [ For sound and video playback ] ]]
+        x11-apps/xdg-utils [[ description = [ For starting web or e-mail
+                                              hyperlinks from PDF documents ] ]]
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Use-mpv-instead-of-mplayer.patch
+)
+
+WORK=${WORKBASE}/${MY_PNV}
+
+src_prepare() {
+    default
+
+    # fix shebang
+    edo sed -i \
+        -e "s:/usr/bin/env python:/usr/$(exhost --target)/bin/env ${PYTHON}:" \
+        ${PN}.py
+}
+
+src_install() {
+    dobin ${PN}.py
+    dosym ${PN}.py /usr/$(exhost --target)/bin/${PN}
+
+    # docs
+    doman ${PN}.1
+    dodoc changelog.txt demo.pdf
+    insinto /usr/share/doc/${PNVR}/html
+    doins ${PN}.html
+}
+
