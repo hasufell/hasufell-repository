@@ -134,7 +134,6 @@ DEPENDENCIES="
         x11-apps/xdg-utils [[ description = [ Set as default browser. Use application launchers for downloaded files (only for Gnome/KDE/Xfce) ] ]]
     suggestion:
         gnome-desktop/adwaita-icon-theme [[ description = [ For the downloads tab ] ]]
-        net-www/google-talkplugin [[ description = [ Plugin necessary for google hangouts ] ]]
 "
 
 WORK=${WORKBASE}/${MY_PNV}
