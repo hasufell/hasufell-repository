@@ -4,11 +4,14 @@
 require desktop-utils
 
 SUMMARY="Faster Than Light: A spaceship simulation real-time roguelike-like game"
-HOMEPAGE="https://www.gog.com/game/faster_than_light"
+HP="http://www.ftlgame.com"
+GOG_HP="https://www.gog.com/game/faster_than_light"
+HOMEPAGE="${HP} ${GOG_HP}"
 FTL_SH="gog_ftl_advanced_edition_2.0.0.2.sh"
+FTL_TAR="FTL.${PV}.tar.gz"
 DOWNLOADS="
     gog? ( manual: ${FTL_SH} )
-    !gog? ( manual: FTL.${PV}.tar.gz )
+    !gog? ( manual: ${FTL_TAR} )
 "
 
 LICENCES="all-rights-reserved Boost-1.0 free-noncomm MIT FTL LGPL-2.1 ZLIB libpng"
@@ -34,8 +37,13 @@ DEPENDENCIES="
 WORK="${WORKBASE}"
 
 pkg_nofetch() {
-    einfo "Please buy & download ${DOWNLOADS} from:"
-    einfo "  ${HOMEPAGE}"
+    local hp=${HP}
+    optionq gog && hp=${GOG_HP}
+    local file=${FTL_TAR}
+    optionq gog && file=${FTL_SH}
+
+    einfo "Please buy & download ${file} from:"
+    einfo "  ${hp}"
     einfo "and move it to ${FETCHEDDIR}"
     einfo
 }
