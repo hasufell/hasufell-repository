@@ -1,0 +1,13 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=setuptools ]
+require pypi
+
+SUMMARY="meld3 is an HTML/XML templating engine"
+
+LICENCES="repoze"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
