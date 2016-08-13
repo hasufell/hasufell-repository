@@ -1,0 +1,29 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
+require setup-py [ import=setuptools blacklist="3" ]
+require pypi
+
+SUMMARY="A system for controlling process state under UNIX"
+HOMEPAGE+=" http://supervisord.org/"
+
+LICENCES="repoze BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    run:
+        dev-python/meld3[python_abis:*(-)?]
+    test:
+        dev-python/mock[python_abis:*(-)?]
+"
+
+RESTRICT="test" # sydbox violations
+
+src_install() {
+    setup-py_src_install
+    install_openrc_files
+}
+
