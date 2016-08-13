@@ -1,0 +1,83 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require desktop-utils gtk-icon-cache
+
+SUMMARY="Direct sequel to 1988's Wasteland, the first-ever post-apocalyptic computer RPG and the inspiration behind the Fallout series (director's cut)"
+HOMEPAGE="https://wasteland.inxile-entertainment.com/"
+GOG_SH="gog_wasteland_2_director_s_cut_2.3.0.5.sh"
+DOWNLOADS="manual: ${GOG_SH}"
+
+LICENCES="all-rights-reserved GOG-EULA"
+SLOT="0"
+PLATFORMS="-* ~amd64"
+MYOPTIONS=""
+RESTRICT="fetch"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+    run:
+        dev-libs/atk
+        dev-libs/glib:2
+        media-libs/fontconfig
+        media-libs/freetype:2
+        x11-dri/glu
+        x11-dri/mesa
+        x11-libs/cairo
+        x11-libs/gdk-pixbuf:2.0
+        x11-libs/gtk+:2
+        x11-libs/pango
+        x11-libs/libX11
+        x11-libs/libXcursor
+        x11-libs/libXext
+        x11-libs/libXrandr
+"
+
+WORK="${WORKBASE}/data/noarch"
+
+pkg_nofetch() {
+    einfo
+    einfo "Please buy Wasteland 2 Director's Cut"
+    einfo "from https://www.gog.com/ and"
+    einfo "download \"${GOG_SH}\""
+    einfo "and move/link it to \"${FETCHEDDIR}\""
+    einfo
+    einfo "This exheres was tested with the CLASSICAL edition."
+    einfo "If it works with the deluxe edition too, please"
+    einfo "open a PR."
+    einfo
+}
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
+
+src_unpack() {
+    unzip -qo "${FETCHEDDIR}/${GOG_SH}"
+    [[ $? -le 1 ]] || die "unpacking ${GOG_SH} failed!"
+}
+
+src_install() {
+    local dir=/opt/${PN}
+
+    insinto "${dir}"
+    doins -r game/WL2_Data
+    exeinto "${dir}"
+    doexe game/WL2
+
+    insinto /usr/share/icons/hicolor/256x256/apps
+    newins support/icon.png ${PN}.png
+
+    herebin ${PN} <<EOF
+#!/bin/sh
+cd "${dir}"
+exec "./WL2" "\$@"
+EOF
+
+    install_desktop_entry "Name=Wasteland 2: Director's Cut"
+
+    # empty, but let's just keep it
+    keepdir "${dir}"/WL2_Data/Localization
+}
+
