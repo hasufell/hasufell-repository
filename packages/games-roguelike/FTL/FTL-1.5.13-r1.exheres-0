@@ -4,13 +4,18 @@
 require desktop-utils
 
 SUMMARY="Faster Than Light: A spaceship simulation real-time roguelike-like game"
-HOMEPAGE="http://www.ftlgame.com/"
-DOWNLOADS="manual: FTL.${PV}.tar.gz"
+HOMEPAGE="https://www.gog.com/game/faster_than_light"
+FTL_SH="gog_ftl_advanced_edition_2.0.0.2.sh"
+DOWNLOADS="
+    gog? ( manual: ${FTL_SH} )
+    !gog? ( manual: FTL.${PV}.tar.gz )
+"
 
 LICENCES="all-rights-reserved Boost-1.0 free-noncomm MIT FTL LGPL-2.1 ZLIB libpng"
 SLOT="0"
 PLATFORMS="-* ~amd64 ~x86"
 MYOPTIONS="
+    gog [[ description = [ Use the gog advanced edition version ] ]]
     ( platform: amd64 x86 )
 "
 RESTRICT="fetch"
@@ -22,9 +27,11 @@ DEPENDENCIES="
         media-libs/freetype:2
         sys-libs/zlib
         x11-dri/mesa
+    build:
+        virtual/unzip
 "
 
-WORK=${WORKBASE}/${PN}
+WORK="${WORKBASE}"
 
 pkg_nofetch() {
     einfo "Please buy & download ${DOWNLOADS} from:"
@@ -37,17 +44,30 @@ pkg_setup() {
     exdirectory --allow /opt
 }
 
+src_unpack() {
+    if optionq gog ; then
+        unzip -qo "${FETCHEDDIR}/${FTL_SH}"
+        [[ $? -le 1 ]] || die "unpacking ${FTL_SH} failed!"
+    else
+        default
+    fi
+}
+
 src_install() {
     local dir=/opt/${PN}
     local arch=$(option platform:amd64 "amd64" "x86")
+    local datadir=${WORKBASE}/${PN}/data
+    optionq gog && datadir=${WORKBASE}/data/noarch/game/data
+    local htmldir=${WORKBASE}/${PN}
+    optionq gog && htmldir=${WORKBASE}/data/noarch/docs
 
     insinto "${dir}"
-    doins -r data/resources
+    doins -r "${datadir}"/resources
 
     exeinto "${dir}"/bin
-    doexe data/${arch}/bin/${PN}
+    doexe "${datadir}"/${arch}/bin/${PN}
     exeinto "${dir}"/lib
-    doexe data/${arch}/lib/*.so*
+    doexe "${datadir}"/${arch}/lib/*.so*
 
     herebin ${PN} << EOF
 #!/bin/sh
@@ -64,9 +84,9 @@ EOF
         "Icon=/usr/share/pixmaps/FTL.bmp"
 
     insinto /usr/share/pixmaps
-    newins data/resources/exe_icon.bmp FTL.bmp
+    newins "${datadir}"/resources/exe_icon.bmp FTL.bmp
 
     insinto /usr/share/doc/${PNVR}/html
-    doins ${PN}_README.html
+    doins "${htmldir}"/${PN}_README.html
 }
 
