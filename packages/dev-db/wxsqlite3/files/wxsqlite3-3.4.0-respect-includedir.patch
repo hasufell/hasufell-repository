@@ -6,7 +6,7 @@ Subject: [PATCH] MAKE: respect --includedir configure flag
 bakefile is a completely broken build system, this is the
 'cleanest' solution I could come up with.
 
-Upstream: no, in discussion https://github.com/utelle/wxsqlite3/issues/3
+Upstream: no, https://github.com/utelle/wxsqlite3/issues/3
 ---
  build/wxsqlite3.bkl                    | 8 ++++----
  wx                                     | 1 +
@@ -17,8 +17,8 @@ Upstream: no, in discussion https://github.com/utelle/wxsqlite3/issues/3
 
 diff --git a/build/wxsqlite3.bkl b/build/wxsqlite3.bkl
 index 7d0f380..92d4b94 100644
---- a/build/wxsqlite3.bkl
-+++ b/build/wxsqlite3.bkl
+--- a/build30/wxsqlite3.bkl
++++ b/build30/wxsqlite3.bkl
 @@ -22,10 +22,10 @@
  
    <!-- COMP_HDR lists the component's headers with path relative to ../include -->

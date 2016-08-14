@@ -28,7 +28,15 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 
 src_prepare() {
     default
+
+    ln -s build30 build
     edo pushd build
+
+    # upstream is completely clueless as to what they are doing
+    edo sed -i \
+            -e 's#^m4_include.*$#m4_include(../wxcode/autoconf/wxcode.m4)#' \
+            configure.ac
+
     edo bakefile_gen -f autoconf
     edo eaclocal
     edo eautoconf
