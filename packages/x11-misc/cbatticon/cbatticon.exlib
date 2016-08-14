@@ -1,0 +1,40 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+export_exlib_phases src_compile
+
+require github [ user="valr" ]
+
+SUMMARY="A lightweight and fast battery icon that sits in your system tray"
+
+LICENCES="GPL-2"
+
+MYOPTIONS="
+    libnotify [[ description = [ Enable battery level notifications ] ]]
+"
+
+DEPENDENCIES="
+    build:
+        sys-devel/gettext
+        virtual/pkg-config
+    build+run:
+        dev-libs/glib:2
+        x11-libs/gtk+:3
+        libnotify? ( x11-libs/libnotify )
+"
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    BINDIR="/usr/$(exhost --target)/bin"
+    DOCDIR="/usr/share/doc/${PNVR}"
+    V=1
+    VERSION="${PNVR}"
+)
+
+cbatticon_src_compile() {
+    emake \
+        $(option libnotify WITH_NOTIFY=1 WITH_NOTIFY=0) \
+        WITH_GTK3=1 \
+        V=1 \
+        VERSION="${PNVR}"
+}
+
