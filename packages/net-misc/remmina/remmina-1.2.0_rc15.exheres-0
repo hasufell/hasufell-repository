@@ -1,0 +1,10 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+CMAKE_SOURCE=${WORKBASE}/${PN^}-${PV/_rc/-rcgit.}
+
+require remmina
+
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
