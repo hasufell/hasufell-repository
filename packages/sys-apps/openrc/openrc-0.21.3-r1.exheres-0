@@ -38,7 +38,7 @@ DEPENDENCIES="
         providers:runit? ( sys-apps/runit )
         providers:sinit? ( sys-apps/sinit )
         providers:sysvinit? ( sys-apps/sysvinit )
-    suggestion:
+    recommendation:
         net-misc/netifrc [[ description = [
             Network Interface Management Scripts
         ] ]]
