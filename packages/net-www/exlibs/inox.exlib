@@ -60,6 +60,7 @@ MYOPTIONS="
         sse2
     ( providers: jpeg-turbo )
     ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
+    ( providers: gtk2 gtk3 ) [[ number-selected = exactly-one ]]
 "
 
 # http://crbug.com/62803 tracks the addition of a use_openssl option. Once that bug is closed,
@@ -107,7 +108,8 @@ DEPENDENCIES="
         virtual/usb:1
         x11-libs/cairo[X]
         x11-libs/gdk-pixbuf:2.0
-        x11-libs/gtk+:2[>=2.16]
+        providers:gtk2? ( x11-libs/gtk+:2[>=2.16.0] )
+        providers:gtk3? ( x11-libs/gtk+:3 )
         x11-libs/harfbuzz
         x11-libs/libX11
         x11-libs/libXScrnSaver
@@ -123,7 +125,8 @@ DEPENDENCIES="
         cups? (
             dev-libs/libgcrypt
             net-print/cups
-            x11-libs/gtk+:2[>=2.16][cups]
+            providers:gtk2? ( x11-libs/gtk+:2[>=2.16.0][cups] )
+            providers:gtk3? ( x11-libs/gtk+:3[cups] )
         )
         gconf? ( gnome-platform/GConf:2 )
         keyring? ( gnome-desktop/libgnome-keyring:1 )
@@ -217,6 +220,7 @@ inox_src_configure() {
         no_strict_aliasing=1
 
         use_cups=$(option cups 1 0)
+        use_gtk3=$(option providers:gtk3 1 0)
         use_gconf=$(option gconf 1 0)
         use_gnome_keyring=$(option keyring 1 0)
         use_pulseaudio=$(option pulseaudio 1 0)
