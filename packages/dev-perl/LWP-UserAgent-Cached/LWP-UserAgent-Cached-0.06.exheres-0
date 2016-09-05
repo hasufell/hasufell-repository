@@ -1,0 +1,17 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require perl-module [ module_author=OLEG ]
+
+SUMMARY="Cached - LWP::UserAgent with simple caching mechanism"
+
+SLOT="0"
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    build+run:
+        dev-perl/libwww-perl
+"
+
+RESTRICT="test" # deps not packaged yet
+
