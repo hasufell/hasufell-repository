@@ -40,10 +40,6 @@ DEPENDENCIES="
         providers:libav? ( media/libav )
 "
 
-DEPENDENCIES+="
-    build+run:
-"
-
 WORK=${WORKBASE}/${PNV}-source/module
 
 renpy_src_prepare() {
