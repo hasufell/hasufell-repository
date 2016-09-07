@@ -30,6 +30,8 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         dev-libs/fribidi
+        dev-python/pygame_sdl2[~${PV}][python_abis:*(-)?]
+        media-libs/SDL:2[X]
         media-libs/freetype:2
         media-libs/glew
         media-libs/libpng:=
@@ -38,19 +40,9 @@ DEPENDENCIES="
         providers:libav? ( media/libav )
 "
 
-if ever at_least 6.99.0; then
-    DEPENDENCIES+="
-        build+run:
-            dev-python/pygame_sdl2[~${PV}][python_abis:*(-)?]
-            media-libs/SDL:2[X]
-    "
-else
-    DEPENDENCIES+="
-        build+run:
-            media-libs/SDL:0[X]
-    "
-fi
-
+DEPENDENCIES+="
+    build+run:
+"
 
 WORK=${WORKBASE}/${PNV}-source/module
 
