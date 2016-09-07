@@ -67,6 +67,7 @@ src_prepare() {
     option havege && enable_mbedtls_option MBEDTLS_HAVEGE_C
     option threads && enable_mbedtls_option MBEDTLS_THREADING_C
     option threads && enable_mbedtls_option MBEDTLS_THREADING_PTHREAD
+    enable_mbedtls_option MBEDTLS_MD4_C
     cmake_src_prepare
 }
 
