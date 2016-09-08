@@ -1,0 +1,103 @@
+From 69a245c9fd7dba34b7ebda9388670482f86bd7d7 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Thu, 8 Sep 2016 23:10:58 +0200
+Subject: [PATCH] Fix cmake skew
+Upstream: no, most of it is obsolete on master
+
+* don't use the broken crosscompile stuff
+* remove version stuff, since it doesn't work with the tarball
+* don't build s25update, we don't need it with the packaged version
+* don't build glfw, it's buggy
+---
+ CMakeLists.txt              | 35 -----------------------------------
+ build_paths.h.cmake         |  1 +
+ driver/video/CMakeLists.txt |  1 -
+ 3 files changed, 1 insertion(+), 36 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 90c8eec..93048d4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,8 +19,6 @@ INCLUDE(CMakeMacroEnsureOutOfSourceBuild)
+ 
+ ################################################################################
+ 
+-INCLUDE(cmake/crosscompile.cmake)
+-
+ PROJECT(s25client)
+ 
+ ################################################################################
+@@ -106,38 +104,6 @@ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/build_paths.h.cmake"
+ 			   build_paths.h)
+ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/build_version.h.cmake"
+ 			   build_version.h)
+-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/build/preinstall.sh.cmake"
+-			   preinstall.sh @ONLY)
+-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/build/postinstall.sh.cmake"
+-			   postinstall.sh @ONLY)
+-
+-################################################################################
+-
+-ADD_SUBDIRECTORY(version)
+-
+-ADD_CUSTOM_TARGET(updateversion ALL
+-				  COMMAND "${CMAKE_BINARY_DIR}/version/src/version" "${CMAKE_SOURCE_DIR}"
+-				  DEPENDS version
+-				  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+-)
+-
+-ADD_CUSTOM_TARGET(mrproper
+-				  COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/build/cleanup.sh"
+-				  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+-)
+-
+-ADD_CUSTOM_TARGET(create_nightly
+-				  COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/release/create_release.sh" "nightly" "${CMAKE_SOURCE_DIR}"
+-				  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+-)
+-
+-ADD_CUSTOM_TARGET(create_stable
+-				  COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/release/create_release.sh" "stable" "${CMAKE_SOURCE_DIR}"
+-				  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+-)
+-
+-# preinstall script
+-INSTALL(SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/cmake/preinstall.cmake")
+ 
+ ################################################################################
+ 
+@@ -148,7 +114,6 @@ ADD_SUBDIRECTORY(libsiedler2)
+ ADD_SUBDIRECTORY(libutil)
+ ADD_SUBDIRECTORY(liblobby)
+ ADD_SUBDIRECTORY(s-c)
+-ADD_SUBDIRECTORY(s25update)
+ ADD_SUBDIRECTORY(src)
+ 
+ ################################################################################
+diff --git a/build_paths.h.cmake b/build_paths.h.cmake
+index b35105e..38469b9 100644
+--- a/build_paths.h.cmake
++++ b/build_paths.h.cmake
+@@ -41,6 +41,7 @@
+ 
+ //	set game directory (normal $(datadir)/s25rttr/S2)
+ //#define GAMEDIR DATADIR"/S2"
++#cmakedefine GAMEDIR "${GAMEDIR}"
+ 
+ //	set driver directory (normal $(libdir)/driver)
+ //#define DRIVERDIR LIBDIR"/driver"
+diff --git a/driver/video/CMakeLists.txt b/driver/video/CMakeLists.txt
+index b79f7ec..015c025 100644
+--- a/driver/video/CMakeLists.txt
++++ b/driver/video/CMakeLists.txt
+@@ -3,7 +3,6 @@
+ #################################################################################
+ 
+ ADD_SUBDIRECTORY( WinAPI )
+-ADD_SUBDIRECTORY( GLFW )
+ ADD_SUBDIRECTORY( SDL )
+ 
+ #################################################################################
+-- 
+2.10.0
+

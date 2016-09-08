@@ -1,0 +1,90 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake [ api=2 ]
+require flag-o-matic
+require github [ user="Return-To-The-Roots" project="s25client" ]
+require gtk-icon-cache desktop-utils
+
+SUMMARY="Open Source remake of The Settlers II game (needs original game files)"
+HOMEPAGE+=" https://www.siedler25.org/"
+DOWNLOADS="mirror://gentoo/${PNV}.tar.xz"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        sys-devel/gettext
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/libsndfile
+        media-libs/SDL_mixer:0[ogg]
+        net-libs/miniupnpc
+        x11-dri/mesa
+"
+
+BUGS_TO=""
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p1 "${FILES}"/${PNV}-Fix-cmake-skew.patch
+    -p0 "${FILES}"/${PNV}-soundconverter.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBINDIR="/usr/$(exhost --target)/bin"
+    -DCMAKE_SKIP_RPATH=YES
+    -DCOMPILEFOR="linux"
+    -DDATADIR="/usr/share"
+    -DDRIVERDIR="/usr/$(exhost --target)/lib/${PN}"
+    -DGAMEDIR="~/.${PN}/S2"
+    -DLIBDIR="/usr/$(exhost --target)/lib/${PN}"
+    -DPREFIX="/usr"
+)
+
+src_prepare() {
+    # fixed in master
+    append-flags -fPIC
+
+    cmake_src_prepare
+}
+
+src_compile() {
+    # fixed in master:
+    # https://github.com/Return-To-The-Roots/s25client/blob/201e685abddb29739a419716d527ad2d0352611c/CMakeLists.txt#L360
+    edo ln -s "${CMAKE_SOURCE}"/RTTR "${WORK}"/RTTR
+
+    default
+}
+
+# cmake install rules are completely broken
+# fixed in master
+src_install() {
+    # binary
+    dobin src/s25client
+
+    # libexec executables
+    exeinto /usr/$(exhost --target)/lib/${PN}
+    doexe "${CMAKE_SOURCE}"/RTTR/{sound-convert,s-c_resample}
+    edo rm "${CMAKE_SOURCE}"/RTTR/{sound-convert,s-c_resample}
+
+    # drivers
+    exeinto /usr/$(exhost --target)/lib/${PN}/video
+    doexe driver/video/SDL/src/libvideoSDL.so
+    exeinto /usr/$(exhost --target)/lib/${PN}/audio
+    doexe driver/audio/SDL/src/libaudioSDL.so
+
+    # data files
+    insinto /usr/share
+    doins -r "${CMAKE_SOURCE}"/RTTR
+    dosym ./LSTS/splash.bmp /usr/share/RTTR/splash.bmp
+
+    # shared files
+    insinto /usr/share/icons/hicolor/64x64/apps
+    doins "${CMAKE_SOURCE}"/debian/${PN}.png
+    install_desktop_entry "Name=Settlers RTTR" "Exec=s25client"
+    dodoc RTTR/texte/{keyboardlayout.txt,readme.txt}
+}
+
