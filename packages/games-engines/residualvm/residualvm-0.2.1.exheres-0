@@ -1,0 +1,92 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=${PN} ]
+require gtk-icon-cache
+
+SUMMARY="A cross-platform 3D game interpreter for play LucasArts' LUA-based 3D adventures"
+DESCRIPTION="
+ResidualVM is a cross-platform 3D game interpreter which allows you to play
+LucasArts' Lua-based 3D adventures: Grim Fandango and Escape from Monkey Island,
+provided you already have their data files. ResidualVM just replaces the
+executables shipped with the games, allowing you to play them on systems for
+which they were never designed!
+"
+HOMEPAGE+=" http://www.residualvm.org"
+DOWNLOADS="http://www.residualvm.org/downloads/release/${PV}/${PNV}-sources.tar.bz2"
+
+LICENCES="GPL-2 LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:0[X]
+        media-libs/freetype:2
+        media-libs/libmad
+        media-libs/libmpeg2
+        media-libs/libvorbis
+        sys-libs/zlib
+        sys-sound/alsa-lib
+        x11-dri/glu
+        x11-dri/mesa
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    VERBOSE_BUILD=1
+)
+
+src_prepare() {
+    default
+
+    edo sed -i -e '/\$(INSTALL)/s/-s //' ports.mk
+    edo sed -i -e "s:\(_strings\)=\(strings\):\1=$(exhost --tool-prefix)\2:" configure
+    edo sed -i -e "s:\(_ar\)=\"\(ar\):\1=\"$(exhost --tool-prefix)\2:" configure
+    edo sed -i -e "s:\(_ranlib\)=\(ranlib\):\1=$(exhost --tool-prefix)\2:" configure
+}
+
+src_configure() {
+    local myconf=(
+        --enable-all-engines
+        --enable-release-mode
+        --enable-zlib
+
+        --disable-debug
+        --disable-faad
+        --disable-flac
+        --disable-fluidsynth
+        --disable-libunity
+        --disable-mad
+        --disable-sparkle
+        --disable-translation
+        --disable-tremor
+        --disable-vorbis
+
+        --backend=sdl
+
+        --host=$(exhost --build)
+        --prefix="/usr"
+        --bindir=/usr/$(exhost --target)/bin
+        --libdir=/usr/$(exhost --target)/lib
+        --datadir="/usr/share/${PN}"
+        --docdir="/usr/share/doc/${PNVR}"
+    )
+
+    # Custom configure script
+    CXX="${CXX}" edo ./configure "${myconf[@]}"
+}
+
+src_install() {
+    default
+
+    insinto /usr/share/applications
+    doins dists/${PN}.desktop
+}
+
