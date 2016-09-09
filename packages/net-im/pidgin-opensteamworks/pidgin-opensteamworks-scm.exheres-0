@@ -1,0 +1,9 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=EionRobb ]
+require pidgin-opensteamworks-build
+
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+

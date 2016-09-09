@@ -1,0 +1,50 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+export_exlib_phases src_compile
+
+SUMMARY="Steam protocol plugin for pidgin"
+
+LICENCES="GPL-3"
+
+MYOPTIONS="
+    ( providers: gcrypt libressl mbedtls nss openssl ) [[
+        number-selected = exactly-one
+    ]]
+"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        core/json-glib
+        dev-libs/glib:2
+        gnome-desktop/libgnome-keyring
+        net-im/pidgin
+        providers:gcrypt? ( dev-libs/libgcrypt:= )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:mbedtls? ( dev-libs/mbedtls:= )
+        providers:nss? ( dev-libs/nss:= )
+        providers:openssl? ( dev-libs/openssl:= )
+"
+
+WORK=${WORK}/steam-mobile
+
+pidgin-opensteamworks-build_src_compile() {
+    local STEAM_CRYPT_BACKEND=
+
+    if option providers:nss ; then
+        STEAM_CRYPT_BACKEND=nss
+    elif option providers:gcrypt ; then
+        STEAM_CRYPT_BACKEND=gcrypt
+    elif option providers:mbedtls ; then
+        STEAM_CRYPT_BACKEND=mbedtls
+    elif option providers:libressl ; then
+        STEAM_CRYPT_BACKEND=openssl
+    elif option providers:openssl ; then
+        STEAM_CRYPT_BACKEND=openssl
+    fi
+
+    emake STEAM_CRYPT_BACKEND=${STEAM_CRYPT_BACKEND}
+}
+
