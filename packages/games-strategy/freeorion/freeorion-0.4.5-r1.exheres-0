@@ -80,6 +80,9 @@ if [ "\${LD_LIBRARY_PATH+set}" = "set" ] ; then
 else
     export LD_LIBRARY_PATH="/usr/$(exhost --target)/lib/freeorion"
 fi
+
+cd /usr/share/freeorion
+
 exec /usr/$(exhost --target)/bin/${PN}.bin --resource-dir /usr/share/freeorion/default "\$@"
 
 EOF
