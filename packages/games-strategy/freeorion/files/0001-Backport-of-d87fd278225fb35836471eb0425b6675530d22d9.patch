@@ -1,0 +1,376 @@
+From 2325d4899015776745dff355999c99b384488e13 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Fri, 9 Sep 2016 14:28:54 +0200
+Subject: [PATCH] Backport of d87fd278225fb35836471eb0425b6675530d22d9 to 0.4.5
+
+---
+ CMakeLists.txt              | 43 +++++++++++++++++++++++++++----------------
+ GG/CMakeLists.txt           |  7 +++----
+ GG/cmake/GiGi.pc.in         |  4 ++--
+ GG/cmake/GiGiSDL.pc.in      |  4 ++--
+ GG/src/CMakeLists.txt       |  9 +++++----
+ GG/src/SDL/CMakeLists.txt   |  9 +++++----
+ client/AI/CMakeLists.txt    |  2 +-
+ client/human/CMakeLists.txt |  8 +-------
+ parse/CMakeLists.txt        |  4 ++--
+ parse/test/CMakeLists.txt   | 12 ------------
+ server/CMakeLists.txt       |  2 +-
+ 11 files changed, 49 insertions(+), 55 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index decefe2..44779f9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,8 @@
+ cmake_minimum_required(VERSION 2.6)
+ cmake_policy(VERSION 2.6.4)
+ 
++include(GNUInstallDirs)
++
+ list(APPEND CMAKE_MODULE_PATH ${CMAKE_HOME_DIRECTORY}/cmake ${CMAKE_HOME_DIRECTORY}/GG/cmake)
+ set(CMAKE_CONFIGURATION_TYPES Debug Release)
+ IF(NOT CMAKE_BUILD_TYPE)
+@@ -33,9 +35,18 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+ 
++if(WIN32)
++    set(CMAKE_INSTALL_BINDIR "")
++    set(FreeOrion_INSTALL_LIBDIR "")
++    set(FreeOrion_INSTALL_FULL_LIBDIR "")
++else()
++    set(FreeOrion_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}/freeorion")
++    set(FreeOrion_INSTALL_FULL_LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}/freeorion")
++endif()
++
+ set(CMAKE_SKIP_BUILD_RPATH FALSE)
+ set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/freeorion")
++set(CMAKE_INSTALL_RPATH "${FreeOrion_INSTALL_FULL_LIBDIR}")
+ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ 
+ if (WIN32)
+@@ -104,10 +115,11 @@ endif ()
+ # Build common code library            #
+ ########################################
+ set(BUILD_DEVEL_PACKAGE OFF CACHE INTERNAL "Disables installation of GiGi development files." FORCE)
+-set(OLD_LIB_SUFFIX ${LIB_SUFFIX})
+-set(LIB_SUFFIX "${LIB_SUFFIX}/freeorion")
++set(_ORIG_CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
++set(CMAKE_INSTALL_LIBDIR "${FreeOrion_INSTALL_LIBDIR}")
+ add_subdirectory(GG)
+-set(LIB_SUFFIX ${OLD_LIB_SUFFIX})
++set(CMAKE_INSTALL_LIBDIR ${_ORIG_CMAKE_INSTALL_LIBDIR})
++unset(_ORIG_CMAKE_INSTALL_LIBDIR)
+ 
+ ########################################
+ # Dependencies                         #
+@@ -377,31 +389,30 @@ if (BUILD_SDK)
+ else ()
+     install(
+         DIRECTORY default/
+-        DESTINATION share/freeorion/default
++        DESTINATION ${CMAKE_INSTALL_DATADIR}/freeorion/default
+         COMPONENT COMPONENT_FREEORION_DATA
+-        PATTERN ".svn" EXCLUDE
+         PATTERN "*~" EXCLUDE
+         PATTERN "*.pyc" EXCLUDE
+     )
+ 
+     install(
+         TARGETS freeorioncommon
+-        LIBRARY DESTINATION lib${LIB_SUFFIX}/freeorion
+-        RUNTIME DESTINATION .
++        LIBRARY DESTINATION ${FreeOrion_INSTALL_LIBDIR}
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+         COMPONENT COMPONENT_FREEORION
+     )
+ 
+      install(
+         FILES
+         ${CMAKE_SOURCE_DIR}/freeorion.desktop
+-        DESTINATION share/applications
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+         COMPONENT COMPONENT_FREEORION
+     )
+ 
+     install(
+         FILES
+         ${CMAKE_SOURCE_DIR}/default/data/art/icons/FO_Icon_16x16.png
+-        DESTINATION share/icons/hicolor/16x16/apps/
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/16x16/apps/
+         RENAME freeorion.png
+         COMPONENT COMPONENT_FREEORION
+     )
+@@ -409,7 +420,7 @@ else ()
+     install(
+         FILES
+         ${CMAKE_SOURCE_DIR}/default/data/art/icons/FO_Icon_24x24.png
+-        DESTINATION share/icons/hicolor/24x24/apps/
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/24x24/apps/
+         RENAME freeorion.png
+         COMPONENT COMPONENT_FREEORION
+     )
+@@ -417,7 +428,7 @@ else ()
+     install(
+         FILES
+         ${CMAKE_SOURCE_DIR}/default/data/art/icons/FO_Icon_32x32.png
+-        DESTINATION share/icons/hicolor/32x32/apps/
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/32x32/apps/
+         RENAME freeorion.png
+         COMPONENT COMPONENT_FREEORION
+     )
+@@ -425,7 +436,7 @@ else ()
+     install(
+         FILES
+         ${CMAKE_SOURCE_DIR}/default/data/art/icons/FO_Icon_64x64.png
+-        DESTINATION share/icons/hicolor/64x64/apps/
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/64x64/apps/
+         RENAME freeorion.png
+         COMPONENT COMPONENT_FREEORION
+     )
+@@ -433,7 +444,7 @@ else ()
+     install(
+         FILES
+         ${CMAKE_SOURCE_DIR}/default/data/art/icons/FO_Icon_128x128.png
+-        DESTINATION share/icons/hicolor/128x128/apps/
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/128x128/apps/
+         RENAME freeorion.png
+         COMPONENT COMPONENT_FREEORION
+     )
+@@ -441,7 +452,7 @@ else ()
+     install(
+         FILES
+         ${CMAKE_SOURCE_DIR}/default/data/art/icons/FO_Icon_256x256.png
+-        DESTINATION share/icons/hicolor/256x256/apps/
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/256x256/apps/
+         RENAME freeorion.png
+         COMPONENT COMPONENT_FREEORION
+     )
+@@ -470,7 +481,7 @@ else ()
+             wrap_oal.dll
+             z.dll
+             zlib1.dll
+-            DESTINATION bin
++            DESTINATION ${CMAKE_INSTALL_BINDIR}
+             COMPONENT COMPONENT_FREEORION_WIN32_RUNTIME_DEPS
+         )
+     endif ()
+diff --git a/GG/CMakeLists.txt b/GG/CMakeLists.txt
+index 1078ec3..882116d 100644
+--- a/GG/CMakeLists.txt
++++ b/GG/CMakeLists.txt
+@@ -3,6 +3,7 @@ cmake_policy(VERSION 2.6.4)
+ 
+ enable_testing()
+ include(CMakeDependentOption)
++include(GNUInstallDirs)
+ 
+ project(GiGi)
+ 
+@@ -131,10 +132,8 @@ configure_file(
+ if (BUILD_DEVEL_PACKAGE)
+     install(
+         DIRECTORY GG
+-        DESTINATION include
++        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+         COMPONENT COMPONENT_GIGI_DEVEL
+-        PATTERN ".svn" EXCLUDE
+-        PATTERN "*~" EXCLUDE
+     )
+ endif ()
+ 
+@@ -172,7 +171,7 @@ if (DOXYGEN_FOUND)
+     if (BUILD_DEVEL_PACKAGE)
+         install(
+             DIRECTORY ${GG_DOC_STAMP_DIR}
+-            DESTINATION doc
++            DESTINATION ${CMAKE_INSTALL_DOCDIR}
+         )
+     endif ()
+ endif ()
+diff --git a/GG/cmake/GiGi.pc.in b/GG/cmake/GiGi.pc.in
+index 3c0a874..ba7cbe6 100644
+--- a/GG/cmake/GiGi.pc.in
++++ b/GG/cmake/GiGi.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+-libdir=${prefix}/lib@LIB_SUFFIX@
+-includedir=${prefix}/include
++libdir=@CMAKE_INSTALL_FULL_LIBDIR@
++includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+ version=@GIGI_VERSION@
+ 
+ Name: GiGi
+diff --git a/GG/cmake/GiGiSDL.pc.in b/GG/cmake/GiGiSDL.pc.in
+index 933c5af..ed2c4e1 100644
+--- a/GG/cmake/GiGiSDL.pc.in
++++ b/GG/cmake/GiGiSDL.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+-libdir=${prefix}/lib@LIB_SUFFIX@
+-includedir=${prefix}/include
++libdir=@CMAKE_INSTALL_FULL_LIBDIR@
++includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+ version=@GIGI_VERSION@
+ 
+ Name: GiGiSDL
+diff --git a/GG/src/CMakeLists.txt b/GG/src/CMakeLists.txt
+index 1ef20d0..d9e90ed 100644
+--- a/GG/src/CMakeLists.txt
++++ b/GG/src/CMakeLists.txt
+@@ -75,15 +75,16 @@ target_link_libraries(GiGi ${GiGi_LINK_LIBS})
+ 
+ install(
+     TARGETS GiGi
+-    LIBRARY DESTINATION lib${LIB_SUFFIX}
+-    RUNTIME DESTINATION .
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     COMPONENT COMPONENT_GIGI
+ )
+ 
+ if (BUILD_DEVEL_PACKAGE)
+     install(
+         TARGETS GiGi
+-        ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT COMPONENT_GIGI_DEVEL
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        COMPONENT COMPONENT_GIGI_DEVEL
+     )
+ endif ()
+ 
+@@ -98,7 +99,7 @@ if (UNIX AND BUILD_DEVEL_PACKAGE)
+ 
+     install(
+         FILES ${CMAKE_BINARY_DIR}/GiGi.pc
+-        DESTINATION lib${LIB_SUFFIX}/pkgconfig
++        DESTINATION  ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+         COMPONENT COMPONENT_GIGI_DEVEL
+         OPTIONAL
+     )
+diff --git a/GG/src/SDL/CMakeLists.txt b/GG/src/SDL/CMakeLists.txt
+index 868778d..3003034 100644
+--- a/GG/src/SDL/CMakeLists.txt
++++ b/GG/src/SDL/CMakeLists.txt
+@@ -24,15 +24,16 @@ target_link_libraries(GiGiSDL ${GiGiSDL_LINK_LIBS})
+ 
+ install(
+     TARGETS GiGiSDL
+-    LIBRARY DESTINATION lib${LIB_SUFFIX}
+-    RUNTIME DESTINATION .
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     COMPONENT COMPONENT_GIGISDL
+ )
+ 
+ if (BUILD_DEVEL_PACKAGE)
+     install(
+         TARGETS GiGiSDL
+-        ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT COMPONENT_GIGISDL_DEVEL
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        COMPONENT COMPONENT_GIGISDL_DEVEL
+     )
+ endif ()
+ 
+@@ -47,7 +48,7 @@ if (UNIX AND BUILD_DEVEL_PACKAGE)
+ 
+     install(
+         FILES ${CMAKE_BINARY_DIR}/GiGiSDL.pc
+-        DESTINATION lib${LIB_SUFFIX}/pkgconfig
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+         COMPONENT COMPONENT_GIGI_DEVEL
+         OPTIONAL
+     )
+diff --git a/client/AI/CMakeLists.txt b/client/AI/CMakeLists.txt
+index fc559ed..082a9ab 100644
+--- a/client/AI/CMakeLists.txt
++++ b/client/AI/CMakeLists.txt
+@@ -63,7 +63,7 @@ target_link_libraries(freeorionca
+ 
+ install(
+     TARGETS freeorionca
+-    RUNTIME DESTINATION bin
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     COMPONENT COMPONENT_FREEORION
+ )
+ 
+diff --git a/client/human/CMakeLists.txt b/client/human/CMakeLists.txt
+index afd6294..4c1d308 100644
+--- a/client/human/CMakeLists.txt
++++ b/client/human/CMakeLists.txt
+@@ -212,13 +212,7 @@ target_link_libraries(freeorion
+ 
+ install(
+     TARGETS freeorion
+-    RUNTIME DESTINATION bin
+-    COMPONENT COMPONENT_FREEORION
+-)
+-
+-install(
+-    FILES
+-    DESTINATION share/freeorion
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     COMPONENT COMPONENT_FREEORION
+ )
+ 
+diff --git a/parse/CMakeLists.txt b/parse/CMakeLists.txt
+index 3b1987e..ebf8632 100644
+--- a/parse/CMakeLists.txt
++++ b/parse/CMakeLists.txt
+@@ -95,8 +95,8 @@ endif ()
+ 
+ install(
+     TARGETS freeorionparse
+-    LIBRARY DESTINATION lib${LIB_SUFFIX}/freeorion
+-    RUNTIME DESTINATION .
++    LIBRARY DESTINATION ${FreeOrion_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     COMPONENT COMPONENT_FREEORION
+ )
+ 
+diff --git a/parse/test/CMakeLists.txt b/parse/test/CMakeLists.txt
+index 6929827..be207b4 100644
+--- a/parse/test/CMakeLists.txt
++++ b/parse/test/CMakeLists.txt
+@@ -26,12 +26,6 @@ target_link_libraries(test_parsers
+     ${CMAKE_THREAD_LIBS_INIT}
+ )
+ 
+-install(
+-    TARGETS test_parsers
+-    RUNTIME DESTINATION .
+-    COMPONENT COMPONENT_FREEORION
+-)
+-
+ find_package (Boost REQUIRED COMPONENTS unit_test_framework)
+ 
+ include_directories (
+@@ -55,12 +49,6 @@ target_link_libraries(test_parsers_boost
+     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES}
+ )
+ 
+-install(
+-    TARGETS test_parsers_boost
+-    RUNTIME DESTINATION .
+-    COMPONENT COMPONENT_FREEORION
+-)
+-
+ add_test(enum_parser                           ${CMAKE_BINARY_DIR}/test_parsers_boost --run_test EnumParser)
+ add_test(value_ref_double_parser               ${CMAKE_BINARY_DIR}/test_parsers_boost --run_test ValueRefDoubleParser)
+ add_test(value_ref_int_parser                  ${CMAKE_BINARY_DIR}/test_parsers_boost --run_test ValueRefIntParser)
+diff --git a/server/CMakeLists.txt b/server/CMakeLists.txt
+index 9a8d7a5..9ead9d0 100644
+--- a/server/CMakeLists.txt
++++ b/server/CMakeLists.txt
+@@ -65,7 +65,7 @@ target_link_libraries(freeoriond
+ 
+ install(
+     TARGETS freeoriond
+-    RUNTIME DESTINATION bin
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     COMPONENT COMPONENT_FREEORION
+ )
+ 
+-- 
+2.10.0
+

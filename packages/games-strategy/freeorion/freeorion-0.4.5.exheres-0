@@ -1,0 +1,87 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+CMAKE_SOURCE=${WORKBASE}/src-tarball
+
+require github [ user=${PN} release=v${PV} pnv=FreeOrion_v${PV}_2015-09-01.f203162_Source suffix=tar.gz ]
+require cmake [ api=2 ]
+require gtk-icon-cache
+
+SUMMARY="A free turn-based space empire and galactic conquest game"
+DESCRIPTION="
+FreeOrion is a free, open source, turn-based space empire and galactic conquest
+(4X) computer game being designed and built by the FreeOrion project. FreeOrion
+is inspired by the tradition of the Master of Orion games, but is not a clone or
+remake of that series or any other game.
+"
+HOMEPAGE+=" http://www.freeorion.org"
+
+LICENCES="GPL-2 LGPL-2.1 CCPL-Attribution-ShareAlike-3.0"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        dev-lang/python:2.7
+        dev-libs/boost
+        media-libs/SDL:2[X]
+        media-libs/freetype:2
+        media-libs/glew
+        media-libs/libogg
+        media-libs/libpng:=
+        media-libs/libvorbis
+        media-libs/openal
+        media-libs/tiff
+        sci-physics/bullet
+        sys-libs/zlib
+        x11-dri/glu
+        x11-dri/mesa
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/70c19e312ae86919bd77b39d45fa35dc4b66d458.patch
+    "${FILES}"/5a3c309cd4025f207e3a77fe57021934e80de703.patch
+    "${FILES}"/0001-Backport-of-d87fd278225fb35836471eb0425b6675530d22d9.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DRELEASE_COMPILE_FLAGS=""
+    -DCMAKE_SKIP_RPATH=ON
+)
+
+src_prepare() {
+    cmake_src_prepare
+
+    # parse subdir sets -O3
+    edo sed -e "s:-O3::" -i "${CMAKE_SOURCE}"/parse/CMakeLists.txt
+}
+
+src_install() {
+    cmake_src_install
+
+    # we need a wrapper
+    edo mv "${IMAGE}"/usr/$(exhost --target)/bin/${PN} \
+        "${IMAGE}"/usr/$(exhost --target)/bin/${PN}.bin
+
+    herebin "${PN}" <<EOF
+#!/bin/sh
+
+if [ "\${LD_LIBRARY_PATH+set}" = "set" ] ; then
+    export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:/usr/$(exhost --target)/lib/freeorion"
+else
+    export LD_LIBRARY_PATH="/usr/$(exhost --target)/lib/freeorion"
+fi
+exec /usr/$(exhost --target)/bin/${PN}.bin --resource-dir /usr/share/freeorion/default "\$@"
+
+EOF
+}
+
