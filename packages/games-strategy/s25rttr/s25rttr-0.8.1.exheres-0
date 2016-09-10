@@ -88,3 +88,9 @@ src_install() {
     dodoc RTTR/texte/{keyboardlayout.txt,readme.txt}
 }
 
+pkg_postinst() {
+    elog "Copy your Settlers2 game files into ~/.${PN}/S2"
+
+    gtk-icon-cache_pkg_postinst
+}
+
