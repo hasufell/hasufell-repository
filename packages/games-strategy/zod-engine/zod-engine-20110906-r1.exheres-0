@@ -37,15 +37,14 @@ src_prepare() {
     edo find "${WORK}" -type f \( -name Thumbs.db -o -name "*.xcf" -o -name "*.ico" \) -delete
     edo rm assets/{splash.png,WebCamScene.icescene}
 
-    # fix some tool invocations
-    eval $(eclectic wxwidgets script 2.8-gtk2) # FIXME: this probably breaks multiarch?
     edo sed -i -e "s#-lmysqlclient#\$\(shell /usr/$(exhost --target)/bin/mysql_config \-\-libs\)#" \
         zod_src/makefile
 }
 
 src_compile() {
     emake -C zod_src DATA_PATH="\"/usr/share/${PN}\"" main map_editor
-    emake -C zod_launcher_src DATA_PATH="\"/usr/share/${PN}\""
+    WX_CONFIG="/usr/$(exhost --target)/bin/wx-config-2.8" \
+        emake -C zod_launcher_src DATA_PATH="\"/usr/share/${PN}\""
 }
 
 src_install() {

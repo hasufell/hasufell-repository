@@ -1,7 +1,7 @@
 From: Julian Ospald <hasufell@gentoo.org>
 Date: Sun Aug 12 09:26:49 UTC 2012
 Subject: build system
-Upstream: yes
+Upstream: yes/partly (upstream is dead anyway)
 
 respect CXX and CXXFLAGS
 
@@ -579,10 +579,11 @@ respect CXX and CXXFLAGS
  	zip zod_src_${DATE}.zip *.cpp *.h makefile
 --- zod_engine/zod_launcher_src/makefile
 +++ zod_engine/zod_launcher_src/makefile
-@@ -1,2 +1,11 @@
+@@ -1,2 +1,13 @@
++WX_CONFIG ?= wx-config
 +CXX ?= g++
-+CXXFLAGS += `wx-config --cppflags`
-+LIBS += `wx-config --libs`
++CXXFLAGS += `$(WX_CONFIG) --cppflags`
++LIBS += `$(WX_CONFIG) --libs`
 +EXENAME = zod_launcher
 +
 +ifdef DATA_PATH
@@ -592,3 +593,4 @@ respect CXX and CXXFLAGS
  default:
 -	g++ -g -o zod_launcher *.cpp `wx-config --cppflags` `wx-config --libs`
 +	$(CXX) $(CXXFLAGS) -o $(EXENAME) *.cpp  $(LDFLAGS) $(LIBS)
++
