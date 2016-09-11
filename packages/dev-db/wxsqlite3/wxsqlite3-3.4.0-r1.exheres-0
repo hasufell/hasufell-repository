@@ -48,10 +48,9 @@ src_configure() {
     econf \
         --enable-shared \
         --enable-unicode \
-        --with-wx-config="/usr/$(exhost --target)/bin/wx-config-${SLOT}" \
+        --with-wx-config="/usr/$(exhost --target)/bin/wx-config-${SLOT}-$(option providers:gtk3 gtk3 gtk2)" \
         --with-wxshared \
         --with-sqlite3-prefix="/usr/$(exhost --target)" \
-        --includedir="/usr/$(exhost --target)/include/wx-${SLOT}/" \
         --hates=disable-silent-rules \
         --hates=enable-fast-install
 }
