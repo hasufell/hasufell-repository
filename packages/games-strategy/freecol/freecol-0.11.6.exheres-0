@@ -1,0 +1,55 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require sourceforge [ suffix=zip ]
+
+SUMMARY="An open source clone of the game Colonization"
+DESCRIPTION="FreeCol is a turn-based strategy game based on the old game
+Colonization, and similar to Civilization. The objective of the game is to
+create an independent nation.
+You start with only a few colonists defying the stormy seas in their search
+for new land. Will you guide them on the Colonization of a New World?"
+HOMEPAGE+=" http://www.freecol.org"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+    run:
+        virtual/jre[>=1.8]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+WORK=${WORKBASE}/${PN}
+
+src_install() {
+    herebin ${PN} <<EOF
+#!/bin/sh
+
+FC_PATH=/usr/share/${PN}
+
+java \
+    -Xmx512M \
+    -jar \${FC_PATH}/FreeCol.jar \
+    "\$@" \
+    --freecol-data \${FC_PATH}/data \
+    --no-intro
+EOF
+
+    insinto /usr/share/${PN}
+    doins FreeCol.jar
+    doins -r data jars
+
+    insinto /usr/share/pixmaps
+    doins ${PN}.xpm
+    insinto /usr/share/applications
+    doins ${PN}.desktop
+
+    dodoc FreeCol.pdf README
+}
+
