@@ -27,6 +27,14 @@ BUGS_TO="hasufell@posteo.de"
 
 WORK=${WORKBASE}/${PN}
 
+src_prepare() {
+    default
+
+    edo sed -i \
+            -e 's#^Icon=.*$#Icon=freecol#' \
+            ${PN}.desktop
+}
+
 src_install() {
     herebin ${PN} <<EOF
 #!/bin/sh
