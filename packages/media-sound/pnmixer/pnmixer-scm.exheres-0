@@ -29,7 +29,6 @@ DEPENDENCIES="
         providers:gtk3? ( x11-libs/gtk+:3[>=3.6.0] )
     suggestion:
         (
-            media-sound/pavucontrol
             xfce-extra/xfce4-mixer
         ) [[
             *description = [ ${PN} can use a full mixer if available ]
