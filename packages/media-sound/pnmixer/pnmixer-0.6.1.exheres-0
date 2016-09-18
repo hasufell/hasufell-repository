@@ -19,6 +19,7 @@ DEPENDENCIES="
     build:
         dev-util/intltool
         sys-devel/gettext
+        virtual/pkg-config
     build+run:
         dev-libs/glib:2
         sys-sound/alsa-lib
