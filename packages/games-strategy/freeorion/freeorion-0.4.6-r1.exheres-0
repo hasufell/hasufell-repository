@@ -37,8 +37,6 @@ DEPENDENCIES="
         media-libs/libvorbis
         media-libs/openal
         media-libs/tiff
-        sci-physics/bullet
-        sys-libs/zlib
         x11-dri/glu
         x11-dri/mesa
         providers:ijg-jpeg? ( media-libs/jpeg:= )
