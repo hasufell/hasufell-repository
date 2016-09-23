@@ -2,7 +2,7 @@
 # Copyright 2009 Heiko Przybyl <zuxez@cs.tu-berlin.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require inox [ patchset="53.0.2785.89" ]
+require inox [ patchset="53.0.2785.101" ]
 
 DESCRIPTION+="
 Chromium has three release channels: Stable, Beta, and Dev. This package corresponds to the Stable
@@ -15,7 +15,7 @@ PLATFORMS="~amd64 ~x86"
 RESTRICT=test
 
 # http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${PV}-1_{amd64,i386}.deb
-# $ strings ./opt/google/chrome/chrome | grep -C 1 " (version:" | tail -1
+# $ strings ./opt/google/chrome/chrome | grep -C 1 " (version:" | head -1
 WIDEVINE_VERSION=1.4.8.893
 
 src_prepare() {
