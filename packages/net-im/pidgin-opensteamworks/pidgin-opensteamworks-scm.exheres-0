@@ -7,3 +7,12 @@ require pidgin-opensteamworks-build
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
+src_prepare() {
+    # upstream is silly
+    # https://github.com/EionRobb/pidgin-opensteamworks/pull/139
+    edo sed -i \
+            -e '/if defined USE_OPENSSL_CRYPTO/s|__OpenBSD__|__unix__|' \
+            steam_rsa.c
+
+    default
+}
