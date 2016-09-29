@@ -1,0 +1,93 @@
+From 223fef7a99661608ae7f7aef426fbd1174878080 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Thu, 29 Sep 2016 22:56:59 +0200
+Subject: [PATCH] CMAKE: fix GNUInstallDirs usage
+Upstream: submitted, https://github.com/FreeRDP/Remmina/pull/1004
+
+* fix locale install destination
+* fix include dir install destination
+* don't assume CMAKE_INSTALL_BINDIR is relative
+---
+ CMakeLists.txt                     | 2 +-
+ cmake/GETTEXT.cmake                | 2 +-
+ remmina/CMakeLists.txt             | 2 +-
+ remmina/desktop/remmina.desktop.in | 8 ++++----
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a1bd5ca..1f9ea35 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -125,7 +125,7 @@ endif()
+ message(STATUS "Git Revision ${GIT_REVISION}")
+ 
+ set(REMMINA_DATADIR "${CMAKE_INSTALL_FULL_DATADIR}")
+-set(REMMINA_LOCALEDIR "${CMAKE_INSTALL_FULL_DATADIR}/locale")
++set(REMMINA_LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}")
+ set(REMMINA_PLUGINDIR "${CMAKE_INSTALL_FULL_LIBDIR}/remmina/plugins")
+ set(REMMINA_UIDIR "${CMAKE_INSTALL_FULL_DATADIR}/remmina/ui")
+ 
+diff --git a/cmake/GETTEXT.cmake b/cmake/GETTEXT.cmake
+index ec49870..368a6be 100644
+--- a/cmake/GETTEXT.cmake
++++ b/cmake/GETTEXT.cmake
+@@ -32,11 +32,11 @@
+ 		if($ENV{LINGUAS} MATCHES "^.*${lang}.*$" OR "${UNSETLINGUAS}" STREQUAL "")
+ 			set(mo_file ${CMAKE_CURRENT_BINARY_DIR}/${lang}.mo)
+ 			add_custom_command(OUTPUT ${mo_file} COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${mo_file} ${po_file} DEPENDS ${po_file})
+-			install(FILES ${mo_file} DESTINATION share/locale/${lang}/LC_MESSAGES RENAME ${package_name}.mo)
++			install(FILES ${mo_file} DESTINATION ${CMAKE_INSTALL_LOCALEDIR}/${lang}/LC_MESSAGES RENAME ${package_name}.mo)
+ 			set(mo_files ${mo_files} ${mo_file})
+ 		endif()
+ 		add_custom_command(OUTPUT ${mo_file} COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${mo_file} ${po_file} DEPENDS ${po_file})
+-		install(FILES ${mo_file} DESTINATION share/locale/${lang}/LC_MESSAGES RENAME ${package_name}.mo)
++		install(FILES ${mo_file} DESTINATION ${CMAKE_INSTALL_LOCALEDIR}/${lang}/LC_MESSAGES RENAME ${package_name}.mo)
+ 		set(mo_files ${mo_files} ${mo_file})
+ 	endforeach()
+ 	set(translations-target "${package_name}-translations")
+diff --git a/remmina/CMakeLists.txt b/remmina/CMakeLists.txt
+index c6869cd..5d3900d 100644
+--- a/remmina/CMakeLists.txt
++++ b/remmina/CMakeLists.txt
+@@ -219,7 +219,7 @@ add_subdirectory(external_tools)
+ add_subdirectory(ui)
+ 
+ install(TARGETS remmina DESTINATION ${CMAKE_INSTALL_BINDIR})
+-install(DIRECTORY include/remmina/ DESTINATION include/remmina FILES_MATCHING PATTERN "*.h")
++install(DIRECTORY include/remmina/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/remmina FILES_MATCHING PATTERN "*.h")
+ 
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/remmina.pc.in ${CMAKE_CURRENT_BINARY_DIR}/remmina.pc @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/remmina.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+diff --git a/remmina/desktop/remmina.desktop.in b/remmina/desktop/remmina.desktop.in
+index a40e50a..f427d7a 100644
+--- a/remmina/desktop/remmina.desktop.in
++++ b/remmina/desktop/remmina.desktop.in
+@@ -65,8 +65,8 @@ Comment[th]=เชื่อมต่อไปยังพื้นโต๊ะ
+ Comment[tr]=Uzak masaüstlerine bağlan
+ Comment[uk]=Приєднатися до віддаленого комп’ютера
+ Comment[zh_CN]=连接到远程桌面
+-TryExec=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@/remmina
+-Exec=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@/remmina
++TryExec=@CMAKE_INSTALL_FULL_BINDIR@/remmina
++Exec=@CMAKE_INSTALL_FULL_BINDIR@/remmina
+ Icon=remmina
+ Terminal=false
+ Type=Application
+@@ -94,7 +94,7 @@ Name[sv]=Skapa en ny anslutningsprofil
+ Name[tr]=Yeni Bir Bağlantı Profili Oluştur
+ Name[uk]=Створити новий профіль з’єднання
+ Name[zh_CN]=新建连接配置
+-Exec=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@/remmina --new
++Exec=@CMAKE_INSTALL_FULL_BINDIR@/remmina --new
+ 
+ [Desktop Action Tray]
+ Name=Start Remmina Minimized
+@@ -117,4 +117,4 @@ Name[sv]=Starta Remmina minimerat
+ Name[tr]=Remmina'yı Küçültülmüş Başlat
+ Name[uk]=Запустити Rammina у системному лотку
+ Name[zh_CN]=启动后自动最小化
+-Exec=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@/remmina --icon
++Exec=@CMAKE_INSTALL_FULL_BINDIR@/remmina --icon
+-- 
+2.10.0
+
