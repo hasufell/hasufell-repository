@@ -1,0 +1,47 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require lua [ multibuild=false whitelist="5.2 5.3" ]
+require github [ user=matricks tag="v${PV}" ]
+
+SUMMARY="Fast and flexible Lua-based build system"
+
+LICENCES="ZLIB"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    test:
+        dev-lang/python:2.7
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-Fix-parallel-build.patch
+    "${FILES}"/27b28f0956a78844e73aa94fee7d0187c9b68bbd.patch
+    "${FILES}"/${PNV}-Fix-picking-up-toolchain-from-environment.patch
+)
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    INSTALL_BINDIR="/usr/$(exhost --target)/bin"
+)
+
+src_compile() {
+    emake \
+        LUA_LIBS="$(${PKG_CONFIG} --libs lua-$(lua_get_abi))" \
+        LUA_CFLAGS="$(${PKG_CONFIG} --cflags lua-$(lua_get_abi))"
+}
+
+src_test() {
+    # https://github.com/matricks/bam/issues/102
+    export CC=$(exhost --build)-gcc CXX=$(exhost --build)-g++
+
+    emake -j1 \
+        LUA_LIBS="$(${PKG_CONFIG} --libs lua-$(lua_get_abi))" \
+        LUA_CFLAGS="$(${PKG_CONFIG} --cflags lua-$(lua_get_abi))" \
+        PYTHON="python2.7" \
+        test
+}
+
