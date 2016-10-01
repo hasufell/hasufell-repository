@@ -1,0 +1,59 @@
+# Copyright 2015-2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require lua [ whitelist="5.1" multibuild=false ]
+require github [ user=OpenRA project=OpenRA tag=playtest-${PV} ]
+require openra-build
+
+## this is a massive amount of 3rd party deps that would otherwise
+## be fetched during build time
+NG_SRC="https://nuget.org/api/v2/package"
+# 3rd party deps
+StyleCopPlus_MSBuild="${NG_SRC}/StyleCopPlus.MSBuild/4.7.49.5 -> StyleCopPlus_MSBuild-4.7.49.5.zip"
+StyleCop_MSBuild="${NG_SRC}/StyleCop.MSBuild/4.7.49.0 -> StyleCop_MSBuild-4.7.49.0.zip"
+SharpZipLib="${NG_SRC}/SharpZipLib/0.86.0 -> SharpZipLib-0.86.0.zip"
+MaxMind_Db="${NG_SRC}/MaxMind.Db/2.0.0 -> MaxMind_Db-2.0.0.zip"
+Newtonsoft_Json="${NG_SRC}/Newtonsoft.Json/8.0.3 -> Newtonsoft_Json-8.0.3.zip"
+RestSharp="${NG_SRC}/RestSharp/105.2.3 -> RestSharp-105.2.3.zip"
+MaxMind_GeoIP2="${NG_SRC}/MaxMind.GeoIP2/2.6.0 -> MaxMind_GeoIP2-2.6.0.zip"
+SharpFont="${NG_SRC}/SharpFont/3.1.0 -> SharpFont-3.1.0.zip"
+NUnit="${NG_SRC}/NUnit/3.0.1 -> NUnit-3.0.1.zip"
+NUnit_Console="${NG_SRC}/NUnit.Console/3.0.1 -> NUnit_Console-3.0.1.zip"
+Open_Nat="${NG_SRC}/Open.NAT/2.1.0 -> Open_NAT-2.1.0.zip"
+FuzzyLogicLibrary="${NG_SRC}/FuzzyLogicLibrary/1.2.0 -> FuzzyLogicLibrary-1.2.0.zip"
+SDL2CS="https://github.com/OpenRA/SDL2-CS/releases/download/20150709/SDL2-CS.dll -> SDL2-CS.dll.20150709"
+Eluant="https://github.com/OpenRA/Eluant/releases/download/20140425/Eluant.dll -> Eluant.dll.20140425"
+SmartIrc4net="${NG_SRC}/SmartIrc4net/0.4.5.1 -> SmartIrc4net-0.4.5.1.zip"
+# unfortunately, this may randomly change
+GEO_IP_DB="http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz -> GeoLite2-Country-2015-10-18.mmdb.gz"
+OpenAL_CS="https://github.com/OpenRA/OpenAL-CS/releases/download/20151227/OpenAL-CS.dll -> OpenAL-CS-20151227.dll"
+OpenAL_CS_config="https://github.com/OpenRA/OpenAL-CS/releases/download/20151227/OpenAL-CS.dll.config -> OpenAL-CS-20151227.dll.config"
+
+DOWNLOADS="${DOWNLOADS}
+${StyleCopPlus_MSBuild}
+${StyleCop_MSBuild}
+${SharpZipLib}
+${MaxMind_Db}
+${Newtonsoft_Json}
+${RestSharp}
+${MaxMind_GeoIP2}
+${SharpFont}
+${NUnit}
+${NUnit_Console}
+${Open_Nat}
+${FuzzyLogicLibrary}
+${SDL2CS}
+${Eluant}
+${SmartIrc4net}
+${GEO_IP_DB}
+${OpenAL_CS}
+${OpenAL_CS_config}
+"
+
+SLOT="playtest"
+PLATFORMS="~amd64 ~x86"
+
+MV_FILES+=(
+    /usr/share/applications/openra-launch-mod.desktop
+)
+
