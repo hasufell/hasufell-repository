@@ -18,7 +18,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        dev-util/bam
+        dev-util/bam[~>0.4.0]
     build+run:
         media-libs/SDL:0[X]
         media-libs/freetype:2
