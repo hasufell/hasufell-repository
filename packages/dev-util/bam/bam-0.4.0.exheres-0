@@ -21,6 +21,7 @@ BUGS_TO="hasufell@posteo.de"
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-fix-tests.patch
     "${FILES}"/${PNV}-Add-Makefile.patch
+    "${FILES}"/${PN}-0.5.0-Fix-parallel-build.patch
 )
 
 DEFAULT_SRC_INSTALL_PARAMS=(
