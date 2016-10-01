@@ -3,24 +3,13 @@
 
 require desktop-utils gtk-icon-cache
 
-ENGINE_PV=4.2.023
-FULL_P=UrbanTerror42_full017
-UPDATE_PV=${PV:0:3}.${FULL_P#*full}
+ENGINE_PV=4.3.0
+FULL_P=UrbanTerror43_full_2
 SUMMARY="Hollywood tactical shooter based on the ioquake3 engine"
 HOMEPAGE="http://www.urbanterror.info/home/"
-DOWNLOADS="http://up.barbatos.fr/urt/${FULL_P}.zip
+DOWNLOADS="https://up.barbatos.fr/urt/${FULL_P}.zip
     https://github.com/Barbatos/ioq3-for-UrbanTerror-4/archive/release-${ENGINE_PV}.tar.gz -> ${PN}-${ENGINE_PV}.tar.gz
-    http://upload.wikimedia.org/wikipedia/en/5/56/Urbanterror.svg -> ${PN}.svg"
-
-# fetch updates
-if [[ ${FULL_P#*full} != ${PV#*.} ]] ; then
-    UPDATE_I=${UPDATE_PV:5:2}
-    while [[ ${UPDATE_I} -lt ${PV:5:2} ]] ; do
-        DOWNLOADS="${DOWNLOADS} http://up.barbatos.fr/urt/UrbanTerror-${PV:0:5}${UPDATE_I}-to-${PV:0:5}$(( ${UPDATE_I} + 1)).zip"
-        UPDATE_I=$(( ${UPDATE_I} + 1))
-    done
-fi
-unset UPDATE_I
+    https://upload.wikimedia.org/wikipedia/commons/5/56/Urbanterror.svg -> ${PN}.svg"
 
 LICENCES="GPL-2 Q3AEULA-20000111 urbanterror-4.2-maps"
 SLOT="0"
@@ -43,25 +32,14 @@ DEPENDENCIES="
     "
 
 WORK=${WORKBASE}/ioq3-for-UrbanTerror-4-release-${ENGINE_PV}
-S_DATA=${WORKBASE}/UrbanTerror42
+S_DATA=${WORKBASE}/${FULL_P%%_full*}
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-${ENGINE_PV}-build.patch
 )
 
 src_unpack() {
-    local UPDATE_I
     default
-    # apply updates
-    if [[ ${FULL_P#*full} != ${PV##*.} ]] ; then
-        UPDATE_I=${UPDATE_PV:5:2}
-        while [[ ${UPDATE_I} -lt ${PV:5:2} ]] ; do
-            edo cp -dRpf \
-                "${WORKBASE}"/UrbanTerror-${PV:0:5}${UPDATE_I}-to-${PV:0:5}$((${UPDATE_I} + 1))/* \
-                "${S_DATA}"/
-            UPDATE_I=$(( ${UPDATE_I} + 1))
-        done
-    fi
 }
 
 src_compile() {
@@ -86,7 +64,7 @@ src_install() {
     local my_arch=$(option platform:amd64 "x86_64" "i386")
 
     dodoc ChangeLog README md4-readme.txt
-    dodoc "${S_DATA}"/q3ut4/readme42.txt
+    dodoc "${S_DATA}"/q3ut4/readme43.txt
     insinto /usr/share/${PN}/q3ut4
     doins "${S_DATA}"/q3ut4/*.pk3
 
