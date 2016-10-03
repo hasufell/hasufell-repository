@@ -28,7 +28,10 @@ DEPENDENCIES="
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
     run:
-        !games-strategy/openra:0
+        !games-strategy/openra:0 [[
+            description = [ File conflict with new SLOT layout ]
+            resolution = [ uninstall-blocked-after ]
+        ]]
         x11-apps/xdg-utils
     suggestion:
         gnome-desktop/zenity [[ description = [ Graphical error dialogs ] ]]
