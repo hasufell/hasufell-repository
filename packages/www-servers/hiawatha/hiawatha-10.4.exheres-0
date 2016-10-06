@@ -1,7 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake [ api=2 ] openrc-service [ openrc_initd_files=[ "${TEMP}/hiawatha" ] ] systemd-service
+require cmake [ api=2 ] openrc-service [ openrc_initd_files=[ "${TEMP}/hiawatha" ] ]
+require systemd-service [ systemd_files=[ "${CMAKE_SOURCE}/extra/debian/hiawatha.service" ] ]
 
 SUMMARY="Advanced and secure webserver"
 HOMEPAGE="http://www.hiawatha-webserver.org"
@@ -18,6 +19,7 @@ MYOPTIONS="
     rproxy [[ description = [ Enable reverse proxy support ] ]]
     ssl [[ description = [ Enable TLS support via mbedtls ] ]]
     tomahawk [[ description = [ Enable Tomahawk control server ] ]]
+    v2 [[ description = [ HTTP v2 support ] ]]
     xslt [[ description = [ Enable XSLT support.
                             This is also needed for directory listings ] ]]
 "
@@ -68,7 +70,23 @@ CMAKE_SRC_CONFIGURE_TESTS=(
     'ssl      USE_SYSTEM_MBEDTLS'
 )
 
+hiawatha_option() {
+    local hoption=$2
+
+    if optionq "${1}" ; then
+        edo sed -i \
+                -e "/#define ${hoption}/s|/\* \(.*\) \*/|\1|" \
+                "${CMAKE_SOURCE}"/config.h.in
+    else
+        edo sed -i \
+                -e "/#define ${hoption}/d" \
+                "${CMAKE_SOURCE}"/config.h.in
+    fi
+}
+
 src_prepare() {
+    hiawatha_option v2 ENABLE_HTTP2
+
     cmake_src_prepare
 
     edo grep -E "^#ServerId =.*$" "config/hiawatha.conf.in" 1>/dev/null
