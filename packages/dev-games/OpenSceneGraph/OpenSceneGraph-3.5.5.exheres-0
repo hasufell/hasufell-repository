@@ -52,7 +52,6 @@ DEPENDENCIES="
         x11-libs/cairo
         x11-libs/libX11
         x11-libs/libXrandr
-        x11-libs/qtbase:5
         providers:ffmpeg? ( media/ffmpeg )
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
@@ -80,9 +79,7 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
     -DCMAKE_DISABLE_FIND_PACKAGE_Lua51=1
     -DCMAKE_DISABLE_FIND_PACKAGE_Lua52=1
     -DCMAKE_DISABLE_FIND_PACKAGE_SDL2=1
-    -DOSG_USE_QT=ON
     -DOSG_USE_LOCAL_LUA_SOURCE=OFF
-    -DDESIRED_QT_VERSION=5
     -DOPENGL_PROFILE=GL2
     -DDYNAMIC_OPENSCENEGRAPH=ON
     -DLIB_POSTFIX=""
