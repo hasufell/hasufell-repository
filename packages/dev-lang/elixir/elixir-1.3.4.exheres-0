@@ -50,3 +50,11 @@ src_prepare() {
     default
 }
 
+src_compile() {
+    # sydbox is broken
+    # TODO: figure out why 'rebar' fails here with latest sydbox
+    esandbox disable_path
+    default
+    esandbox enable_path
+}
+
