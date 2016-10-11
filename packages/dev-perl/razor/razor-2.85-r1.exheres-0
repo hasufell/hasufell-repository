@@ -1,0 +1,43 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require perl-module
+require sourceforge [ pnv="razor-agents-${PV}" ]
+
+SUMMARY="Vipul's Razor is a distributed, collaborative spam detection and filtering network"
+
+LICENCES="Artistic"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        dev-perl/Digest-Nilsimsa
+        dev-perl/Digest-SHA1
+        dev-perl/Net-DNS
+        dev-perl/URI
+"
+
+WORK=${WORKBASE}/razor-agents-${PV}
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-Makefile-quoting.patch
+)
+
+src_install() {
+    perl-module_src_install
+
+    # utterly broken shit, doesn't honour INSTALLMAN1DIR etc
+    # no, I'm not hacking on perl build systems
+    dodir /usr/share/man
+    edo mv "${IMAGE%/}"/usr/$(exhost --target)/man/man1 \
+        "${IMAGE%/}"/usr/share/man/man1
+    edo mv "${IMAGE%/}"/usr/$(exhost --target)/man/man3 \
+        "${IMAGE%/}"/usr/share/man/man3
+    edo mv "${IMAGE%/}"/usr/$(exhost --target)/share/man/man5 \
+        "${IMAGE%/}"/usr/share/man/man5
+    edo rmdir "${IMAGE%/}"/usr/$(exhost --target)/man \
+        "${IMAGE%/}"/usr/$(exhost --target)/share/man \
+        "${IMAGE%/}"/usr/$(exhost --target)/share
+}
+
