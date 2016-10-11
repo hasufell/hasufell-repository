@@ -1,0 +1,11 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require perl-module [ module_author=VIPUL ]
+
+SUMMARY="Digest::Nilsimsa - Perl version of Nilsimsa code"
+
+LICENCES="GPL-2 LGPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
