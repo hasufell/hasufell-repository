@@ -1,0 +1,28 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user='SpamExperts' tag="release-${PV//./-}" ]
+require setup-py [ import=setuptools blacklist=3 has_bin=true has_lib=true work="${PN}-release-${PV//./-}" ]
+
+SUMMARY="A distributed, collaborative spam detection and filtering network"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    suggestion:
+        dev-python/mysql-python[python_abis:*(-)?] [[ description = [ MySQL support when running the pyzor server ] ]]
+        dev-python/redis[python_abis:*(-)?] [[ description = [ Redis support when running the pyzor server ] ]]
+    test:
+        dev-python/mock[python_abis:*(-)?]
+        dev-python/redis[python_abis:*(-)?]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+setup-py_test_one_multibuild() {
+    PYTHONPATH=. "${PYTHON}" ./tests/unit/__init__.py || die
+}
+
