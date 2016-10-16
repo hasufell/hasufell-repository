@@ -1,0 +1,37 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user="mjambon" tag="v${PV}" ]
+
+SUMMARY="C-style preprocessor for OCaml"
+HOMEPAGE="http://mjambon.com/cppo.html ${HOMEPAGE}"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-ocaml/findlib
+        dev-ocaml/ocamlbuild
+    build+run:
+        dev-lang/ocaml
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_prepare() {
+    edo sed -i \
+            -e "s#ocamlfind install#ocamlfind install -destdir \"${IMAGE}$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)\"#" \
+            Makefile
+}
+
+src_install() {
+    dodir /usr/$(exhost --target)/bin
+    dodir "$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)"/cppo_ocamlbuild
+    emake -j1 \
+        BINDIR="${IMAGE%/}/usr/$(exhost --target)/bin" \
+        install
+}
+
