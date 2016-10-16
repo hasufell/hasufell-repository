@@ -1,0 +1,43 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user="mjambon" tag="v${PV}" ]
+
+SUMMARY="JSON parsing and pretty-printing library for OCaml"
+HOMEPAGE="https://mjambon.github.io/atdgen-doc/ ${HOMEPAGE}"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-ocaml/findlib
+    build+run:
+        dev-lang/ocaml
+        dev-ocaml/biniou
+        dev-ocaml/cppo
+        dev-ocaml/easy-format
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    -j1
+)
+
+src_prepare() {
+    edo sed -i \
+            -e "s#ocamlfind install#ocamlfind install -destdir \"${IMAGE}$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)\"#" \
+            Makefile
+}
+
+src_install() {
+    dodir /usr/$(exhost --target)/bin
+    dodir "$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)"/yojson
+    emake -j1 \
+        BINDIR="${IMAGE%/}/usr/$(exhost --target)/bin" \
+        install
+}
+
