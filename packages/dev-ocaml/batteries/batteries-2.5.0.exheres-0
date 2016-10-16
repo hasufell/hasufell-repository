@@ -1,0 +1,36 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user="ocaml-batteries-team" project="batteries-included" tag="v${PV}" ]
+
+SUMMARY="A comprehensive standard library for OCaml"
+HOMEPAGE="http://ocaml-batteries-team.github.io/batteries-included/hdoc2/ ${HOMEPAGE}"
+
+LICENCES="LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-ocaml/findlib
+        dev-ocaml/ocamlbuild
+    build+run:
+        dev-lang/ocaml
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_compile() {
+    OCAMLBUILD="ocamlbuild -no-links" emake -j1 all doc
+}
+
+src_install() {
+    local ocaml_dest="$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)"
+    export OCAMLFIND_DESTDIR="${IMAGE%/}/${ocaml_dest}"
+    dodir "${ocaml_dest}"
+
+    OCAMLBUILD="ocamlbuild -no-links" emake install
+    DOCROOT="${IMAGE%/}/usr/share/doc/${PNVR}/" emake install-doc
+}
+
