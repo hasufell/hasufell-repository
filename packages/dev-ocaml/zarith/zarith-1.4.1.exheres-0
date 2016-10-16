@@ -1,0 +1,32 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Implements arithmetic and logical operations over arbitrary-precision integers"
+HOMEPAGE="https://forge.ocamlcore.org/projects/zarith/"
+DOWNLOADS="http://forge.ocamlcore.org/frs/download.php/1574/${PNV}.tgz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-ocaml/findlib
+    build+run:
+        dev-lang/ocaml
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_configure() {
+    ocaml_dest="$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)"
+
+    edo ./configure -installdir "${IMAGE%/}/${ocaml_dest}"
+}
+
+src_install() {
+    dodir "${ocaml_dest}"
+    OCAMLFIND_LDCONF=ignore emake install
+}
+
