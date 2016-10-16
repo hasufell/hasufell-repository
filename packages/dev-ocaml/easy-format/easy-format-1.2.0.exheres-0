@@ -1,0 +1,33 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user="mjambon" tag="v${PV}" ]
+
+SUMMARY="Pretty-printing library for OCaml"
+HOMEPAGE="http://martin.jambon.free.fr/easy-format.html ${HOMEPAGE}"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-ocaml/findlib
+    build+run:
+        dev-lang/ocaml
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_prepare() {
+    edo sed -i \
+            -e "s#ocamlfind install#ocamlfind install -destdir \"${IMAGE}$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)\"#" \
+            Makefile
+}
+
+src_install() {
+    dodir "$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)"/easy-format
+    default
+}
+
