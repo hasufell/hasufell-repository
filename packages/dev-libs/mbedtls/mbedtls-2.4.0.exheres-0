@@ -1,15 +1,17 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-WORK=${WORKBASE}/${PN}-${PNV}
 
 require github [ user=ARMmbed tag=mbedtls-${PV} ]
+WORK="${WORKBASE}/${PNV}" # because github.exlib is broken
 require cmake [ api=2 ]
+
 
 SUMMARY="Cryptographic library for embedded systems"
 HOMEPAGE="https://tls.mbed.org/"
+DOWNLOADS="https://tls.mbed.org/download/${PNV}-gpl.tgz"
 
-LICENCES="Apache-2.0"
+LICENCES="|| ( Apache-2.0 GPL-2 )"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
@@ -47,10 +49,6 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 
 CMAKE_SRC_CONFIGURE_TESTS=(
     '-DENABLE_TESTING=ON'
-)
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-platform-include.patch
 )
 
 enable_mbedtls_option() {
