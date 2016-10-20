@@ -1,0 +1,60 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user="FStarLang" project="FStar" ]
+
+SUMMARY="An ML-like language with a type system for program verification"
+DESCRIPTION="
+F* (pronounced F star) is an ML-like functional programming language aimed at
+program verification. Its type system includes polymorphism, dependent types,
+monadic effects, refinement types, and a weakest precondition calculus.
+Together, these features allow expressing precise and compact specifications for
+programs, including functional correctness and security properties. The F* type-
+checker aims to prove that programs meet their specifications using a
+combination of SMT solving and manual proofs. Programs written in F* can be
+translated to OCaml or F# for execution.
+"
+HOMEPAGE="https://www.fstar-lang.org ${HOMEPAGE}"
+
+LICENCES="Apache-2.0"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-lang/fsharp
+        dev-lang/ocaml[>=4.02.2]
+        dev-ocaml/batteries
+        dev-ocaml/findlib
+        dev-ocaml/yojson
+        dev-ocaml/zarith
+    build+run:
+        dev-libs/gmp:=
+    run:
+        sci-apps/z3
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_compile() {
+    # Step 1. Building F* from sources using the F# compiler
+    esandbox disable_net
+    emake -C src
+    esandbox enable_net
+    # Step 2. Extracting the sources of F* itself to OCaml
+    emake ocaml -C src
+    # Step 3. Building F* from the OCaml snapshot
+    emake -C src/ocaml-output
+}
+
+src_install() {
+    insinto /usr/$(exhost --target)/lib/fstar
+    doins -r lib contrib bin
+    edo chmod +x "${IMAGE%/}"/usr/$(exhost --target)/lib/fstar/bin/{fstar.exe,fstar-any.sh,tests.exe,tests-mono.sh}
+    dodoc -r doc/*
+
+    dodir /usr/$(exhost --target)/bin
+    dosym ../lib/fstar/bin/fstar.exe /usr/$(exhost --target)/bin/fstar
+}
+
