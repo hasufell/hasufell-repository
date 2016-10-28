@@ -46,11 +46,17 @@ DEPENDENCIES="
 #   dev-perl/Gtk2-Notify (for Notify plugin)
 #   dev-perl/gnome2-wnck (for Titlebar plugin)
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/853840eb9dad0b59ad2dac5d303f5929b2f09f21.patch
+)
+
 src_prepare() {
     edo sed -i \
         -e "s|\$FindBin::RealBin\,'\.\.'|'/usr'|" \
         -e "s|\$FindBin::RealBin\.SLASH\.'\.\.'|SLASH\.'usr'|" \
         gmusicbrowser.pl
+
+    default
 }
 
 src_install() {
