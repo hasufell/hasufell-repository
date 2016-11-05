@@ -18,6 +18,10 @@ RESTRICT=test
 # $ strings ./opt/google/chrome/chrome | grep -C 1 " (version:" | head -1
 WIDEVINE_VERSION=1.4.8.893
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/issue2248343002_1.patch
+)
+
 src_prepare() {
     inox_src_prepare
 
