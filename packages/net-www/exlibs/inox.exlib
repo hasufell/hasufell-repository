@@ -23,9 +23,10 @@ fi
 
 export_exlib_phases pkg_setup src_prepare src_configure src_compile src_test src_install pkg_postinst pkg_postrm
 
-SUMMARY="The open-source project behind Google Chrome"
-DESCRIPTION="Browser based on Blink and Google's V8 JavaScript engine."
-HOMEPAGE="https://www.chromium.org/Home"
+SUMMARY="Privacy enhanced Google Chrome"
+DESCRIPTION="Inox patchset tries to provide a minimal Chromium based browser
+with focus on privacy by disabling data transmission to Google."
+HOMEPAGE="https://www.chromium.org/Home https://github.com/gcarq/inox-patchset"
 DOWNLOADS="
     https://storage.googleapis.com/chromium-browser-official/${MY_PNV}.tar.xz
     https://gsdview.appspot.com/chromium-browser-official/${MY_PNV}.tar.xz
