@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require desktop-utils
-require github [ user=teeworlds ]
+require github [ user=teeworlds tag="${PV}-release" ]
 require gtk-icon-cache
 
 SUMMARY="Online multi-player platform 2D shooter"
