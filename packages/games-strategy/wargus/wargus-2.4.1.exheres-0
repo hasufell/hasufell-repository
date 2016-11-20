@@ -1,10 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-WORK=${WORKBASE}/${PN}_${PV}.orig
-
+require github [ user="Wargus" tag="v${PV}" ]
 require cmake [ api=2 ] gtk-icon-cache
-require launchpad [ branch=trunk pv=${PV%.*} pnv=${PN}_${PV} suffix=orig.tar.gz ]
 
 SUMMARY="Warcraft II for the Stratagus game engine"
 HOMEPAGE="https://wargus.github.io/"
@@ -30,17 +28,16 @@ DEPENDENCIES="
         media/cdparanoia [[ description = [ Needed for rip audio CD tracks ] ]]
 "
 
-REMOTE_IDS+=" sourceforge:${PN} github:Wargus/${PN}"
-
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DGAMEDIR="/usr/$(exhost --target)/bin"
     -DBINDIR="/usr/$(exhost --target)/bin"
-    -DSTRATAGUS="/usr/bin/stratagus"
-    -DSHAREDIR="/usr/share/stratagus/${PN}"
-    -DICONDIR="/usr/share/icons/hicolor/64x64/apps"
+    -DDATAROOTDIR="/usr/share"
     -DDESKTOPDIR="/usr/share/applications"
+    -DGAMEDIR="/usr/$(exhost --target)/bin"
+    -DICONDIR="/usr/share/icons/hicolor/64x64/apps"
+    -DSHAREDIR="/usr/share/stratagus/${PN}"
 
     -DENABLE_STRIP=OFF
+    -DWITH_STORMLIB=OFF
 )
 
 src_install() {
