@@ -1,11 +1,9 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-WORK=${WORKBASE}/${PN}_${PV}.orig
-
 require lua [ whitelist="5.1" multibuild=false ]
+require github [ user="Wargus" tag="v${PV}" ]
 require cmake [ api=2 ]
-require launchpad [ branch=trunk pv=${PV%.*} pnv=stratagus_${PV} suffix=orig.tar.gz ]
 
 SUMMARY="A realtime strategy game engine"
 HOMEPAGE="https://wargus.github.io/stratagus.html"
@@ -32,8 +30,6 @@ DEPENDENCIES="
         x11-dri/mesa
         x11-libs/libX11
 "
-
-REMOTE_IDS+=" sourceforge:${PN} github:Wargus/${PN}"
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBINDIR="/usr/$(exhost --target)/bin"
