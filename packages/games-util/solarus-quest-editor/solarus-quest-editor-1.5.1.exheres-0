@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=christopho tag=v${PV} ] \
+require github [ user=solarus-games tag=v${PV} ] \
     cmake [ api=2 ] \
     lua [ whitelist="5.1" multibuild=false ] \
     gtk-icon-cache
