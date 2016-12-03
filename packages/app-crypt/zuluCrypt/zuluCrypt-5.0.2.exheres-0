@@ -16,6 +16,11 @@ MYOPTIONS="
     gui [[ description = [ Whether to build the QT gui ] ]]
     kde [[ requires = [ gui ]
            description = [ Enable support for KDE, e.g. via kwallet ] ]]
+    polkit [[ description = [ Set this option to \"true\" if you want GUI components to start elevated and run in \"mixed\" mode. Good thing about
+this option is that CLI components will not be suid-root. Bad things about setting this option are:
+1. zuluMount-gui will loose its ability to unlock encrypted folders.
+2. lxqt_wallet wallet functionality will be disabled.
+3. GUI components will run from root's account and they will look different. ] ]]
    ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "
 
@@ -35,6 +40,7 @@ DEPENDENCIES="
             kde/kdelibs:4
             kde/kde-runtime:4
         )
+        polkit? ( sys-auth/polkit )
     run:
         providers:eudev? ( sys-apps/eudev )
         providers:systemd? ( sys-apps/systemd )
@@ -53,5 +59,6 @@ CMAKE_SRC_CONFIGURE_OPTIONS=(
     '!gui   NOGUI'
     'gui    WITH_PWQUALITY'
     '!kde   NOKDE'
+    'polkit USE_POLKIT'
 )
 
