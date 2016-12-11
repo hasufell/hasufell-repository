@@ -21,7 +21,7 @@ DEPENDENCIES="
         x11-libs/qttools:5
     build+run:
         dev-games/physfs
-        games-engines/solarus[~${PV}]
+        games-engines/solarus[>=1.5.1]
         media-libs/SDL:2
         media-libs/SDL_image:2
         media-libs/SDL_ttf:2
