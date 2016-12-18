@@ -2,7 +2,7 @@
 # Copyright 2009 Heiko Przybyl <zuxez@cs.tu-berlin.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require inox [ patchset="54.0.2840.100" ]
+require inox [ patchset="55.0.2883.87" ]
 
 DESCRIPTION+="
 Chromium has three release channels: Stable, Beta, and Dev. This package corresponds to the Stable
@@ -20,7 +20,7 @@ WIDEVINE_VERSION=1.4.8.903
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-53.0.2785.116-glibc-2.24-crash.patch
-    "${FILES}"/${PN}-54.0.2840.90-system-jinja-r13.patch
+    "${FILES}"/${PN}-55.0.2883.87-system-jinja-r14.patch
 )
 
 src_prepare() {
