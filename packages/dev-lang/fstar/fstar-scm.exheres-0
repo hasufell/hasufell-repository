@@ -1,6 +1,14 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+SCM_SECONDARY_REPOSITORIES="
+    openssl
+"
+SCM_openssl_REPOSITORY="git://github.com/openssl/openssl.git"
+SCM_EXTERNAL_REFS="
+    ucontrib/CoreCrypto/ml/openssl:openssl
+"
+
 require github [ user="FStarLang" project="FStar" ]
 
 SUMMARY="An ML-like language with a type system for program verification"
