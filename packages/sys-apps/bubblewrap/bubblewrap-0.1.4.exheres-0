@@ -1,0 +1,29 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user='projectatomic' suffix="tar.xz" release="v${PV}" ]
+
+SUMMARY="Unprivileged sandboxing tool"
+
+LICENCES="LGPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    selinux
+"
+
+DEPENDENCIES="
+    build:
+        dev-libs/libxslt
+        virtual/pkg-config
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-bash-completion-dir=/usr/share/bash-completion/completions
+)
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'selinux'
+)
+
