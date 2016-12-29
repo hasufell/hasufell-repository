@@ -29,6 +29,7 @@ DEPENDENCIES="
 BUGS_TO=""
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    -p1 "${FILES}"/3b08b907235c09ab84e3bb23d1e05fe5a1d1c00e.patch
     -p1 "${FILES}"/${PNV}-Fix-cmake-skew.patch
     -p0 "${FILES}"/${PNV}-soundconverter.patch
 )

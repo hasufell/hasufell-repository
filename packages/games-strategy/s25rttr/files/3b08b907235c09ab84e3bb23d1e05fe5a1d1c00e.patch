@@ -1,0 +1,40 @@
+From baefdbc828a0b057f165c4a6f2ecb5b1641b9f70 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Thu, 29 Dec 2016 20:13:27 +0100
+Subject: [PATCH] Backport from 3b08b907235c09ab84e3bb23d1e05fe5a1d1c00e
+
+---
+ libutil/src/UPnP.cpp | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/libutil/src/UPnP.cpp b/libutil/src/UPnP.cpp
+index 8491f21..055029c 100644
+--- a/libutil/src/UPnP.cpp
++++ b/libutil/src/UPnP.cpp
+@@ -210,7 +210,11 @@ bool UPnP::OpenPort(const unsigned short& port)
+ 	UPNPDev* devicelist = NULL;
+ #ifdef UPNPDISCOVER_SUCCESS
+ 	int upnperror = 0;
++#if (MINIUPNPC_API_VERSION >= 14) /* miniUPnPc API version 14 adds TTL parameter */
++    devicelist = upnpDiscover(2000, NULL, NULL, 0, 0 /* ipv6 */, 2, &upnperror);
++#else
+ 	devicelist = upnpDiscover(2000, NULL, NULL, 0, 0 /* ipv6 */, &upnperror);
++#endif
+ #else
+ 	devicelist = upnpDiscover(2000, NULL, NULL, 0);
+ #endif
+@@ -276,7 +280,11 @@ void UPnP::ClosePort()
+ 	UPNPDev* devicelist = NULL;
+ #ifdef UPNPDISCOVER_SUCCESS
+ 	int upnperror = 0;
++#if (MINIUPNPC_API_VERSION >= 14) /* miniUPnPc API version 14 adds TTL parameter */
++    devicelist = upnpDiscover(2000, NULL, NULL, 0, 0 /* ipv6 */, 2, &upnperror);
++#else
+ 	devicelist = upnpDiscover(2000, NULL, NULL, 0, 0 /* ipv6 */, &upnperror);
++#endif
+ #else
+ 	devicelist = upnpDiscover(2000, NULL, NULL, 0);
+ #endif
+-- 
+2.11.0
+
