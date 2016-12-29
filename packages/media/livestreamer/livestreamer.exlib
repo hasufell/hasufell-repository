@@ -1,0 +1,51 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2014 Benedikt Morbach <moben@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=setuptools blacklist='3.2' ]
+require github [ user='chrippa' tag="v${PV}" ]
+
+SUMMARY="extract live and vod streams from various services and pipe them into a video player"
+DESCRIPTION="
+Livestreamer is a Command Line Interface that pipes video streams from various services into a video
+player, such as VLC. The main purpose of Livestreamer is to allow the user to avoid buggy and CPU
+heavy flash plugins but still be able to enjoy various streamed content.
+Supported services are:
+afreecatv.com aftonbladet.se aliez.tv live.daserste.de ardmediathek.de arte.tv azubu.tv be-at.tv
+bambuser.com chaturbate.com connectcast.tv crunchyroll.com cybergame.tv dailymotion.com dommune.com
+douyutv.com api.dmcloud.net dr.dk euronews.com filmon.com filmon.us furstre.am gamlinglive.tv
+gomexp.com goodgame.ru hitbox.tv ilive.to leton.tv livestation.com new.livestream.com mips.tv mlg.tv
+nhk.or.jp/nhkworld tv.nrk.no radio.nrk.no livestream.com picarto.tv rtve.es seemeplay.ru
+speedrunslive.com streamingvideoprovider.co.uk K-S-V svtplay.se svtflow.se oppetarkiv.se tv4play
+fotbollskanalen.se twitch.tv subscription ustream.tv vaughnlive.tv breakers.tv instagib.tv vapers.tv
+veetle.com vgtv.no tv3play.se tv3play.no tv3play.dk tv3play.ee tv3play.lt tv3play.lv tv6play.se
+tv6play.no tv8play.se tv10play.se viagame.com viasat4play.no weeb.tv youtube.com youtu.be zdf.de
+"
+HOMEPAGE="livestreamer.tanuki.se ${HOMEPAGE}"
+
+LICENCES="BSD-2 MIT"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        python_abis:2.7? (
+            dev-python/futures[python_abis:2.7]
+            dev-python/singledispatch[python_abis:2.7]
+        )
+        python_abis:3.3? ( dev-python/singledispatch[python_abis:3.3] )
+        dev-python/requests[>=1.0&<3.0][python_abis:*(-)?]
+    suggestion:
+        media-video/rtmpdump[~scm] [[
+            description = [ for RTMP based services, such as
+                            alieztv bambuser ard_mediathek cybergame dmcloud dailymotion euronews
+                            freedocast filmon filmon_us furstream hitbox ilive mips picarto stream
+                            streamingvideoprovider tv4play viasat weeb ustreamtv zdf_mediathek  ] ]]
+        dev-python/pycrypto[python_abis:*(-)?] [[
+            description = [ for decrypting encrypted HLS streams, such as
+                            afreecatv aftonbladet ard_live chaturbate dmcloud crunchyroll drdk
+                            gomexp livestation livestream justintv_common oldlivestream nrk mlgtv
+                            stream streamingvideoprovider svtplay viasat youtube ustreamtv      ] ]]
+"
+
+WORK=${WORKBASE}
+
