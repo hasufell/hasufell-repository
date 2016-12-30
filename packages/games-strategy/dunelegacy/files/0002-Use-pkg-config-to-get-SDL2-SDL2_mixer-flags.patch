@@ -1,0 +1,38 @@
+From df3c27ae3739259ea38226cd52d83e074304e8ce Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Fri, 30 Dec 2016 21:15:01 +0100
+Subject: [PATCH 2/2] Use pkg-config to get SDL2/SDL2_mixer flags
+Upstream: no
+
+---
+ configure.ac | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 2da5f58..4ddfa49 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -40,19 +40,12 @@ fi
+ dnl Check for SDL library
+ dnl Check for SDL_mixer library.
+ SDL_VERSION=2.0.0
+-AM_PATH_SDL2($SDL_VERSION, : , AC_MSG_ERROR([*** SDL2 version $SDL_VERSION not found!]))
++PKG_CHECK_MODULES([SDL], [sdl2 >= $SDL_VERSION SDL2_mixer])
+ dnl PKG_CHECK_MODULES(SDL, sdl2 SDL2_mixer)
+ CFLAGS="$CFLAGS $SDL_CFLAGS"
+ CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
+ LIBS="$LIBS $SDL_LIBS"
+ 
+-dnl Check for SDL_mixer library.
+-AC_CHECK_LIB(SDL2_mixer, 
+-       Mix_OpenAudio, 
+-       LIBS="$LIBS -lSDL2_mixer", 
+-       AC_MSG_ERROR([*** SDL2_mixer library not found!])
+-)
+-
+ dnl enet defines
+ AC_CHECK_FUNC(gethostbyaddr_r, [AC_DEFINE(HAS_GETHOSTBYADDR_R)])
+ AC_CHECK_FUNC(gethostbyname_r, [AC_DEFINE(HAS_GETHOSTBYNAME_R)])
+-- 
+2.11.0
+

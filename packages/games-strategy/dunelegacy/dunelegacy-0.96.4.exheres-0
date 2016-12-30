@@ -15,12 +15,13 @@ DEPENDENCIES="
     build:
         virtual/pkg-config
     build+run:
-        media-libs/SDL:0[X]
-        media-libs/SDL_mixer:0[midi]
+        media-libs/SDL:2[X]
+        media-libs/SDL_mixer:2[midi]
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p0 "${FILES}"/${PNV}-build.patch
+    "${FILES}"/0001-Don-t-overwrite-user-C-XX-FLAGS-and-set-saner-defaul.patch
+    "${FILES}"/0002-Use-pkg-config-to-get-SDL2-SDL2_mixer-flags.patch
 )
 
 src_install() {

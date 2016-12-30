@@ -1,0 +1,28 @@
+From 55cb71defbc9f3f3b101fff423aa24a6346141ff Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Fri, 30 Dec 2016 21:14:38 +0100
+Subject: [PATCH 1/2] Don't overwrite user C{,XX}FLAGS and set saner defaults
+Upstream: no
+
+---
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e08e6ee..2da5f58 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -19,8 +19,8 @@ fi
+ AC_SUBST(dunelegacydatadir)
+ 
+ dnl Some flags for gcc
+-CXXFLAGS="-std=c++11 -pthread -fPIC -O3 -pipe -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-shift-negative-value -DNDEBUG"
+-CFLAGS="-std=c99 -pthread -fPIC -O3 -pipe -pedantic -Wall -Wextra -Wno-unused-parameter -Wno-shift-negative-value -DNDEBUG"
++CXXFLAGS="-std=c++11 -pthread -fPIC -Wall -Wextra -Wno-unused-parameter -Wno-shift-negative-value -DNDEBUG ${CXXFLAGS}"
++CFLAGS="-std=c99 -pthread -fPIC -Wall -Wextra -Wno-unused-parameter -Wno-shift-negative-value -DNDEBUG ${CFLAGS}"
+ dnl Additional flags: -Wconversion -Wno-sign-conversion -Wlogical-op
+ 
+ dnl Some flags for clang
+-- 
+2.11.0
+
