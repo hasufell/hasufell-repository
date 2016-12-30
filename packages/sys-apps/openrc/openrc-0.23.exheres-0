@@ -5,8 +5,7 @@
 #     Copyright 1999-2015 Gentoo Foundation
 #     Distributed under the terms of the GNU General Public License v2
 
-HOMEPAGE="http://www.gentoo.org/proj/en/base/${PN}/"
-DOWNLOADS="http://dev.gentoo.org/~williamh/dist/${PNV}.tar.bz2"
+require github
 
 SUMMARY="A dependency-based init system that works with the system-provided init program"
 SLOT="0"
