@@ -13,29 +13,21 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 RESTRICT="mirror" # contains keen files, but we do not install them
 
+PY_SLOT="3.5"
+
 DEPENDENCIES="
     build:
         dev-libs/boost
         virtual/pkg-config
     build+run:
+        dev-lang/python:${PY_SLOT}
         media-libs/SDL:2[X]
         media-libs/SDL_image:2
         media-libs/libvorbis
+        net-misc/curl
         sys-libs/zlib
         x11-dri/mesa
 "
-
-CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DAPPDIR="/usr/$(exhost --target)/bin"
-    -DBUILD_TARGET="LINUX"
-    -DDOCDIR="/usr/share/doc/${PNVR}"
-    -DGAMES_SHAREDIR="/usr/share"
-    -DOGG=ON
-    -DOPENGL=ON
-    -DSHAREDIR="/usr/share"
-    -DTREMOR=OFF
-    -DUSE_SDL2=1
-)
 
 src_prepare() {
     # don't install questionable bundled keen data
@@ -47,6 +39,24 @@ src_prepare() {
         CMakeLists.txt
 
     cmake_src_prepare
+}
+
+src_configure() {
+    CMAKE_SRC_CONFIGURE_PARAMS=(
+        -DAPPDIR="/usr/$(exhost --target)/bin"
+        -DBUILD_TARGET="LINUX"
+        -DDOCDIR="/usr/share/doc/${PNVR}"
+        -DGAMES_SHAREDIR="/usr/share"
+        -DOGG=ON
+        -DOPENGL=ON
+        -DSHAREDIR="/usr/share"
+        -DTREMOR=OFF
+        -DUSE_SDL2=1
+        -DPYTHON_LIBRARY="$(python${PY_SLOT} -c 'import os.path, sysconfig; print(os.path.join(sysconfig.get_config_var("LIBDIR"), sysconfig.get_config_var("LDLIBRARY")) if sysconfig.get_config_var("LDLIBRARY") else "")')"
+        -DPYTHON_INCLUDE_DIR="$(python${PY_SLOT} -c 'import distutils.sysconfig; print(distutils.sysconfig.get_python_inc())')"
+    )
+
+    cmake_src_configure
 }
 
 src_install() {
