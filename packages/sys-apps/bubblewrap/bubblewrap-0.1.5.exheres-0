@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require github [ user='projectatomic' suffix="tar.xz" release="v${PV}" ]
+require bash-completion
 
 SUMMARY="Unprivileged sandboxing tool"
 
@@ -21,9 +22,14 @@ DEPENDENCIES="
 BUGS_TO="hasufell@posteo.de"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --with-bash-completion-dir=/usr/share/bash-completion/completions
+    --with-bash-completion-dir=${BASHCOMPLETIONDIR}
 )
+
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     'selinux'
 )
+
+src_install() {
+    default
+}
 
