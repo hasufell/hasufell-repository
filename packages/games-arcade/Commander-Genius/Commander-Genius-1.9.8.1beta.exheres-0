@@ -52,6 +52,7 @@ src_configure() {
         -DSHAREDIR="/usr/share"
         -DTREMOR=OFF
         -DUSE_SDL2=1
+        -DUSE_PYTHON3=ON
         -DPYTHON_LIBRARY="$(python${PY_SLOT} -c 'import os.path, sysconfig; print(os.path.join(sysconfig.get_config_var("LIBDIR"), sysconfig.get_config_var("LDLIBRARY")) if sysconfig.get_config_var("LDLIBRARY") else "")')"
         -DPYTHON_INCLUDE_DIR="$(python${PY_SLOT} -c 'import distutils.sysconfig; print(distutils.sysconfig.get_python_inc())')"
     )
