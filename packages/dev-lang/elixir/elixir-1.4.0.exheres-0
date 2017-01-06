@@ -17,10 +17,6 @@ DEPENDENCIES="
         dev-lang/erlang[>=18]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-Allow-to-set-BINDIR-for-binaries-and-SHARE_PREFIX-fo.patch
-)
-
 DEFAULT_SRC_COMPILE_PARAMS=(
     Q=""
 )
