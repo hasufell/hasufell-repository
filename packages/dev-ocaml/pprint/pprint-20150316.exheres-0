@@ -1,0 +1,34 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Prettier printing"
+HOMEPAGE="http://gallium.inria.fr/~fpottier/pprint/"
+DOWNLOADS="http://gallium.inria.fr/~fpottier/pprint/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-ocaml/findlib
+    build+run:
+        dev-lang/ocaml
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+WORK=${WORK}/src
+
+src_prepare() {
+    edo sed -i \
+            -e "s#\$(OCAMLFIND) install#ocamlfind install -destdir \"${IMAGE}$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)\"#" \
+            Makefile
+}
+
+src_install() {
+    dodir "$(/usr/$(exhost --target)/bin/ocamlfind printconf destdir)"/pprint
+    default
+}
+
