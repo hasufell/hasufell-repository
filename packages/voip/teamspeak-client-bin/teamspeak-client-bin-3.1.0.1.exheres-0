@@ -24,6 +24,7 @@ DEPENDENCIES="
     run:
         app-arch/quazip[qt5]
         x11-libs/qtbase:5[sqlite]
+        x11-libs/qtwebengine:5
         sys-libs/zlib
         alsa? ( sys-sound/alsa-lib )
         pulseaudio? ( media-sound/pulseaudio )
