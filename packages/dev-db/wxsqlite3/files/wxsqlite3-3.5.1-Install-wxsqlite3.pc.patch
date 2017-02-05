@@ -1,0 +1,27 @@
+From 50fa069824950451a5a8c9a96f9de17ba897786e Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Sun, 5 Feb 2017 15:55:09 +0100
+Subject: [PATCH] Install wxsqlite3.pc
+Upstream: pending https://github.com/utelle/wxsqlite3/pull/10
+
+---
+ Makefile.am | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index 521d963..50e0643 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -19,6 +19,9 @@ LDADD = lib@WXSQLITE3_LIBNAME@.la $(WX_LIBS)
+ # Define the directory where the library headers are installed.
+ includewxdir = $(includedir)/wx
+ 
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = wxsqlite3.pc
++
+ # The main library. Notice that it uses dynamic, i.e. determined when running
+ # configure, name because it depends on the version of wxWidgets used. This is
+ # rather unusual, but Automake doesn't seem to mind.
+-- 
+2.11.0
+

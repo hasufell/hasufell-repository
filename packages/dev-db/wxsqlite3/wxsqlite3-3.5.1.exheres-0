@@ -1,0 +1,32 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ user=utelle tag=v${PV} ]
+
+SUMMARY="C++ wrapper around the public domain SQLite 3.x database"
+
+LICENCES="wxWinLL-3"
+SLOT="3.0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: gtk2 gtk3 ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        dev-db/sqlite:3[>=3.12.1]
+        x11-libs/wxGTK:${SLOT}[providers:gtk3?][providers:gtk2?]
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-Fix-wxsqlite3.pc.patch
+    "${FILES}"/${PNV}-Install-wxsqlite3.pc.patch
+)
+
+src_configure() {
+    econf \
+        --with-wx-config="/usr/$(exhost --target)/bin/wx-config-${SLOT}-$(option providers:gtk3 gtk3 gtk2)"
+}
+
