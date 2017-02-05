@@ -1,0 +1,65 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require systemd-service
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ user=fatbob313 rev="d017730cd2eb7eeb219e7fb975cce7c7c377b195" ]
+
+SUMMARY="Minimalistic Murmur (Mumble server)"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+MYOPTIONS="
+    ( providers: libressl mbedtls openssl ) [[
+        number-selected = exactly-one
+    ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/protobuf-c
+        dev-libs/libconfig
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:mbedtls? ( dev-libs/mbedtls )
+        providers:openssl? ( dev-libs/openssl )
+    run:
+        group/umurmur
+        user/umurmur
+"
+
+src_configure() {
+    local tls
+
+    if option providers:mbedtls ; then
+        tls=mbedtls
+    else
+        tls=openssl
+    fi
+
+    econf \
+        --with-ssl=${tls}
+}
+
+src_install() {
+    default
+
+    exeinto /etc/init.d
+    newexe "${FILES}"/umurmurd.initd umurmurd
+    insinto /etc/conf.d
+    newins "${FILES}"/umurmurd.confd umurmurd
+    install_systemd_files
+
+    local confdir="/etc/umurmur"
+    insinto "${confdir}"
+    doins "${FILES}"/umurmur.conf
+
+    # Some permissions are adjusted as the config may contain a server
+    # password, and /etc/umurmur will typically contain the cert and the
+    # key used to sign it, which are read after priveleges are dropped.
+    edo chmod 0750 "${IMAGE%/}/${confdir}"
+    edo chown -R root:umurmur "${IMAGE%/}/${confdir}"
+    edo chmod 0640 "${IMAGE%/}/${confdir}"/umurmur.conf
+}
+
