@@ -1,0 +1,19 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require pypi setup-py [ import=setuptools ]
+
+SUMMARY="Pure python QR Code generator"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/six[python_abis:*(-)?]
+        dev-python/lxml[python_abis:*(-)?]
+        dev-python/Pillow[python_abis:*(-)?]
+"
+
