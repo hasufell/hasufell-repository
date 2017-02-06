@@ -1,0 +1,32 @@
+# Copyright 2017 Julian Ospald
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_REPOSITORY="https://dev.gajim.org/gajim/gajim-plugins.git"
+
+require python [ has_bin=false blacklist=3 multibuild=false  ]
+require scm-git
+
+SUMMARY="Gajim plugin for XEP proposal: OMEMO Encryption"
+HOMEPAGE="https://dev.gajim.org/gajim/gajim-plugins/wikis/OmemoGajimPlugin"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/axolotl[python_abis:*(-)?]
+        dev-python/qrcode[python_abis:*(-)?]
+        net-im/gajim[python_abis:*(-)?]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_install() {
+    insinto /usr/share/gajim/plugins/omemo
+    doins -r "${WORK}"/omemo/*
+
+    python_bytecompile /usr/share/gajim/plugins/omemo
+}
+
