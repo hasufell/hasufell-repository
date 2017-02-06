@@ -1,0 +1,26 @@
+From 5048538a523364b492e0bc2ce14d27e25ce9d24d Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Mon, 6 Feb 2017 21:21:31 +0100
+Subject: [PATCH] Fix ar invocation
+Upstream: not yet
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 25ac434..36b6a18 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -74,7 +74,7 @@ if test "$INSTALL" = "$ac_install_sh"; then
+ 	INSTALL="`pwd`/install-sh -c"
+ fi
+ AC_PROG_RANLIB
+-AC_PATH_PROG(AR,ar)
++AC_PATH_TOOL(AR,ar)
+ AC_PATH_PROG(CP,cp)
+ AC_PATH_PROG(LN,ln)
+ AC_PATH_PROG(MKDIR,mkdir)
+-- 
+2.11.0
+
