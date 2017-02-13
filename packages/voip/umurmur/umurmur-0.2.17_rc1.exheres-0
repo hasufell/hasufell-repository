@@ -3,7 +3,7 @@
 
 require systemd-service
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
-require github [ user=fatbob313 rev="d017730cd2eb7eeb219e7fb975cce7c7c377b195" ]
+require github [ user=fatbob313 tag="${PV/_rc/rc}" ]
 
 SUMMARY="Minimalistic Murmur (Mumble server)"
 
