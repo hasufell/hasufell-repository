@@ -19,7 +19,7 @@ DEPENDENCIES="
     build:
         virtual/pkg-config
     build+run:
-        dev-libs/protobuf-c
+        dev-libs/protobuf
         x11-libs/qtbase:5
         x11-libs/qtdeclarative:5
         x11-libs/qtmultimedia:5
