@@ -3,8 +3,8 @@
 
 require desktop-utils gtk-icon-cache
 
-ENGINE_PV=4.3.1
-FULL_P=UrbanTerror431_full
+ENGINE_PV=4.3.2
+FULL_P=UrbanTerror432_full
 SUMMARY="Hollywood tactical shooter based on the ioquake3 engine"
 HOMEPAGE="http://www.urbanterror.info/home/"
 DOWNLOADS="https://up.barbatos.fr/urt/${FULL_P}.zip
