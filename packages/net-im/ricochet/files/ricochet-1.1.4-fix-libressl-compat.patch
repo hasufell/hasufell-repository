@@ -1,0 +1,37 @@
+From 5a02ee50fe3806a195ee0c730415160ffefc14ef Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Fri, 17 Feb 2017 14:00:21 +0100
+Subject: [PATCH] Fix LibreSSL compatibility
+Upstream: submitted, https://github.com/ricochet-im/ricochet/pull/527
+
+---
+ src/main.cpp            | 2 +-
+ src/utils/CryptoKey.cpp | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/main.cpp b/src/main.cpp
+index 4fda541..fd4abfa 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
+     initTranslation();
+ 
+     /* Initialize OpenSSL's allocator */
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#if (OPENSSL_VERSION_NUMBER < 0x10100000L) || defined (LIBRESSL_VERSION_NUMBER)
+     CRYPTO_malloc_init();
+ #else
+     OPENSSL_malloc_init();
+diff --git a/src/utils/CryptoKey.cpp b/src/utils/CryptoKey.cpp
+index 0ddaa7e..64f4008 100644
+--- a/src/utils/CryptoKey.cpp
++++ b/src/utils/CryptoKey.cpp
+@@ -39,7 +39,7 @@
+ #include <openssl/bio.h>
+ #include <openssl/pem.h>
+ 
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#if (OPENSSL_VERSION_NUMBER < 0x10100000L) || defined (LIBRESSL_VERSION_NUMBER)
+ void RSA_get0_factors(const RSA *r, const BIGNUM **p, const BIGNUM **q)
+ {
+   *p = r->p;

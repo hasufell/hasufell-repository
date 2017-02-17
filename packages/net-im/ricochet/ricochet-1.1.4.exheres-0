@@ -1,0 +1,50 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require qmake [ slot=5 ]
+require github [ user="ricochet-im" tag="v${PV}" ]
+require gtk-icon-cache
+
+SUMMARY="Anonymous peer-to-peer instant messaging"
+HOMEPAGE="https://ricochet.im/ ${HOMEPAGE}"
+
+LICENCES="BSD-3 CCPL-Attribution-ShareAlike-4.0 LGPL-2.1 openssl"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        dev-libs/protobuf-c
+        x11-libs/qtbase:5
+        x11-libs/qtdeclarative:5
+        x11-libs/qtmultimedia:5
+        x11-libs/qtquickcontrols:5
+        x11-libs/qttools:5
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
+    run:
+        net-misc/tor
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-fix-libressl-compat.patch
+)
+
+EQMAKE_PARAMS=(
+    DEFINES+=RICOCHET_NO_PORTABLE
+)
+
+src_prepare() {
+    edo sed -i \
+        -e 's#target.path = /usr/bin#target.path = /usr/'$(exhost --target)'/bin#' \
+        ${PN}.pro
+    default
+}
+
