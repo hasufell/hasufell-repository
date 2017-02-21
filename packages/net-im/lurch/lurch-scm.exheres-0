@@ -1,0 +1,73 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_REPOSITORY="https://github.com/gkdr/${PN}.git"
+SCM_axc_REPOSITORY="https://github.com/gkdr/axc.git"
+SCM_omemo_REPOSITORY="https://github.com/gkdr/libomemo.git"
+SCM_SECONDARY_REPOSITORIES="
+    axc
+    omemo
+"
+SCM_EXTERNAL_REFS="
+    lib/axc:axc
+    lib/libomemo:omemo
+"
+
+CMAKE_SOURCE=${WORK}/lib/axc/lib/libaxolotl-c
+
+require cmake [ api=2 out_of_source=false ] # don't let cmake mess with $WORK
+require scm-git
+
+SUMMARY="OMEMO for libpurple - interoperable with other OMEMO clients"
+HOMEPAGE="https://github.com/gkdr/${PN}"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        sys-devel/libtool
+        virtual/pkg-config
+    build+run:
+        dev-db/sqlite:3
+        dev-libs/glib:2
+        dev-libs/libgcrypt
+        dev-libs/libxml2
+        dev-libs/mxml
+        net-im/pidgin
+"
+
+BUGS_TO="hasufell@posteo.de"
+REMOTE_IDS="github:gkdr/${PN}"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Improve-build-system.patch
+    "${FILES}"/0002-axc-Improve-build-system.patch
+    "${FILES}"/0003-omemo-Improve-build-system.patch
+)
+
+src_prepare() {
+    # cmake part of libaxolotl-c
+    edo mkdir "${CMAKE_SOURCE}"/build
+    default
+}
+
+src_configure() {
+    # cmake part of libaxolotl-c
+    edo cd "${CMAKE_SOURCE}"/build
+    cmake_src_configure
+}
+
+src_compile() {
+    # cmake part of libaxolotl-c
+    emake -C "${CMAKE_SOURCE}"/build
+
+    default
+}
+
+src_install() {
+    default
+}
+
