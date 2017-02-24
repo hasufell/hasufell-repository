@@ -42,12 +42,6 @@ DEPENDENCIES="
 BUGS_TO="hasufell@posteo.de"
 REMOTE_IDS="github:gkdr/${PN}"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-Improve-build-system.patch
-    "${FILES}"/0002-axc-Improve-build-system.patch
-    "${FILES}"/0003-omemo-Improve-build-system.patch
-)
-
 src_prepare() {
     # cmake part of libaxolotl-c
     edo mkdir "${CMAKE_SOURCE}"/build
