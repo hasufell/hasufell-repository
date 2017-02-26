@@ -49,7 +49,7 @@ src_install() {
     # this might improve with the new cmake build system anyway,
     # so don't care to patch
     # https://github.com/notepadqq/notepadqq/pull/357
-    edo dodir /usr/$(exhost --target)/bin
+    dodir /usr/$(exhost --target)/bin
     edo mv "${IMAGE}"/usr/lib/notepadqq/notepadqq-bin \
         "${IMAGE}"/usr/$(exhost --target)/bin/notepadqq
     edo rm -r "${IMAGE}"/usr/{lib,bin}
