@@ -1,0 +1,83 @@
+Upstream: yes/submitted; first patch is from upstream, second is submitted
+Source: https://github.com/nicklan/pnmixer/pull/114
+
+From 418c1286b026d7a11e8c09f653326c2d05bafb5c Mon Sep 17 00:00:00 2001
+From: elboulangero <elboulangero@gmail.com>
+Date: Fri, 13 Nov 2015 20:50:20 +0100
+Subject: [PATCH 1/2] Use pkg-config to handle X11 library
+
+---
+ configure.ac | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e698b7e..9359dc3 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -31,17 +31,24 @@ pkg_modules=""
+ # Check that we have -lm and add it to LIBS
+ AC_CHECK_LIB(m,ceil,,AC_MSG_FAILURE([libm not found. Check 'config.log' for more details.]))
+ 
+-# Make sure we have X11, and also have it added to LIBS
+-AC_CHECK_LIB(X11,XOpenDisplay,,AC_MSG_FAILURE([libX11 not found. Check 'config.log' for more details.]))
++# Make sure we have X11
++echo -n "checking for x11... "
++if pkg-config --exists x11; then
++        echo "yes"
++        pkg_modules="$pkg_modules x11"
++else
++        echo "no"
++        AC_MSG_ERROR([x11 not found])
++fi
+ 
+ # Make sure we have Alsa
+-echo -n "checking for alsasound ... "
++echo -n "checking for alsa... "
+ if pkg-config --exists alsa; then
+ 	echo "yes"
+ 	pkg_modules="$pkg_modules alsa"
+ else
+ 	echo "no"
+-	AC_MSG_ERROR(alsa not found)
++	AC_MSG_ERROR([alsa not found])
+ fi
+ 
+ # ======================================================= #
+-- 
+2.6.3
+
+
+From 50c66bc4672a5c9c26197dbd51d2a03b04d98c4a Mon Sep 17 00:00:00 2001
+From: Kylie McClain <somasis@exherbo.org>
+Date: Tue, 8 Dec 2015 11:39:53 -0500
+Subject: [PATCH 2/2] configure.ac: Use PKG_CONFIG if available
+
+---
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 9359dc3..54455d0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -33,7 +33,7 @@ AC_CHECK_LIB(m,ceil,,AC_MSG_FAILURE([libm not found. Check 'config.log' for more
+ 
+ # Make sure we have X11
+ echo -n "checking for x11... "
+-if pkg-config --exists x11; then
++if ${PKG_CONFIG:-pkg-config} --exists x11; then
+         echo "yes"
+         pkg_modules="$pkg_modules x11"
+ else
+@@ -43,7 +43,7 @@ fi
+ 
+ # Make sure we have Alsa
+ echo -n "checking for alsa... "
+-if pkg-config --exists alsa; then
++if ${PKG_CONFIG:-pkg-config} --exists alsa; then
+ 	echo "yes"
+ 	pkg_modules="$pkg_modules alsa"
+ else
+-- 
+2.6.3
+
