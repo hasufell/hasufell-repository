@@ -10,7 +10,7 @@ SLOT="0"
 PLATFORMS="~amd64"
 
 src_prepare() {
-    edo intltoolize --force --copy
+    edo autopoint --force
     autotools_src_prepare
 }
 
