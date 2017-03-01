@@ -1,0 +1,48 @@
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ user='nicklan' ]
+
+SUMMARY="Simple ALSA mixer application designed to run in system tray"
+SLOT="0"
+LICENCES="GPL-3"
+
+MYOPTIONS="
+    libnotify
+    ( providers: gtk2 gtk3 ) [[ number-selected = exactly-one ]]
+"
+
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    build:
+        dev-util/intltool
+        sys-devel/gettext
+    build+run:
+        dev-libs/glib:2
+        sys-sound/alsa-lib
+        x11-libs/libX11
+        libnotify? ( x11-libs/libnotify )
+        providers:gtk2? ( x11-libs/gtk+:2[>=2.16.0] )
+        providers:gtk3? ( x11-libs/gtk+:3[>=3.6.0] )
+    suggestion:
+        (
+            media-sound/pavucontrol
+            xfce-extra/xfce4-mixer
+        ) [[
+            *description = [ ${PN} can use a full mixer if available ]
+        ]]
+"
+
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    libnotify
+    'providers:gtk3 gtk3'
+)
+
+src_prepare() {
+    edo intltoolize --force --copy
+    autotools_src_prepare
+}
+
