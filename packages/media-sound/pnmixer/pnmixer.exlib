@@ -1,11 +1,13 @@
 # Copyright 2015 Kylie McClain <somasis@exherbo.org>
-# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2016-2017 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 myexparam release=v${PV}
 PNMIXER_RELEASE=$(exparam release)
 
 require github [ user='nicklan' release="${PNMIXER_RELEASE}" suffix="tar.gz" ]
+require cmake
+require gtk-icon-cache
 
 SUMMARY="Simple ALSA mixer application designed to run in system tray"
 LICENCES="GPL-3"
@@ -34,8 +36,8 @@ DEPENDENCIES="
         ]]
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
-    libnotify
-    'providers:gtk3 gtk3'
+CMAKE_SRC_CONFIGURE_OPTION_WITHS=(
+    'libnotify LIBNOTIFY'
+    'providers:gtk3 GTK3'
 )
 

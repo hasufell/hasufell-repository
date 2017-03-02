@@ -1,41 +1,9 @@
 # Copyright 2015 Kylie McClain <somasis@exherbo.org>
-# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2016-2017 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user='nicklan' branch='cmake' ]
-require cmake
+require pnmixer
 
-SUMMARY="Simple ALSA mixer application designed to run in system tray"
-LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64"
-
-MYOPTIONS="
-    libnotify
-    ( providers: gtk2 gtk3 ) [[ number-selected = exactly-one ]]
-"
-
-DEPENDENCIES="
-    build:
-        sys-devel/gettext
-        virtual/pkg-config
-    build+run:
-        dev-libs/glib:2
-        sys-sound/alsa-lib
-        x11-libs/libX11
-        libnotify? ( x11-libs/libnotify )
-        providers:gtk2? ( x11-libs/gtk+:2[>=2.16.0] )
-        providers:gtk3? ( x11-libs/gtk+:3[>=3.6.0] )
-    suggestion:
-        (
-            xfce-extra/xfce4-mixer
-        ) [[
-            *description = [ ${PN} can use a full mixer if available ]
-        ]]
-"
-
-CMAKE_SRC_CONFIGURE_OPTION_WITHS=(
-    'providers:gtk3 GTK3'
-    'libnotify LIBNOTIFY'
-)
 
