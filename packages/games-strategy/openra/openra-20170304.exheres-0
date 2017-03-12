@@ -13,15 +13,13 @@ StyleCopPlus_MSBuild="${NG_SRC}/StyleCopPlus.MSBuild/4.7.49.5 -> StyleCopPlus_MS
 StyleCop_MSBuild="${NG_SRC}/StyleCop.MSBuild/4.7.49.0 -> StyleCop_MSBuild-4.7.49.0.zip"
 SharpZipLib="${NG_SRC}/SharpZipLib/0.86.0 -> SharpZipLib-0.86.0.zip"
 MaxMind_Db="${NG_SRC}/MaxMind.Db/2.0.0 -> MaxMind_Db-2.0.0.zip"
-Newtonsoft_Json="${NG_SRC}/Newtonsoft.Json/8.0.3 -> Newtonsoft_Json-8.0.3.zip"
 RestSharp="${NG_SRC}/RestSharp/105.2.3 -> RestSharp-105.2.3.zip"
-MaxMind_GeoIP2="${NG_SRC}/MaxMind.GeoIP2/2.6.0 -> MaxMind_GeoIP2-2.6.0.zip"
-SharpFont="${NG_SRC}/SharpFont/3.1.0 -> SharpFont-3.1.0.zip"
+SharpFont="${NG_SRC}/SharpFont/4.0.1 -> SharpFont-4.0.1.zip"
 NUnit="${NG_SRC}/NUnit/3.0.1 -> NUnit-3.0.1.zip"
 NUnit_Console="${NG_SRC}/NUnit.Console/3.0.1 -> NUnit_Console-3.0.1.zip"
-Open_Nat="${NG_SRC}/Open.NAT/2.1.0 -> Open_NAT-2.1.0.zip"
+Open_Nat="${NG_SRC}/Open.NAT/2.1.0 -> Open_Nat-2.1.0.zip"
 FuzzyLogicLibrary="${NG_SRC}/FuzzyLogicLibrary/1.2.0 -> FuzzyLogicLibrary-1.2.0.zip"
-SDL2CS="https://github.com/OpenRA/SDL2-CS/releases/download/20150709/SDL2-CS.dll -> SDL2-CS.dll.20150709"
+SDL2CS="https://github.com/OpenRA/SDL2-CS/releases/download/20161223/SDL2-CS.dll -> SDL2-CS.dll.20161223"
 Eluant="https://github.com/OpenRA/Eluant/releases/download/20140425/Eluant.dll -> Eluant.dll.20140425"
 SmartIrc4net="${NG_SRC}/SmartIrc4net/0.4.5.1 -> SmartIrc4net-0.4.5.1.zip"
 # unfortunately, this may randomly change
@@ -34,9 +32,7 @@ ${StyleCopPlus_MSBuild}
 ${StyleCop_MSBuild}
 ${SharpZipLib}
 ${MaxMind_Db}
-${Newtonsoft_Json}
 ${RestSharp}
-${MaxMind_GeoIP2}
 ${SharpFont}
 ${NUnit}
 ${NUnit_Console}
