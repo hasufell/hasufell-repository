@@ -3,7 +3,7 @@
 
 require github [ user=Bitmessage project=PyBitmessage tag=v${PV} ]
 require gtk-icon-cache
-require python [ blacklist=3 has_bin=true multibuild=false ]
+require python [ blacklist=3 has_bin=true multibuild=false python_opts='[sqlite]' ]
 
 SUMMARY="P2P communications protocol"
 DESCRIPTION="
@@ -27,11 +27,14 @@ MYOPTIONS="
 DEPENDENCIES="
     run:
         dev-python/PyQt4[python_abis:*(-)?]
+        dev-python/msgpack-python[python_abis:*(-)?]
         providers:libressl? ( dev-libs/libressl )
         providers:openssl?  ( dev-libs/openssl  )
     suggestion:
+        media-sound/mpg123 [[ description = [ For playing mp3 files ] ]]
         net-misc/tor [[ description = [ For running bitmessage traffic
                                         through the tor network ] ]]
+        sys-sound/alsa-utils [[ description = [ For playing wav files ] ]]
 "
 
 BUGS_TO="hasufell@posteo.de"
