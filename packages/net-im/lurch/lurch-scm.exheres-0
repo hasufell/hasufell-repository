@@ -32,10 +32,10 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         dev-db/sqlite:3
+        dev-libs/Mini-XML
         dev-libs/glib:2
         dev-libs/libgcrypt
         dev-libs/libxml2
-        dev-libs/mxml
         net-im/pidgin
 "
 
