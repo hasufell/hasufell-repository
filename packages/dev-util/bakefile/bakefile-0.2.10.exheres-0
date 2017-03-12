@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require python [ blacklist=3 has_bin=true has_lib=true multibuild=false ]
-require sourceforge [ suffix=tar.gz ]
+require github [ user="vslavik" release="v${PV}" suffix=tar.gz ]
 
 SUMMARY="Bakefile makefiles generator"
 HOMEPAGE="http://bakefile.org/"
