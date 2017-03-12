@@ -24,7 +24,6 @@ MYOPTIONS="
             Enable the new network stack (experimental)
         ] ]]
     pam
-    tools [[ description = [ Build optional tools ]  ]]
 "
 
 PLATFORMS="~amd64 ~x86"
@@ -93,7 +92,6 @@ src_compile() {
         MKAUDIT=no
         MKPAM=$(optionv pam)
         MKSTATICLIBS=no
-        MKTOOLS=$(option tools yes no)
     "
 
     emake ${MAKE_ARGS}
