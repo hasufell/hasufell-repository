@@ -1,0 +1,9 @@
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Copyright 2016-2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require pnmixer [ release=v${PV/_rc/-rc} ]
+
+SLOT="0"
+PLATFORMS="~amd64"
+

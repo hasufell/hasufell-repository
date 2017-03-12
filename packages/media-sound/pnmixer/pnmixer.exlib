@@ -3,9 +3,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
 myexparam release=v${PV}
+myexparam pv=$(exparam release)
 PNMIXER_RELEASE=$(exparam release)
+PNMIXER_PV=$(exparam pv)
 
-require github [ user='nicklan' release="${PNMIXER_RELEASE}" suffix="tar.gz" ]
+require github [ user='nicklan' release="${PNMIXER_RELEASE}" pv="${PNMIXER_PV}" suffix="tar.gz" ]
 require cmake
 require gtk-icon-cache
 
