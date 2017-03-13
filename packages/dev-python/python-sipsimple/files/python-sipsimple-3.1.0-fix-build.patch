@@ -1,0 +1,45 @@
+From f786808a36deab01f301905ecdae27e6e17ce197 Mon Sep 17 00:00:00 2001
+From: Charles Barcza <info@blackpanther.hu>
+Date: Mon, 13 Mar 2017 14:46:34 +0100
+Subject: [PATCH 1/2] Build fix on Linux
+Upstream: submitted, https://github.com/AGProjects/python-sipsimple/pull/1
+
+---
+ setup_pjsip.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/setup_pjsip.py b/setup_pjsip.py
+index 4760e64..a43533d 100644
+--- a/setup_pjsip.py
++++ b/setup_pjsip.py
+@@ -157,6 +157,7 @@ def configure_pjsip(self):
+         if sys_platform == "win32":
+             cmd = ["bash", "configure"]
+         else:
++    	    os.system("chmod +x "+ self.build_dir +"/*configure")
+             cmd = ["./configure"]
+         cmd.extend(["--disable-g7221-codec"])
+         ffmpeg_path = env.get("SIPSIMPLE_FFMPEG_PATH", None)
+
+From b80cf7ee9d4c32b4e068eb74492f31ccab1296b2 Mon Sep 17 00:00:00 2001
+From: Charles Barcza <info@blackpanther.hu>
+Date: Mon, 13 Mar 2017 14:55:29 +0100
+Subject: [PATCH 2/2] Build fix on Linux
+
+---
+ setup_pjsip.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup_pjsip.py b/setup_pjsip.py
+index a43533d..5f1b27b 100644
+--- a/setup_pjsip.py
++++ b/setup_pjsip.py
+@@ -157,7 +157,7 @@ def configure_pjsip(self):
+         if sys_platform == "win32":
+             cmd = ["bash", "configure"]
+         else:
+-    	    os.system("chmod +x "+ self.build_dir +"/*configure")
++	    os.system("chmod +x "+ self.build_dir +"/*configure")
+             cmd = ["./configure"]
+         cmd.extend(["--disable-g7221-codec"])
+         ffmpeg_path = env.get("SIPSIMPLE_FFMPEG_PATH", None)

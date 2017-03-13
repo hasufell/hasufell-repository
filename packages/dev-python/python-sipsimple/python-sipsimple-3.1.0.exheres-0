@@ -1,11 +1,11 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require setup-py [ import=distutils blacklist="3" ]
+require github [ user="AGProjects" tag="release-${PV}" ]
+require setup-py [ import=distutils blacklist="3" work="${PN}-release-${PV}" ]
 
 SUMMARY="SIP SIMPLE client SDK is a Software Development Kit"
-HOMEPAGE="http://sipsimpleclient.org"
-DOWNLOADS="http://download.ag-projects.com/SipClient/${PNV}.tar.gz"
+HOMEPAGE="http://sipsimpleclient.org ${HOMEPAGE}"
 
 LICENCES="GPL-3"
 SLOT="0"
@@ -39,12 +39,16 @@ DEPENDENCIES="
         dev-python/python-eventlib[python_abis:*(-)?]
         dev-python/python-gnutls[python_abis:*(-)?]
         dev-python/python-msrplib[>=0.19.0][python_abis:*(-)?]
-        dev-python/python-otr[python_abis:*(-)?]
+        dev-python/python-otr[>=1.2.0][python_abis:*(-)?]
         dev-python/python-xcaplib[python_abis:*(-)?]
         dev-python/zopeinterface[python_abis:*(-)?]
         media-libs/x264[-10bit]
         net-twisted/TwistedCore[python_abis:*(-)?]
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-fix-build.patch
+)
 
 src_compile() {
     # breaks horribly with 'ld'
