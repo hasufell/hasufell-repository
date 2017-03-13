@@ -1,0 +1,20 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require pypi setup-py [ import=distutils ]
+
+SUMMARY="A client library for accessing the Plus, Moderator, and many other Google APIs"
+
+LICENCES="Apache-2.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/httplib2[>=0.9.2][python_abis:*(-)?]
+        dev-python/oauth2client[>=1.5.0][python_abis:*(-)?]
+        dev-python/six[>=1.6.1][python_abis:*(-)?]
+        dev-python/uritemplate[>=3.0.0][python_abis:*(-)?]
+"
+
