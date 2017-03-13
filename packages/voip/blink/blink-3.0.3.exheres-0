@@ -3,10 +3,10 @@
 
 require desktop-utils gtk-icon-cache
 require setup-py [ import=distutils blacklist="3" multibuild=false ]
+require github [ user="AGProjects" pn="blink-qt" tag="release-${PV}" ]
 
 SUMMARY="A state of the art, easy to use SIP client"
 HOMEPAGE="http://iCanBlink.com"
-DOWNLOADS="http://download.ag-projects.com/BlinkQt/blink-${PV}.tar.gz"
 
 LICENCES="GPL-3"
 SLOT="0"
@@ -19,9 +19,10 @@ DEPENDENCIES="
     build+run:
         net-libs/libvncserver
     run:
-        dev-python/PyQt4[webkit][python_abis:*(-)?]
+        dev-python/PyQt5[>=5.0][webkit][python_abis:*(-)?]
+        dev-python/google-api-python-client[python_abis:*(-)?]
         dev-python/lxml[python_abis:*(-)?]
-        dev-python/python-application[python_abis:*(-)?]
+        dev-python/python-application[>=2.0.0][python_abis:*(-)?]
         dev-python/python-cjson[python_abis:*(-)?]
         dev-python/python-dateutil[python_abis:*(-)?]
         dev-python/python-eventlib[python_abis:*(-)?]
