@@ -1,0 +1,12 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require pypi setup-py [ import=distutils ]
+
+SUMMARY="Python implementation of RFC6570, URI Template"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
