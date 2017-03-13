@@ -1,0 +1,22 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require pypi setup-py [ import=distutils ]
+
+SUMMARY="OAuth 2.0 client library"
+
+LICENCES="Apache-2.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/httplib2[>=0.9.1][python_abis:*(-)?]
+        dev-python/pyasn1-modules[>=0.0.5][python_abis:*(-)?]
+        dev-python/pyasn1[>=0.1.7][python_abis:*(-)?]
+        dev-python/rsa[>=3.1.4][python_abis:*(-)?]
+        dev-python/six[>=1.6.1][python_abis:*(-)?]
+"
+
+
