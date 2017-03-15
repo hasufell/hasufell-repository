@@ -1,0 +1,23 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user="jonathanslenders" project="python-${PN/_/-}" ]
+require pypi setup-py [ import=setuptools ]
+
+SUMMARY="Library for building powerful interactive command lines in Python"
+HOMEPAGE="https://python-prompt-toolkit.readthedocs.io ${HOMEPAGE}"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/six[>=1.9.0][python_abis:*(-)?]
+        dev-python/wcwidth[python_abis:*(-)?]
+
+"
+
+BUGS_TO="hasufell@posteo.de"
+
