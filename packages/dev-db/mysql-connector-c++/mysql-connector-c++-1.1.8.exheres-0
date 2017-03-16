@@ -1,0 +1,50 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake [ api=2 ]
+
+SUMMARY="MySQL database connector for C++ (mimics JDBC 4.0 API)"
+HOMEPAGE="http://dev.mysql.com/downloads/connector/cpp/"
+DOWNLOADS="https://dev.mysql.com/get/Downloads/Connector-C++/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        dev-libs/boost
+    build+run:
+        virtual/mysql
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_configure() {
+    CMAKE_SRC_CONFIGURE_PARAMS=(
+        -DINSTALL_DOCS="/usr/share/doc/${PNVR}"
+        -DMYSQLCPPCONN_BUILD_EXAMPLES=OFF
+        -DMYSQLCPPCONN_ICU_ENABLE=OFF
+        -DMYSQL_CXX_LINKAGE=0
+        -DMYSQL_INCLUDE_DIR="$(mysql_config --variable=pkgincludedir)"
+        -DUSE_MYSQLCPPCONN_GCOV_ENABLE=OFF
+        -DUSE_MYSQLCPPCONN_TRACE_ENABLE=OFF
+    )
+
+    cmake_src_configure
+}
+
+src_prepare() {
+    edo sed -i \
+            -e '/ADD_SUBDIRECTORY(test/d' \
+            -e 's#DOC_DESTINATION "."#DOC_DESTINATION ${INSTALL_DOCS}#' \
+            "${CMAKE_SOURCE}"/CMakeLists.txt
+
+    cmake_src_prepare
+}
+
