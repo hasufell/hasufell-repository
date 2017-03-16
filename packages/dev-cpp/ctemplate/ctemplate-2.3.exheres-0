@@ -1,0 +1,16 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ user="olafvdspek" tag="${PNV}" ]
+
+SUMMARY="A simple but powerful template language for C++"
+HOMEPAGE="https://github.com/olafvdspek/ctemplate"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+BUGS_TO="hasufell@posteo.de"
+
