@@ -1,0 +1,18 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=distutils ]
+
+SUMMARY="MySQL driver written in Python"
+DESCRIPTION="MySQL driver written in Python which does not depend on MySQL C
+client libraries and implements the DB API v2.0 specification (PEP-249)."
+HOMEPAGE="https://dev.mysql.com/doc/connector-python/en/index.html"
+DOWNLOADS="https://dev.mysql.com/get/Downloads/Connector-Python/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+BUGS_TO="hasufell@posteo.de"
+
