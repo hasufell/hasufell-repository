@@ -62,6 +62,13 @@ src_prepare() {
     edo install -D "${FETCHEDDIR}"/antlr-3.4-complete.jar \
         "${WORKBASE}"/linux-res/bin/antlr-3.4-complete.jar
 
+    # fix gdal includes
+    edo sed -i \
+            -e 's|#include <gdal/|#include <|' \
+            "${CMAKE_SOURCE}"/backend/wbpublic/grt/*.h \
+            "${CMAKE_SOURCE}"/backend/wbpublic/grtui/*.h \
+            "${CMAKE_SOURCE}"/backend/wbpublic/objimpl/db.query/*.cpp
+
     # fix python detection
     edo sed -i \
             -e '/find_package(PythonLibs 2.6)/d' \
