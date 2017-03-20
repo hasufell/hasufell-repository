@@ -3,17 +3,22 @@
 
 SCM_REPOSITORY="https://github.com/gkdr/${PN}.git"
 SCM_axc_REPOSITORY="https://github.com/gkdr/axc.git"
+SCM_signal_REPOSITORY="https://github.com/WhisperSystems/libsignal-protocol-c.git"
 SCM_omemo_REPOSITORY="https://github.com/gkdr/libomemo.git"
 SCM_SECONDARY_REPOSITORIES="
     axc
+    signal
     omemo
 "
 SCM_EXTERNAL_REFS="
     lib/axc:axc
     lib/libomemo:omemo
 "
+SCM_axc_EXTERNAL_REFS="
+    lib/libsignal-protocol-c:signal
+"
 
-CMAKE_SOURCE=${WORK}/lib/axc/lib/libaxolotl-c
+CMAKE_SOURCE=${WORK}/lib/axc/lib/libsignal-protocol-c
 
 require cmake [ api=2 out_of_source=false ] # don't let cmake mess with $WORK
 require scm-git
@@ -41,6 +46,10 @@ DEPENDENCIES="
 
 BUGS_TO="hasufell@posteo.de"
 REMOTE_IDS="github:gkdr/${PN}"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DCMAKE_C_FLAGS="${CFLAGS} -fPIC"
+)
 
 src_prepare() {
     # cmake part of libaxolotl-c
