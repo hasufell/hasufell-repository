@@ -52,19 +52,19 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 )
 
 src_prepare() {
-    # cmake part of libaxolotl-c
+    # cmake part of libsignal-protocol-c
     edo mkdir "${CMAKE_SOURCE}"/build
     default
 }
 
 src_configure() {
-    # cmake part of libaxolotl-c
+    # cmake part of libsignal-protocol-c
     edo cd "${CMAKE_SOURCE}"/build
     cmake_src_configure
 }
 
 src_compile() {
-    # cmake part of libaxolotl-c
+    # cmake part of libsignal-protocol-c
     emake -C "${CMAKE_SOURCE}"/build
 
     default
