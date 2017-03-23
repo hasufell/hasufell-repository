@@ -307,14 +307,6 @@ inox_src_prepare() {
     # TODO: package re2
     keeplibs+=( third_party/re2 )
 
-    # remove some of the bundled libraries
-    edo build/linux/unbundle/remove_bundled_libraries.py "${keeplibs[@]}" --do-remove
-
-    # TODO: Find out how to properly do this for GN and/or report upstream
-    edo sed \
-        -e "s:pkg_config = \"\":pkg_config = \"$(exhost --tool-prefix)pkg-config\":g" \
-        -i build/config/linux/pkg_config.gni
-
     # TODO: Find out how to properly do this for GN and/or report upstream
     # Fix this for multiarch by adding appropriate symlinks here and adding this directory to
     # the PATH
@@ -334,6 +326,14 @@ inox_src_prepare() {
     # and, they assume python is python2!
     edo ln -s /usr/host/bin/python2 ${dir}/python
     export PATH="${dir}:${PATH}"
+
+    # remove some of the bundled libraries
+    edo build/linux/unbundle/remove_bundled_libraries.py "${keeplibs[@]}" --do-remove
+
+    # TODO: Find out how to properly do this for GN and/or report upstream
+    edo sed \
+        -e "s:pkg_config = \"\":pkg_config = \"$(exhost --tool-prefix)pkg-config\":g" \
+        -i build/config/linux/pkg_config.gni
 }
 
 inox_src_configure() {
