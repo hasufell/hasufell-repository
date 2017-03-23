@@ -408,12 +408,12 @@ inox_src_configure() {
     myconf_gn+=" use_gtk3=$(option providers:gtk3 true false)"
 
     # inox specific
+    myconf_gn+=" enable_webrtc=true" # prevents frequent crashes
     myconf_gn+=" enable_google_now=false"
     myconf_gn+=" enable_hangout_services_extension=false"
     myconf_gn+=" enable_hotwording=false"
     myconf_gn+=" enable_print_preview=false"
     myconf_gn+=" enable_remoting=false"
-    myconf_gn+=" enable_webrtc=false"
     myconf_gn+=" safe_browsing_mode=0"
     myconf_gn+=" use_allocator=\"none\""
 
