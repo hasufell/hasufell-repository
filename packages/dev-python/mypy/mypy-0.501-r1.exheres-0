@@ -30,10 +30,11 @@ DEPENDENCIES="
 
 BUGS_TO="hasufell@posteo.de"
 
-src_install() {
-    setup-py_src_install
+prepare_one_multibuild() {
+    edo sed -i \
+            -e "/target = /s|lib|$(exhost --target)/lib|" \
+            setup.py
 
-    # misplaced and obsolete
-    edo rm -r "${IMAGE}"/usr/lib
+    setup-py_prepare_one_multibuild
 }
 
