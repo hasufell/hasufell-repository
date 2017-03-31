@@ -1,0 +1,26 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_SECONDARY_REPOSITORIES="typeshed"
+SCM_typeshed_REPOSITORY="https://github.com/python/typeshed.git"
+SCM_EXTERNAL_REFS="typeshed:typeshed"
+
+require pypi
+require setup-py [ import=distutils blacklist=3 ]
+require github [ user="google" ]
+
+SUMMARY="A static type inferencer for Python code"
+DOWNLOADS=""
+
+LICENCES="Apache-2.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/PyYAML[>=3.11][python_abis:*(-)?]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
