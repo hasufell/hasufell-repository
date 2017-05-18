@@ -1,4 +1,4 @@
-# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 require desktop-utils gtk-icon-cache
@@ -24,7 +24,7 @@ DEPENDENCIES="
         x11-proto/xproto
     build+run:
         dev-libs/d0_blind_id
-        media-libs/SDL:0[X]
+        media-libs/SDL:2[X]
         media-libs/freetype:2
         media-libs/libmodplug
         media-libs/libogg
