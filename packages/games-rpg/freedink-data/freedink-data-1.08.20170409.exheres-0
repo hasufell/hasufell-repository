@@ -1,0 +1,29 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Data files for Freedink"
+HOMEPAGE="http://www.freedink.org/"
+DOWNLOADS="mirror://gnu/freedink/${PNV}.tar.gz"
+
+LICENCES="
+    CCPL-Attribution-3.0
+    CCPL-Attribution-ShareAlike-3.0
+    FreeArt
+    GPL-2
+    GPL-3
+    OAL-1.0.1
+    WTFPL-2
+    ZLIB
+    public-domain
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    DESTDIR="${IMAGE}"
+    DATADIR="/usr/share"
+)
+
