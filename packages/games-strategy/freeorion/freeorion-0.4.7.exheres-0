@@ -1,9 +1,9 @@
-# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 CMAKE_SOURCE=${WORKBASE}/src-tarball
 
-require github [ user=${PN} release=v${PV} pnv=FreeOrion_v${PV}_2016-09-16.49f9123_Source suffix=tar.gz ]
+require github [ user=${PN} release=v${PV} pnv=FreeOrion_v${PV}_2017-04-24.60d06dc_Source suffix=tar.gz ]
 require cmake [ api=2 ]
 require gtk-icon-cache
 
