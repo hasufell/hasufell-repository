@@ -34,9 +34,11 @@ DEPENDENCIES="
 BUGS_TO="hasufell@posteo.de"
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DSOLARUS_USE_LUAJIT=OFF
+    -DCMAKE_INSTALL_PREFIX="/usr"
     -DSOLARUS_INCLUDE_DIR="/usr/$(exhost --target)/include/solarus"
+    -DSOLARUS_INSTALL_BINDIR="/usr/$(exhost --target)/bin"
     -DSOLARUS_LIBRARY="/usr/$(exhost --target)/lib/libsolarus.so"
+    -DSOLARUS_USE_LUAJIT=OFF
 )
 
 src_prepare() {
@@ -46,15 +48,11 @@ src_prepare() {
         -e "s#^Exec=.*#Exec=${PN}#" \
         -e "s#^Icon=.*#Icon=${PN}#" \
         "${CMAKE_SOURCE}"/resources/solarus-quest-editor.desktop
-}
 
-src_install() {
-    dobin solarus-quest-editor
-
-    insinto /usr/share/applications
-    doins "${CMAKE_SOURCE}"/resources/solarus-quest-editor.desktop
-
-    insinto /usr/share/icons/hicolor/128x128/apps
-    newins "${CMAKE_SOURCE}"/images/icon/sqe-icon-png-128px.png ${PN}.png
+    # code doesn't expect share and bin to have different prefixes, although
+    # cmake allows it
+    edo sed -i \
+        -e '/bool running_installed_executable = /s#executable_path == .*$#executable_path == "/usr/'$(exhost --target)'/bin");#' \
+            "${CMAKE_SOURCE}"/src/file_tools.cpp
 }
 
