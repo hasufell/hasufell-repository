@@ -63,7 +63,6 @@ MYOPTIONS="
         sse2
     ( providers: jpeg-turbo )
     ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
-    ( providers: gtk2 gtk3 ) [[ number-selected = exactly-one ]]
 "
 
 # http://crbug.com/62803 tracks the addition of a use_openssl option. Once that bug is closed,
@@ -74,8 +73,10 @@ MYOPTIONS="
 # TODO: GN build with system speech dispatcher and libevent
 #  app-speech/speechd[>=0.8]
 #  dev-libs/libevent[>=1.4.13]
+#  media-libs/libvpx[>=1.6.0-r1]
 DEPENDENCIES="
     build:
+        dev-lang/node
         dev-lang/python:*[>=2.5&<3]
         dev-lang/yasm
         dev-perl/Switch
@@ -84,7 +85,6 @@ DEPENDENCIES="
         dev-python/simplejson[python_abis:2.7]
         dev-scm/git [[ note = [ https://bugs.gentoo.org/show_bug.cgi?id=593476 ] ]]
         dev-util/gperf[>=3.0.4]
-        media-libs/libexif
         sys-devel/bison
         sys-devel/ninja
     build+run:
@@ -99,15 +99,12 @@ DEPENDENCIES="
         dev-libs/libxslt[>=1.1.26]
         dev-libs/nspr[>=4.0]
         dev-libs/nss[>=3.12.3] [[ note = [ see base/nss_util.cc for the version requirement ] ]]
-        fonts/corefonts
         media-libs/flac
         media-libs/fontconfig
         media-libs/freetype:2
         media-libs/libpng:=[>=1.2.37]
-        media-libs/libvpx[>=1.6.0-r1]
         media-libs/libwebp:=[>=0.4]
         media-libs/opus[>=1.1-r1]
-        media-libs/speex
         net-libs/libsrtp
         sys-apps/dbus
         sys-apps/pciutils
@@ -118,11 +115,9 @@ DEPENDENCIES="
         virtual/usb:1
         x11-libs/cairo[X]
         x11-libs/gdk-pixbuf:2.0
-        providers:gtk2? ( x11-libs/gtk+:2[>=2.16] )
-        providers:gtk3? ( x11-libs/gtk+:3 )
-        x11-libs/harfbuzz
-        x11-libs/libxcb
+        x11-libs/harfbuzz[>=1.4.2]
         x11-libs/libX11
+        x11-libs/libxcb
         x11-libs/libXScrnSaver
         x11-libs/libXcomposite
         x11-libs/libXcursor
@@ -137,13 +132,14 @@ DEPENDENCIES="
         cups? (
             dev-libs/libgcrypt
             net-print/cups
-            providers:gtk2? ( x11-libs/gtk+:2[>=2.16][cups] )
-            providers:gtk3? ( x11-libs/gtk+:3[cups] )
         )
         gconf? ( gnome-platform/GConf:2 )
         keyring? ( gnome-desktop/libgnome-keyring:1 )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         pulseaudio? ( media-sound/pulseaudio )
+    run:
+        x11-libs/gtk+:3
+        cups? ( x11-libs/gtk+:3[cups] )
     recommendation:
         fonts/corefonts [[ description = [ Needed to display some websites ] ]]
         x11-apps/xdg-utils [[ description = [ Set as default browser. Use application launchers for downloaded files (only for Gnome/KDE/Xfce) ] ]]
@@ -181,6 +177,10 @@ inox_src_prepare() {
     expatch "${WORKBASE}"/inox-patchset-${PATCHSET}/
 
     default
+
+    # setup nodejs
+    edo mkdir -p third_party/node/linux/node-linux-x64/bin
+    edo ln -s /usr/host/bin/node third_party/node/linux/node-linux-x64/bin/node
 
     local keeplibs=(
         base/third_party/dmg_fp
@@ -253,6 +253,8 @@ inox_src_prepare() {
         third_party/mesa
         third_party/modp_b64
         third_party/mt19937ar
+        third_party/node
+        third_party/node/node_modules/vulcanize/third_party/UglifyJS2
         third_party/openh264
         third_party/openmax_dl
         third_party/opus
@@ -307,6 +309,18 @@ inox_src_prepare() {
     # TODO: package re2
     keeplibs+=( third_party/re2 )
 
+    # TODO: keep libvpx (58.0.3029.81 fails to compile with the current libvpx-1.6.1)
+    keeplibs+=( third_party/libvpx )
+    keeplibs+=( third_party/libvpx/source/libvpx/third_party/x86inc )
+
+    # remove some of the bundled libraries
+    edo build/linux/unbundle/remove_bundled_libraries.py "${keeplibs[@]}" --do-remove
+
+    # TODO: Find out how to properly do this for GN and/or report upstream
+    edo sed \
+        -e "s:pkg_config = \"\":pkg_config = \"$(exhost --tool-prefix)pkg-config\":g" \
+        -i build/config/linux/pkg_config.gni
+
     # TODO: Find out how to properly do this for GN and/or report upstream
     # Fix this for multiarch by adding appropriate symlinks here and adding this directory to
     # the PATH
@@ -326,19 +340,12 @@ inox_src_prepare() {
     # and, they assume python is python2!
     edo ln -s /usr/host/bin/python2 ${dir}/python
     export PATH="${dir}:${PATH}"
-
-    # remove some of the bundled libraries
-    edo build/linux/unbundle/remove_bundled_libraries.py "${keeplibs[@]}" --do-remove
-
-    # TODO: Find out how to properly do this for GN and/or report upstream
-    edo sed \
-        -e "s:pkg_config = \"\":pkg_config = \"$(exhost --tool-prefix)pkg-config\":g" \
-        -i build/config/linux/pkg_config.gni
 }
 
 inox_src_configure() {
     # re2: not yet packaged
     # libevent: https://bugs.gentoo.org/593458
+    # libvpx: 58.0.3029.81 fails to compile
     # ffmpeg: unknown
     local gn_system_libraries="
         flac
@@ -346,7 +353,6 @@ inox_src_configure() {
         icu
         libjpeg
         libpng
-        libvpx
         libwebp
         libxml
         libxslt
@@ -405,17 +411,19 @@ inox_src_configure() {
     # hard disable kerberos support (requires heimdal)
     myconf_gn+=" use_kerberos=false"
 
-    myconf_gn+=" use_gtk3=$(option providers:gtk3 true false)"
+    # GTK3 build
+    myconf_gn+=" use_gtk3=true"
 
     # inox specific
-    myconf_gn+=" enable_webrtc=true" # prevents frequent crashes
-    myconf_gn+=" enable_google_now=false"
     myconf_gn+=" enable_hangout_services_extension=false"
+    myconf_gn+=" enable_rlz=false"
+    myconf_gn+=" enable_rlz_support=false"
+    myconf_gn+=" enable_remoting=false"
+    myconf_gn+=" enable_google_now=false"
+    myconf_gn+=" safe_browsing_mode=0"
+    myconf_gn+=" enable_webrtc=true" # prevents frequent crashes
     myconf_gn+=" enable_hotwording=false"
     myconf_gn+=" enable_print_preview=false"
-    myconf_gn+=" enable_remoting=false"
-    myconf_gn+=" safe_browsing_mode=0"
-    myconf_gn+=" use_allocator=\"none\""
 
     # Update strings
     edo third_party/libaddressinput/chromium/tools/update-strings.py
@@ -425,7 +433,7 @@ inox_src_configure() {
     edo touch chrome/test/data/webui/i18n_process_css_test.html
 
     # GN configure
-    edo tools/gn/bootstrap/bootstrap.py -v --gn-gen-args "${myconf_gn}"
+    edo tools/gn/bootstrap/bootstrap.py -v --no-clean --gn-gen-args "${myconf_gn}"
     edo out/Release/gn gen --args="${myconf_gn}" out/Release
 }
 
