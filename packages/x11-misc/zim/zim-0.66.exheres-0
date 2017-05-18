@@ -34,6 +34,10 @@ DEPENDENCIES="
         sci-apps/gnuplot
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/c951d49a643c140eb2eadafade92db40cad61740.patch
+)
+
 SETUP_PY_SRC_INSTALL_PARAMS=(
     --skip-xdg-cmd
 )

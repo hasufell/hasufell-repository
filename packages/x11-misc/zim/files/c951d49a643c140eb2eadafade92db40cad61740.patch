@@ -1,0 +1,436 @@
+From c951d49a643c140eb2eadafade92db40cad61740 Mon Sep 17 00:00:00 2001
+From: Jaap Karssenberg <jaap.karssenberg@gmail.com>
+Date: Tue, 9 May 2017 09:58:10 +0200
+Subject: [PATCH] Fix for logger missing in newfs - issue #23
+
+Added test to detect this common error
+Also converted zim/newfs/__init__.py to use unix line end
+---
+ tests/package.py           |   7 +
+ zim/config/__init__.py     |   6 +-
+ zim/formats/wiki.py        |   2 -
+ zim/newfs/__init__.py      | 315 +++++++++++++++++++++++----------------------
+ zim/newfs/base.py          |   2 +-
+ zim/newfs/local.py         |   4 +
+ zim/templates/processor.py |   1 -
+ 7 files changed, 176 insertions(+), 161 deletions(-)
+
+diff --git a/tests/package.py b/tests/package.py
+index 4cea073..eea34ca 100644
+--- a/tests/package.py
++++ b/tests/package.py
+@@ -206,6 +206,13 @@ def testIndenting(self):
+ 					self.assertFalse(' ' in indent, 'Indenting should use tabs - file: %s line %s' % (file, lineno))
+ 				start_block = def_line and line.rstrip().endswith(':')
+ 
++	def testLoggerDefined(self):
++		# Common to forget this import, and only notice it when an exception
++		# happens much later
++		for file, code in self.list_code():
++			if 'logger.' in code:
++				assert 'logger = logging.getLogger(' in code, 'Forgot to define "logger" in %s' % file
++
+ 
+ class TestDocumentation(tests.TestCase):
+ 
+diff --git a/zim/config/__init__.py b/zim/config/__init__.py
+index 38e8a8b..bfc26a0 100644
+--- a/zim/config/__init__.py
++++ b/zim/config/__init__.py
+@@ -2,6 +2,11 @@
+ 
+ # Copyright 2009-2013 Jaap Karssenberg <jaap.karssenberg@gmail.com>
+ 
++import logging
++
++logger = logging.getLogger('zim.config')
++
++
+ from .basedirs import *
+ from .dicts import *
+ from .manager import *
+@@ -116,4 +121,3 @@ def user_dirs():
+ 	except FileNotFoundError:
+ 		pass
+ 	return dirs
+-
+diff --git a/zim/formats/wiki.py b/zim/formats/wiki.py
+index b4c731e..4e88d52 100644
+--- a/zim/formats/wiki.py
++++ b/zim/formats/wiki.py
+@@ -563,7 +563,6 @@ def dump_img(self, tag, attrib, strings=None):
+ 		# TODO use text for caption (with full recursion)
+ 
+ 	def dump_object(self, tag, attrib, strings=None):
+-		#~ logger.debug("Dumping object: %s, %s", attrib, strings)
+ 		assert "type" in attrib, "Undefined type of object"
+ 
+ 		opts = []
+@@ -615,7 +614,6 @@ def dump_td(self, tag, attrib, strings):
+ 			return [self._concat(strings)]
+ 
+ 	def dump_line(self, tag, attrib, strings = None):
+-		#logger.debug("Dumping line tag:%s, attrib:%s, strings:%s", tag, attrib, strings)
+ 		if not strings:
+ 			strings = [LINE_TEXT]
+ 		elif isinstance(strings, basestring):
+diff --git a/zim/newfs/__init__.py b/zim/newfs/__init__.py
+index fb9424f..dda81a6 100644
+--- a/zim/newfs/__init__.py
++++ b/zim/newfs/__init__.py
+@@ -1,156 +1,159 @@
+-# -*- coding: utf-8 -*-
+-
+-# Copyright 2015-2016 Jaap Karssenberg <jaap.karssenberg@gmail.com>
+-
+-'''Module which contains all classes to deal with the filesystem'''
+-
+-import sys
+-import os
+-
+-FS_CASE_SENSITIVE = (os.name != 'nt') #: file system case-sensitive yes or no
+-
+-FS_SUPPORT_NON_LOCAL_FILE_SHARES = (os.name == 'nt') #: Support \\host\share paths yes or no
+-
+-FS_ENCODING = sys.getfilesystemencoding() #: file system encoding for paths
+-if FS_ENCODING.upper() in (
+-	'ASCII', 'US-ASCII', 'ANSI_X3.4-1968', 'ISO646-US', # some aliases for ascii
+-	'LATIN1', 'ISO-8859-1', 'ISO_8859-1', 'ISO_8859-1:1987', # aliases for latin1
+-):
+-	logger.warn('Filesystem encoding is set to ASCII or Latin1, using UTF-8 instead')
+-	FS_ENCODING = 'utf-8'
+-
+-
+-from .base import *
+-from .base import _SEP, _EOL, _HOME
+-from .local import *
+-from .helpers import *
+-
+-
+-# Functions
+-# - (relative) pathname manipulation - specifically for links
+-# - file/folder info - iswritable, mtime, ctime, exists
+-# - file info - mimetype, size, (thumbnail)
+-# - file access - read, write, touch, remove (clear)
+-# - folder access - list, touch, remove, file, folder, child
+-# - tree operations - move, copy
+-# - signal changes (internal) - specifically for version control
+-# - monitor changes (external) - specifically to pick up changes in open page
+-
+-# OS dependent
+-# - pathname should support all variants, cross platform
+-# - path encoding for low level functions
+-# - atomic rename for writing
+-
+-# Classes
+-# - FilePath - pathname manipulation
+-# - File - base class for files
+-# - Folder - base class for folders
+-
+-# local file system:
+-# - LocalFSObjectBase - file / folder info
+-# - LocalFile - file info + file access + tree operations
+-# - LocalFolder - folder access + tree operation
+-
+-# helpers:
+-# - FolderMask - wraps a Folder and exposes part of children, disables all but list()
+-# - FSObjectMonitor - monitor single file or folder for external changes
+-#	- ObjectMonitorFallback - at least report internal changes
+-# - FSTreeMonitor - monitor internal changes, passes itself as "logger" to children
+-
+-
+-# Key is that we always use objects to signal file vs folder,
+-# get rid of all uses of "isdir" because it shows a constructor issue.
+-# Instead use "folder.child(path)" to get either file or folder.
+-# Also no common FS object, just construct the parent folder first
+-#
+-# When instatiating you need to use specific LocalFolder or LocalFile
+-# this will alert you to the non-mockable nature of the code
+-#
+-# This also means that folder provide access to children, not parents
+-# if a object needs access to larger file system, a root folder
+-# should be passed as a requirement to the constructor; else you can
+-# not mock the function for testing.
+-
+-# TODO
+-# - test on FAT file system - e.g. USB stick ?
+-
+-# TODO - put in helper modules:
+-# - trash - optional, only support for local file - separate gui object
+-# - monitor with gio - separate gui object
+-# - thumbnailer - separate gui object
+-
+-# TODO - don't do
+-# - lock for fs operations --> checkin / checkout mechanism in notebook, use notebook lock
+-
+-# With respect to page interface:
+-# Page.source is used for:
+-# - StubLinker - export with links to real source
+-# - cusomt tools to get commandline arg
+-# - edit source command
+-# - versioncontrol & zeitgeist logger plugins
+-#   --> these are also only one interested in FS signals
+-# --> very limitted access needed
+-
+-# Re checkin//checkout --> only needed for interface editing page
+-# implement by setting callbacks that can be called by the notebook
+-# before any operation.
+-# notebook.checkout(page, callback)
+-# notebook.checkin(page)
+-# notebook.update_checked_pages()
+-#   called automatically by most methods, call explicitly from export
+-#
+-# by calling all callbacks *before* any action we allow for error dialogs
+-# etc before modification - no surprises once running
+-# --> Make it a context manager lock to block checkout during operation etc.
+-
+-
+-
+-
+-
+-
+-def localFileOrFolder(path):
+-	'''Convenience method that resolves a local C{File} or C{Folder} object'''
+-	path = FilePath(path)
+-	try:
+-		return LocalFolder(path.dirname).child(path.basename)
+-	except FileNotFoundError:
+-		raise FileNotFoundError(path)
+-
+-
+-def cleanup_filename(name):
+-	'''Removes all characters in 'name' that are not allowed as part
+-	of a file name. This function is intended for e.g. config files etc.
+-	B{not} for page files in a store.
+-	For file system filenames we can not use:
+-	'\\', '/', ':', '*', '?', '"', '<', '>', '|'
+-	And we also exclude "\\t" and "\\n".
+-	@param name: the filename as string
+-	@returns: the name with invalid characters removed
+-	'''
+-	for char in ("/", "\\", ":", "*", "?", '"', "<", ">", "|", "\t", "\n"):
+-		name = name.replace(char, '')
+-	return name
+-
+-
+-def format_file_size(bytes):
+-	'''Returns a human readable label  for a file size
+-	E.g. C{1230} becomes C{"1.23kb"}, idem for "Mb" and "Gb"
+-	@param bytes: file size in bytes as integer
+-	@returns: size as string
+-	'''
+-	for unit, label in (
+-		(1000000000, 'Gb'),
+-		(1000000, 'Mb'),
+-		(1000, 'kb'),
+-	):
+-		if bytes >= unit:
+-			size = float(bytes) / unit
+-			if size < 10:
+-				return "%.2f%s" % (size, label)
+-			elif size < 100:
+-				return "%.1f%s" % (size, label)
+-			else:
+-				return "%.0f%s" % (size, label)
+-	else:
+-		return str(bytes) + 'b'
+-
++# -*- coding: utf-8 -*-
++
++# Copyright 2015-2016 Jaap Karssenberg <jaap.karssenberg@gmail.com>
++
++'''Module which contains all classes to deal with the filesystem'''
++
++import sys
++import os
++import logging
++
++logger = logging.getLogger('zim.newfs')
++
++
++FS_CASE_SENSITIVE = (os.name != 'nt') #: file system case-sensitive yes or no
++
++FS_SUPPORT_NON_LOCAL_FILE_SHARES = (os.name == 'nt') #: Support \\host\share paths yes or no
++
++FS_ENCODING = sys.getfilesystemencoding() #: file system encoding for paths
++if FS_ENCODING.upper() in (
++	'ASCII', 'US-ASCII', 'ANSI_X3.4-1968', 'ISO646-US', # some aliases for ascii
++	'LATIN1', 'ISO-8859-1', 'ISO_8859-1', 'ISO_8859-1:1987', # aliases for latin1
++):
++	logger.warn('Filesystem encoding is set to ASCII or Latin1, using UTF-8 instead')
++	FS_ENCODING = 'utf-8'
++
++
++from .base import *
++from .base import _SEP, _EOL, _HOME
++from .local import *
++from .helpers import *
++
++
++# Functions
++# - (relative) pathname manipulation - specifically for links
++# - file/folder info - iswritable, mtime, ctime, exists
++# - file info - mimetype, size, (thumbnail)
++# - file access - read, write, touch, remove (clear)
++# - folder access - list, touch, remove, file, folder, child
++# - tree operations - move, copy
++# - signal changes (internal) - specifically for version control
++# - monitor changes (external) - specifically to pick up changes in open page
++
++# OS dependent
++# - pathname should support all variants, cross platform
++# - path encoding for low level functions
++# - atomic rename for writing
++
++# Classes
++# - FilePath - pathname manipulation
++# - File - base class for files
++# - Folder - base class for folders
++
++# local file system:
++# - LocalFSObjectBase - file / folder info
++# - LocalFile - file info + file access + tree operations
++# - LocalFolder - folder access + tree operation
++
++# helpers:
++# - FolderMask - wraps a Folder and exposes part of children, disables all but list()
++# - FSObjectMonitor - monitor single file or folder for external changes
++#	- ObjectMonitorFallback - at least report internal changes
++# - FSTreeMonitor - monitor internal changes, passes itself as "logger" to children
++
++
++# Key is that we always use objects to signal file vs folder,
++# get rid of all uses of "isdir" because it shows a constructor issue.
++# Instead use "folder.child(path)" to get either file or folder.
++# Also no common FS object, just construct the parent folder first
++#
++# When instatiating you need to use specific LocalFolder or LocalFile
++# this will alert you to the non-mockable nature of the code
++#
++# This also means that folder provide access to children, not parents
++# if a object needs access to larger file system, a root folder
++# should be passed as a requirement to the constructor; else you can
++# not mock the function for testing.
++
++# TODO
++# - test on FAT file system - e.g. USB stick ?
++
++# TODO - put in helper modules:
++# - trash - optional, only support for local file - separate gui object
++# - monitor with gio - separate gui object
++# - thumbnailer - separate gui object
++
++# TODO - don't do
++# - lock for fs operations --> checkin / checkout mechanism in notebook, use notebook lock
++
++# With respect to page interface:
++# Page.source is used for:
++# - StubLinker - export with links to real source
++# - cusomt tools to get commandline arg
++# - edit source command
++# - versioncontrol & zeitgeist logger plugins
++#   --> these are also only one interested in FS signals
++# --> very limitted access needed
++
++# Re checkin//checkout --> only needed for interface editing page
++# implement by setting callbacks that can be called by the notebook
++# before any operation.
++# notebook.checkout(page, callback)
++# notebook.checkin(page)
++# notebook.update_checked_pages()
++#   called automatically by most methods, call explicitly from export
++#
++# by calling all callbacks *before* any action we allow for error dialogs
++# etc before modification - no surprises once running
++# --> Make it a context manager lock to block checkout during operation etc.
++
++
++
++
++
++
++def localFileOrFolder(path):
++	'''Convenience method that resolves a local C{File} or C{Folder} object'''
++	path = FilePath(path)
++	try:
++		return LocalFolder(path.dirname).child(path.basename)
++	except FileNotFoundError:
++		raise FileNotFoundError(path)
++
++
++def cleanup_filename(name):
++	'''Removes all characters in 'name' that are not allowed as part
++	of a file name. This function is intended for e.g. config files etc.
++	B{not} for page files in a store.
++	For file system filenames we can not use:
++	'\\', '/', ':', '*', '?', '"', '<', '>', '|'
++	And we also exclude "\\t" and "\\n".
++	@param name: the filename as string
++	@returns: the name with invalid characters removed
++	'''
++	for char in ("/", "\\", ":", "*", "?", '"', "<", ">", "|", "\t", "\n"):
++		name = name.replace(char, '')
++	return name
++
++
++def format_file_size(bytes):
++	'''Returns a human readable label  for a file size
++	E.g. C{1230} becomes C{"1.23kb"}, idem for "Mb" and "Gb"
++	@param bytes: file size in bytes as integer
++	@returns: size as string
++	'''
++	for unit, label in (
++		(1000000000, 'Gb'),
++		(1000000, 'Mb'),
++		(1000, 'kb'),
++	):
++		if bytes >= unit:
++			size = float(bytes) / unit
++			if size < 10:
++				return "%.2f%s" % (size, label)
++			elif size < 100:
++				return "%.1f%s" % (size, label)
++			else:
++				return "%.0f%s" % (size, label)
++	else:
++		return str(bytes) + 'b'
+diff --git a/zim/newfs/base.py b/zim/newfs/base.py
+index 59ee702..c14310d 100644
+--- a/zim/newfs/base.py
++++ b/zim/newfs/base.py
+@@ -11,7 +11,7 @@
+ 
+ import logging
+ 
+-logger = logging.getLogger('zim.fs')
++logger = logging.getLogger('zim.newfs')
+ 
+ 
+ from . import FS_ENCODING, FS_SUPPORT_NON_LOCAL_FILE_SHARES
+diff --git a/zim/newfs/local.py b/zim/newfs/local.py
+index 89edb5f..c9a3aa8 100644
+--- a/zim/newfs/local.py
++++ b/zim/newfs/local.py
+@@ -13,6 +13,10 @@
+ import tempfile
+ import errno
+ 
++import logging
++
++logger = logging.getLogger('zim.newfs')
++
+ 
+ from . import FS_CASE_SENSITIVE, FS_ENCODING
+ from .base import *
+diff --git a/zim/templates/processor.py b/zim/templates/processor.py
+index fc44d2d..b9157e9 100644
+--- a/zim/templates/processor.py
++++ b/zim/templates/processor.py
+@@ -141,7 +141,6 @@ def __call__(self, output, elements, context):
+ 				else:
+ 					raise AssertionError, 'Unknown instruction: %s' % element.tag
+ 			except:
+-				#~ logger.exception('Exception in template')
+ 				raise
+ 
+ 	def _loop(self, output, element, context):
