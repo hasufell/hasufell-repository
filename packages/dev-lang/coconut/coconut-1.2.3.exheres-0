@@ -28,10 +28,10 @@ RESTRICT="test" # missing deps
 
 DEPENDENCIES="
     build+run:
-        dev-python/Pygments[>=2.2&<2.3][python_abis:*(-)?]
-        dev-python/prompt_toolkit[>=1.0&<1.1][python_abis:*(-)?]
-        dev-python/pyparsing[>=2.1.10&<2.1.11][python_abis:*(-)?]
-        python_abis:2.7? ( dev-python/futures[>=3.0&<3.1][python_abis:2.7] )
+        dev-python/Pygments[>=2.2][python_abis:*(-)?]
+        dev-python/prompt_toolkit[>=1.0][python_abis:*(-)?]
+        dev-python/pyparsing[>=2.2.0&<2.2.1][python_abis:*(-)?]
+        python_abis:2.7? ( dev-python/futures[>=3.1][python_abis:2.7] )
     suggestion:
         dev-python/mypy [[ description = [ coconut can run mypy on the compiled python code ] ]]
 "
