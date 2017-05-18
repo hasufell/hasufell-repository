@@ -16,14 +16,9 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        dev-db/sqlite:3[>=3.12.1]
+        dev-db/sqlite:3[>=3.18.0]
         x11-libs/wxGTK:${SLOT}[providers:gtk3?][providers:gtk2?]
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-Fix-wxsqlite3.pc.patch
-    "${FILES}"/${PNV}-Install-wxsqlite3.pc.patch
-)
 
 src_configure() {
     econf \
