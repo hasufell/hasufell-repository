@@ -3,6 +3,7 @@
 
 require lua [ whitelist="5.1" multibuild=false ]
 require cmake [ api=2 ]
+require gtk-icon-cache
 
 SUMMARY="An open-source Zelda-like 2D game engine"
 HOMEPAGE="http://www.solarus-games.org/"
@@ -27,12 +28,10 @@ DEPENDENCIES="
 "
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DSOLARUS_INSTALL_DESTINATION="/usr/$(exhost --target)/bin"
+    -DCMAKE_INSTALL_PREFIX="/usr"
+    -DSOLARUS_EXECUTABLE_INSTALL_DESTINATION="/usr/$(exhost --target)/bin"
+    -DSOLARUS_HEADERS_INSTALL_DESTINATION="/usr/$(exhost --target)/include"
+    -DSOLARUS_LIBRARY_INSTALL_DESTINATION="/usr/$(exhost --target)/lib"
     -DSOLARUS_USE_LUAJIT=OFF
 )
-
-src_install() {
-    cmake_src_install
-    doman "${CMAKE_SOURCE}"/solarus.6
-}
 
