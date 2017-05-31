@@ -1,0 +1,19 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="C function call hierarchy analyzer"
+HOMEPAGE="https://www.gnu.org/software/cflow/"
+DOWNLOADS="https://ftp.gnu.org/gnu/cflow/${PNV}.tar.xz"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        sys-devel/gettext
+"
+
+BUGS_TO="hasufell@posteo.de"
+
