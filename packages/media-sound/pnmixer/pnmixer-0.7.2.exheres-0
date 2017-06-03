@@ -7,7 +7,3 @@ require pnmixer [ release=v${PV/_rc/-rc} ]
 SLOT="0"
 PLATFORMS="~amd64"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/e28f40d13da702dd5074b85996ea520006f6d3fb.patch
-)
-
