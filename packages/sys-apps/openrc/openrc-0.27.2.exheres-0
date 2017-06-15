@@ -87,11 +87,12 @@ src_compile() {
 
     MAKE_ARGS="
         ${DEFAULT_SRC_COMPILE_PARAMS[@]}
-        MKNET=$(option newnet yes no)
-        MKSELINUX=no
         MKAUDIT=no
+        MKNET=$(option newnet yes no)
         MKPAM=$(optionv pam)
+        MKSELINUX=no
         MKSTATICLIBS=no
+        MKSYSVINIT=no
     "
 
     emake ${MAKE_ARGS}
