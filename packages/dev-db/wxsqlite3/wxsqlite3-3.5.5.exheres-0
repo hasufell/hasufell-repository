@@ -16,7 +16,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        dev-db/sqlite:3[>=3.18.0]
+        dev-db/sqlite:3[>=3.19.3]
         x11-libs/wxGTK:${SLOT}[providers:gtk3?][providers:gtk2?]
 "
 
