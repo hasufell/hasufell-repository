@@ -1,8 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require github [ user=arx project=ArxLibertatis tag=${PV/_p/-r} ]
 require cmake [ api=2 ] gtk-icon-cache
-require sourceforge [ project=arx suffix=tar.xz ]
 
 SUMMARY="Cross-platform port of Arx Fatalis, a first-person role-playing game"
 HOMEPAGE="http://arx-libertatis.org/"
@@ -26,12 +26,6 @@ DEPENDENCIES="
                                                 from CD, used by the
                                                 arx-install-data tool ] ]]
 "
-
-REMOTE_IDS+=" github:arx/ArxLibertatis"
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-fix-cmake-build.patch
-)
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBUILD_EDITOR=OFF
