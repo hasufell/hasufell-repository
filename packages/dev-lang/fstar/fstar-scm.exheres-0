@@ -1,13 +1,24 @@
-# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2016-2017 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 SCM_SECONDARY_REPOSITORIES="
     openssl
+    boringssl
+    krb5
+    pyca
 "
-SCM_openssl_REPOSITORY="git://github.com/openssl/openssl.git"
 SCM_EXTERNAL_REFS="
     ucontrib/CoreCrypto/ml/openssl:openssl
 "
+SCM_openssl_REPOSITORY="git://github.com/openssl/openssl.git"
+SCM_openssl_EXTERNAL_REFS="
+    boringssl:boringssl
+    krb5:krb5
+    pyca-cryptography:pyca
+"
+SCM_boringssl_REPOSITORY="https://boringssl.googlesource.com/boringssl"
+SCM_krb5_REPOSITORY="https://github.com/krb5/krb5"
+SCM_pyca_REPOSITORY="https://github.com/pyca/cryptography.git"
 
 require github [ user="FStarLang" project="FStar" ]
 
@@ -36,6 +47,7 @@ DEPENDENCIES="
         dev-ocaml/batteries
         dev-ocaml/findlib
         dev-ocaml/pprint
+        dev-ocaml/stdint
         dev-ocaml/yojson
         dev-ocaml/zarith
     build+run:
@@ -59,7 +71,7 @@ src_compile() {
 
 src_install() {
     insinto /usr/$(exhost --target)/lib/fstar
-    doins -r lib contrib bin
+    doins -r ulib ucontrib bin
     edo chmod +x "${IMAGE%/}"/usr/$(exhost --target)/lib/fstar/bin/{fstar.exe,fstar-any.sh,tests.exe,tests-mono.sh}
     dodoc -r doc/*
 
