@@ -1,0 +1,39 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=hasufell project=${PN/-rs/-rust} ]
+require cargo
+
+SUMMARY="Volume mixer for the system tray written in Rust"
+HOMEPAGE="https://github.com/hasufell/pnmixer-rust ${HOMEPAGE}"
+DOWNLOADS=""
+
+LICENCES="GPL-3.0"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="libnotify"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        dev-libs/glib:2
+        sys-sound/alsa-lib
+        x11-libs/gdk-pixbuf:2.0
+        x11-libs/gtk+:3[>=3.6.0]
+        x11-libs/libX11
+        libnotify? ( x11-libs/libnotify )
+    suggestion:
+        (
+            xfce-extra/xfce4-mixer
+        ) [[
+            *description = [ ${PN} can use a full mixer if available ]
+        ]]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+ECARGO_FEATURE_ENABLES=(
+    'libnotify notify'
+)
+
