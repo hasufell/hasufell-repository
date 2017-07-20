@@ -13,6 +13,12 @@ PLATFORMS="~amd64 ~x86"
 
 RESTRICT=test
 
+# Temponary fix, chromium doesn't package freetype2 anymore
+# https://groups.google.com/a/chromium.org/d/msg/chromium-packagers/wuInaKJkosg/kMfIV_7wDgAJ
+DOWNLOADS+="
+    https://chromium.googlesource.com/chromium/src/third_party/freetype2/+archive/5a3490e054bda8a318ebde482.tar.gz -> \
+        freetype2-5a3490e054bda8a318ebde482.tar.gz"
+
 # http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${PV}-1_amd64.deb
 # $ ar -x google-chrome-stable_${PV}-1_amd64.deb
 # $ tar xf data.tar.xz
@@ -22,6 +28,16 @@ WIDEVINE_VERSION=1.4.8.977
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-58.0.3029.81-skia-avx2.patch
 )
+
+src_unpack() {
+    unpack chromium-${PV}.tar.xz
+    unpack inox-patches-${PATCHSET}.tar.gz
+
+    # Temponary fix, chromium doesn't package freetype2 anymore
+    edo mkdir "${WORK}"/third_party/freetype/src
+    edo cd "${WORK}"/third_party/freetype/src
+    unpack freetype2-5a3490e054bda8a318ebde482.tar.gz
+}
 
 src_prepare() {
     inox_src_prepare

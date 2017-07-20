@@ -53,9 +53,10 @@ SLOT="0"
 MYOPTIONS="
     bindist
     cups
-    gconf
     keyring [[ description = [ Store passwords using GNOME Keyring ] ]]
     pulseaudio
+    suid-sandbox [[ description = [ Enable Chromium's SUID sandbox, only necessary for
+        kernels built without user namespaces ] ]]
     platform:
         amd64
         x86
@@ -72,7 +73,9 @@ MYOPTIONS="
 
 # TODO: GN build with system speech dispatcher and libevent
 #  app-speech/speechd[>=0.8]
+#  dev-libs/icu:=
 #  dev-libs/libevent[>=1.4.13]
+#  dev-libs/libxml2:2.0[>=2.6.32]
 #  media-libs/libvpx[>=1.6.0-r1]
 DEPENDENCIES="
     build:
@@ -94,8 +97,6 @@ DEPENDENCIES="
         dev-libs/dbus-glib:1[>=0.84]
         dev-libs/expat
         dev-libs/glib:2[>=2.26] [[ note = [ for gsettings ] ]]
-        dev-libs/icu:=
-        dev-libs/libxml2:2.0[>=2.6.32]
         dev-libs/libxslt[>=1.1.26]
         dev-libs/nspr[>=4.0]
         dev-libs/nss[>=3.12.3] [[ note = [ see base/nss_util.cc for the version requirement ] ]]
@@ -108,11 +109,10 @@ DEPENDENCIES="
         net-libs/libsrtp
         sys-apps/dbus
         sys-apps/pciutils
-        providers:eudev? ( sys-apps/eudev )
-        providers:systemd? ( sys-apps/systemd )
         sys-libs/zlib[>=1.2.7-r1]
         sys-sound/alsa-lib
         virtual/usb:1
+        x11-dri/libdrm
         x11-libs/cairo[X]
         x11-libs/gdk-pixbuf:2.0
         x11-libs/harfbuzz[>=1.4.2]
@@ -133,9 +133,10 @@ DEPENDENCIES="
             dev-libs/libgcrypt
             net-print/cups
         )
-        gconf? ( gnome-platform/GConf:2 )
         keyring? ( gnome-desktop/libgnome-keyring:1 )
+        providers:eudev? ( sys-apps/eudev )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+        providers:systemd? ( sys-apps/systemd )
         pulseaudio? ( media-sound/pulseaudio )
     run:
         x11-libs/gtk+:3
@@ -174,6 +175,9 @@ inox_src_prepare() {
     # this one is unneded and doesn't apply cleanly
     edo rm "${WORKBASE}"/inox-patchset-${PATCHSET}/*launcher-branding.patch
     # fire up the inox patches
+    edo sed -i \
+            -e 's|\/src\/ports|\/third_party\/skia\/src\/ports|' \
+            "${WORKBASE}"/inox-patchset-${PATCHSET}/0001-Clip-FreeType-glyph-bitmap-to-mask.patch
     expatch "${WORKBASE}"/inox-patchset-${PATCHSET}/
 
     default
@@ -226,6 +230,7 @@ inox_src_prepare() {
         third_party/fips181
         third_party/flatbuffers
         third_party/flot
+        third_party/freetype
         third_party/google_input_tools
         third_party/google_input_tools/third_party/closure_library
         third_party/google_input_tools/third_party/closure_library/third_party/closure
@@ -244,8 +249,9 @@ inox_src_prepare() {
         third_party/libsrtp
         third_party/libudev
         third_party/libusb
+        third_party/libva
         third_party/libwebm
-        third_party/libxml/chromium
+        third_party/libxml
         third_party/libyuv
         third_party/lss
         third_party/lzma_sdk
@@ -262,14 +268,13 @@ inox_src_prepare() {
         third_party/pdfium
         third_party/pdfium/third_party/agg23
         third_party/pdfium/third_party/base
+        third_party/pdfium/third_party/build
         third_party/pdfium/third_party/bigint
         third_party/pdfium/third_party/freetype
         third_party/pdfium/third_party/lcms2-2.6
-        third_party/pdfium/third_party/libjpeg
         third_party/pdfium/third_party/libopenjpeg20
         third_party/pdfium/third_party/libpng16
         third_party/pdfium/third_party/libtiff
-        third_party/pdfium/third_party/zlib_v128
         third_party/ply
         third_party/polymer
         third_party/protobuf
@@ -279,6 +284,10 @@ inox_src_prepare() {
         third_party/skia
         third_party/smhasher
         third_party/sqlite
+        third_party/swiftshader
+        third_party/swiftshader/third_party/llvm-subzero
+        third_party/swiftshader/third_party/pnacl-subzero
+        third_party/swiftshader/third_party/subzero
         third_party/tcmalloc
         third_party/usrsctp
         third_party/web-animations-js
@@ -313,6 +322,10 @@ inox_src_prepare() {
     keeplibs+=( third_party/libvpx )
     keeplibs+=( third_party/libvpx/source/libvpx/third_party/x86inc )
 
+    # TODO: keep icu (59.0.3071.86 fails to compile with the current icu-59.1
+    keeplibs+=( third_party/icu/common )
+    keeplibs+=( third_party/icu/source )
+
     # remove some of the bundled libraries
     edo build/linux/unbundle/remove_bundled_libraries.py "${keeplibs[@]}" --do-remove
 
@@ -343,18 +356,19 @@ inox_src_prepare() {
 }
 
 inox_src_configure() {
+    # icu: 59.0.3071.86 https://chromium-review.googlesource.com/c/505173/
     # re2: not yet packaged
     # libevent: https://bugs.gentoo.org/593458
     # libvpx: 58.0.3029.81 fails to compile
+    # libxml: 59.0.3071.86 https://bugs.gentoo.org/616818
     # ffmpeg: unknown
     local gn_system_libraries="
         flac
         harfbuzz-ng
-        icu
+        libdrm
         libjpeg
         libpng
         libwebp
-        libxml
         libxslt
         snappy
         yasm
@@ -376,6 +390,9 @@ inox_src_configure() {
     # GN needs explicit config for Debug/Release as opposed to inferring it from build directory
     myconf_gn+=" is_debug=false"
 
+    # Use tcmalloc
+    myconf_gn+=" use_allocator=\"tcmalloc\""
+
     # Disable nacl, we can't build without pnacl (http://crbug.com/269560)
     myconf_gn+=" enable_nacl=false"
 
@@ -393,6 +410,7 @@ inox_src_configure() {
     # Disable fatal linker warnings, Gentoo bug 506268
     myconf_gn+=" fatal_linker_warnings=false"
 
+    # Follow upstream advice on the chromium-packagers group
     myconf_gn+=" fieldtrial_testing_like_official_build=true"
 
     # FFmpeg handling
@@ -403,8 +421,8 @@ inox_src_configure() {
     # Options
     # TODO: link_pulseaudio=true for GN
     myconf_gn+=" enable_widevine=true"
+    myconf_gn+=" link_pulseaudio=$(option pulseaudio true false)"
     myconf_gn+=" use_cups=$(option cups true false)"
-    myconf_gn+=" use_gconf=$(option gconf true false)"
     myconf_gn+=" use_gnome_keyring=$(option keyring true false)"
     myconf_gn+=" use_pulseaudio=$(option pulseaudio true false)"
 
@@ -416,8 +434,6 @@ inox_src_configure() {
 
     # inox specific
     myconf_gn+=" enable_hangout_services_extension=false"
-    myconf_gn+=" enable_rlz=false"
-    myconf_gn+=" enable_rlz_support=false"
     myconf_gn+=" enable_remoting=false"
     myconf_gn+=" enable_google_now=false"
     myconf_gn+=" safe_browsing_mode=0"
@@ -438,7 +454,11 @@ inox_src_configure() {
 }
 
 inox_src_compile() {
-    eninja -C out/Release chrome chrome_sandbox
+    if optionq suid-sandbox; then
+        eninja -C out/Release chrome chrome_sandbox
+    else
+        eninja -C out/Release chrome
+    fi
 }
 
 inox_src_test() {
@@ -538,13 +558,18 @@ inox_src_install() {
 
     exeinto ${dest}
     newexe chrome inox
-    newexe chrome_sandbox chrome-sandbox # the name is hardcoded
-    edo chmod 4755 "${IMAGE}"${dest}/chrome-sandbox
+    if optionq suid-sandbox; then
+        newexe chrome_sandbox inox-sandbox # the name is hardcoded
+        edo chmod 4755 "${IMAGE}"${dest}/inox-sandbox
+    fi
     doexe "${FILES}"/inox-launcher.sh
 
     insinto ${dest}
     doins -r *.pak locales resources
     doins -r *.bin
+
+    # TODO: Required by bundled icu
+    doins icudtl.dat
 
     doins libwidevinecdmadapter.so
 
@@ -552,6 +577,9 @@ inox_src_install() {
 
     dodir /usr/$(exhost --target)/bin
     dosym ${dest}/inox-launcher.sh /usr/$(exhost --target)/bin/inox-browser
+
+    insinto ${dest}/swiftshader
+    doins swiftshader/*.so
 
     for size in 22 24 48 64 128 256 ; do
         insinto /usr/share/icons/hicolor/${size}x${size}/apps
