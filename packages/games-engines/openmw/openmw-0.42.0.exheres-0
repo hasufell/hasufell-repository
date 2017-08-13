@@ -27,15 +27,11 @@ DEPENDENCIES="
         media-libs/SDL:2[X]
         media-libs/freetype:2
         media-libs/openal
-        sci-physics/bullet[>=2.83]
+        sci-physics/bullet[>=2.86]
         x11-libs/qtbase:5
         providers:ffmpeg? ( media/ffmpeg )
         providers:libav? ( media/libav )
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-Fix-build-with-OpenSceneGraph-3.5.6.patch
-)
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBINDIR="/usr/$(exhost --target)/bin"
