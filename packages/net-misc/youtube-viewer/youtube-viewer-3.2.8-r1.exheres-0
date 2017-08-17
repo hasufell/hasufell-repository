@@ -54,8 +54,9 @@ DEPENDENCIES="
 "
 
 src_configure() {
+    edo rm Makefile.PL
     if option gtk ; then
-        PERL_MODULE_SRC_CONFIGURE_PARAMS=( --gtk-youtube-viewer )
+        PERL_MODULE_SRC_CONFIGURE_PARAMS=( --gtk )
     fi
     perl-module_src_configure
 }
