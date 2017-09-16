@@ -49,6 +49,10 @@ DEPENDENCIES="
         x11-libs/libXtst
         x11-libs/libxcb
         x11-libs/pango
+    suggestion:
+        gnome-desktop/gnome-keyring [[
+            description = [ Needed for storing credentials to permit auto-login ]
+        ]]
 "
 
 WORK=${WORKBASE}
