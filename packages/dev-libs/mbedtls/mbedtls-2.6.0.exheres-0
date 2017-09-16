@@ -2,6 +2,15 @@
 # Distributed under the terms of the GNU General Public License v2
 
 
+LIBMBEDTLS_VER=2.6.0
+LIBMBEDX509_VER=2.6.0
+LIBMBEDCRYPTO_VER=2.6.0
+
+LIBMBEDTLS_SOVER=10
+LIBMBEDX509_SOVER=0
+LIBMBEDCRYPTO_SOVER=0
+
+require alternatives
 require github [ user=ARMmbed tag=mbedtls-${PV} ]
 WORK="${WORKBASE}/${PNV}" # because github.exlib is broken
 require cmake [ api=2 ]
@@ -12,7 +21,7 @@ HOMEPAGE="https://tls.mbed.org/"
 DOWNLOADS="https://tls.mbed.org/download/${PNV}-gpl.tgz"
 
 LICENCES="|| ( Apache-2.0 GPL-2 )"
-SLOT="0"
+SLOT="${LIBMBEDTLS_SOVER}.${LIBMBEDX509_SOVER}.${LIBMBEDCRYPTO_SOVER}"
 PLATFORMS="~amd64 ~x86"
 
 MYOPTIONS="
@@ -34,6 +43,10 @@ DEPENDENCIES="
         )
     build+run:
         sys-libs/zlib
+        !dev-libs/mbedtls:0 [[
+            description = [ Alternatives conflict ]
+            resolution = upgrade-blocked-before
+        ]]
     test:
         dev-lang/perl:*
 "
@@ -89,5 +102,48 @@ src_install() {
         docinto html
         dodoc -r "${CMAKE_SOURCE}"/apidoc/*
     fi
+
+
+    local lib ver sover
+
+    edo mkdir "${IMAGE}"/usr/$(exhost --target)/lib/mbedtls
+
+    # alternatives to support same-sover, different slot
+    for lib in {mbedtls,mbedx509,mbedcrypto}; do
+        ver=LIB${lib^^}_VER
+        sover=LIB${lib^^}_SOVER
+
+
+        # move the .so so it's not picked up automatically by ldconfig
+        edo mv \
+            "${IMAGE}"/usr/$(exhost --target)/lib/lib${lib}.so.${!ver} \
+            "${IMAGE}"/usr/$(exhost --target)/lib/mbedtls/lib${lib}-${SLOT}.so
+
+        # remove the versioned dynamic libraries, we'll provide the symlinks ourselves
+        edo rm "${IMAGE}"/usr/$(exhost --target)/lib/lib${lib}.so{,.${!sover}}
+
+
+        # this alternative should select the hightes slot for each ver
+        alternatives_for \
+            _$(exhost --target)_${PN}_${lib}_${!ver} ${SLOT} ${SLOT} \
+            /usr/$(exhost --target)/lib/lib${lib}.so.${!ver} \
+            /usr/$(exhost --target)/lib/mbedtls/lib${lib}-${SLOT}.so
+
+        # this alternative should select the highest slot for each sover
+        alternatives_for \
+            _$(exhost --target)_${PN}_${lib}_${!sover} ${SLOT} ${SLOT} \
+            /usr/$(exhost --target)/lib/lib${lib}.so.${!sover} \
+            /usr/$(exhost --target)/lib/mbedtls/lib${lib}-${SLOT}.so
+
+        # this alternative should select the highest sover for each unsuffixed library
+        alternatives_for \
+            _$(exhost --target)_${PN}_${lib} ${!sover} ${!sover} \
+            /usr/$(exhost --target)/lib/lib${lib}.so{,.${!sover}}
+    done
+
+    # alternatives to support multiple slots, architecture dependent files
+    alternatives_for \
+        _$(exhost --target)_${PN} ${SLOT} ${SLOT} \
+        /usr/$(exhost --target)/include/mbedtls{,-${SLOT}}
 }
 
