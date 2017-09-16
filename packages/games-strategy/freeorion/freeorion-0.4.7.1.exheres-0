@@ -3,7 +3,7 @@
 
 CMAKE_SOURCE=${WORKBASE}/src-tarball
 
-require github [ user=${PN} release=v${PV} pnv=FreeOrion_v${PV}_2017-04-24.60d06dc_Source suffix=tar.gz ]
+require github [ user=${PN} release=v${PV} pnv=FreeOrion_v${PV}_2017-09-03.139ffd9_Source suffix=tar.gz ]
 require cmake [ api=2 ]
 require gtk-icon-cache
 
