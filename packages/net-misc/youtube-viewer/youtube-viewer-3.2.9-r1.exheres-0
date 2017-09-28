@@ -28,7 +28,6 @@ DEPENDENCIES="
         dev-perl/Scalar-List-Utils
         dev-perl/Term-ANSIColor
         dev-perl/Term-ReadLine-Gnu
-        dev-perl/Text-ParseWords
         dev-perl/Text-Tabs+Wrap
         dev-perl/libwww-perl
         gtk? (
