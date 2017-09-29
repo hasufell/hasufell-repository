@@ -32,7 +32,6 @@ DEPENDENCIES="
             dev-python/futures[python_abis:2.7]
             dev-python/singledispatch[python_abis:2.7]
         )
-        python_abis:3.3? ( dev-python/singledispatch[python_abis:3.3] )
         dev-python/requests[>=1.0&<3.0][python_abis:*(-)?]
     suggestion:
         media-video/rtmpdump[~scm] [[
