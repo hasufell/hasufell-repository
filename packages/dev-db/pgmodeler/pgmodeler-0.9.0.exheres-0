@@ -1,0 +1,67 @@
+# Copyright 2017 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require desktop-utils gtk-icon-cache
+require github [ tag="v${PV}" ]
+require qmake [ slot=5 ]
+
+SUMMARY="Data modeling tool designed for PostgreSQL"
+DESCRIPTION="
+pgModeler - PostgreSQL Database Modeler - is an open source data modeling tool
+designed for PostgreSQL. No more DDL commands written by hand let pgModeler do
+the job for you! This software reunites the concepts of entity-relationship
+diagrams and the features that PostgreSQL implements as extensions of SQL
+standards.
+"
+HOMEPAGE="https://www.pgmodeler.com.br ${HOMEPAGE}"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+        x11-libs/qttools:5
+    build+run:
+        dev-db/postgresql
+        dev-libs/libxml2
+        group/pgmodeler
+        x11-libs/qtbase:5
+        x11-libs/qtsvg:5
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+
+src_configure() {
+    EQMAKE_PARAMS=(
+        "CONFDIR=/etc/pgmodeler/conf"
+        "DOCDIR=/usr/share/doc/${PNV}"
+        "PLUGINSDIR=/etc/pgmodeler/plugins"
+        "PREFIX=/usr/$(exhost --target)"
+        "SHAREDIR=/usr/share/pgmodeler"
+    )
+    qmake_src_configure
+}
+
+src_install() {
+    emake INSTALL_ROOT="${IMAGE}" install
+
+    keepdir /etc/pgmodeler/plugins
+    edo chmod g+w "${IMAGE}"/etc/pgmodeler/plugins
+    edo chown :pgmodeler "${IMAGE}"/etc/pgmodeler/plugins
+
+    insinto /usr/share/icons/hicolor/48x48/apps
+    newins libpgmodeler_ui/res/icones/pgsqlModeler48x48.png ${PN}.png
+    install_desktop_entry "Name=PostgreSQL Database Modeler"
+}
+
+pkg_postinst() {
+    elog "Plugin directory is /etc/pgmodeler/plugins"
+    elog "and has write permissions for 'pgmodeler' group."
+
+    gtk-icon-cache_pkg_postinst
+}
+
