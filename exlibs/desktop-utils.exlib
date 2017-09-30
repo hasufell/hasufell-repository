@@ -105,6 +105,12 @@ find_desktop_file_category() {
     local subcat=
 
     case ${CATEGORY} in
+        dev*) maincat="Development"
+            case ${CATEGORY##*-} in
+                db) subcat="Database";;
+                *) ;;
+            esac
+            ;;
         games*) maincat="Game"
             case ${CATEGORY##*-} in
                 action)     subcat="ActionGame" ;;
