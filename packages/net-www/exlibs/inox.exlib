@@ -1,7 +1,7 @@
 # Copyright 2009, 2010 Elias Pipping <pipping@exherbo.org>
 # Copyright 2009 Heiko Przybyl <zuxez@cs.tu-berlin.de>
-# Copyright 2016 Timo Gurr <tgurr@exherbo.org>
-# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2016-2017 Timo Gurr <tgurr@exherbo.org>
+# Copyright 2016-2017 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 # You'll find new releases here:
@@ -13,7 +13,7 @@ CHROMIUM_CHANNEL=stable
 MY_PN=chromium
 MY_PNV=${MY_PN}-${PV}
 
-require freedesktop-desktop gtk-icon-cache python [ has_lib=false ] toolchain-funcs
+require freedesktop-desktop gtk-icon-cache python [ has_lib=false ] toolchain-funcs flag-o-matic
 
 myexparam patchset=
 
@@ -77,6 +77,7 @@ MYOPTIONS="
 #  dev-libs/libevent[>=1.4.13]
 #  dev-libs/libxml2:2.0[>=2.6.32]
 #  media-libs/libvpx[>=1.6.0-r1]
+#  media-libs/openh264[>=1.6.0] ( once it's written )
 DEPENDENCIES="
     build:
         dev-lang/node
@@ -89,7 +90,7 @@ DEPENDENCIES="
         dev-scm/git [[ note = [ https://bugs.gentoo.org/show_bug.cgi?id=593476 ] ]]
         dev-util/gperf[>=3.0.4]
         sys-devel/bison
-        sys-devel/ninja
+        sys-devel/ninja[>=1.7.2]
     build+run:
         app-arch/gzip[>=1.8]
         app-arch/snappy
@@ -104,7 +105,7 @@ DEPENDENCIES="
         media-libs/fontconfig
         media-libs/freetype:2
         media-libs/libpng:=[>=1.2.37]
-        media-libs/libwebp:=[>=0.4]
+        media-libs/libwebp:=[>=0.6.0-r1]
         media-libs/opus[>=1.1-r1]
         net-libs/libsrtp
         sys-apps/dbus
@@ -116,6 +117,7 @@ DEPENDENCIES="
         x11-libs/cairo[X]
         x11-libs/gdk-pixbuf:2.0
         x11-libs/harfbuzz[>=1.4.2]
+        x11-libs/libva
         x11-libs/libX11
         x11-libs/libxcb
         x11-libs/libXScrnSaver
@@ -170,14 +172,10 @@ inox_pkg_setup() {
 }
 
 inox_src_prepare() {
-    # odd upstream git versioning
-    edo rm -r "${WORKBASE}"/inox-patchset-${PATCHSET}/archive
-    # this one is unneded and doesn't apply cleanly
-    edo rm "${WORKBASE}"/inox-patchset-${PATCHSET}/*launcher-branding.patch
+    # these ones are unneded and don't apply cleanly
+    edo rm "${WORKBASE}"/inox-patchset-${PATCHSET}/*launcher-branding.patch \
+        "${WORKBASE}"/inox-patchset-${PATCHSET}/chromium-glibc2.26-r1.patch
     # fire up the inox patches
-    edo sed -i \
-            -e 's|\/src\/ports|\/third_party\/skia\/src\/ports|' \
-            "${WORKBASE}"/inox-patchset-${PATCHSET}/0001-Clip-FreeType-glyph-bitmap-to-mask.patch
     expatch "${WORKBASE}"/inox-patchset-${PATCHSET}/
 
     default
@@ -204,10 +202,10 @@ inox_src_prepare() {
         third_party/WebKit
         third_party/analytics
         third_party/angle
-        third_party/angle/src/common/third_party/numerics
+        third_party/angle/src/common/third_party/base
+        third_party/angle/src/common/third_party/murmurhash
         third_party/angle/src/third_party/compiler
         third_party/angle/src/third_party/libXNVCtrl
-        third_party/angle/src/third_party/murmurhash
         third_party/angle/src/third_party/trace_event
         third_party/boringssl
         third_party/brotli
@@ -221,6 +219,7 @@ inox_src_prepare() {
         third_party/catapult/tracing/third_party/gl-matrix
         third_party/catapult/tracing/third_party/jszip
         third_party/catapult/tracing/third_party/mannwhitneyu
+        third_party/catapult/tracing/third_party/oboe
         third_party/ced
         third_party/cld_2
         third_party/cld_3
@@ -231,9 +230,11 @@ inox_src_prepare() {
         third_party/flatbuffers
         third_party/flot
         third_party/freetype
+        third_party/glslang-angle
         third_party/google_input_tools
         third_party/google_input_tools/third_party/closure_library
         third_party/google_input_tools/third_party/closure_library/third_party/closure
+        third_party/googletest
         third_party/hunspell
         third_party/iccjpeg
         third_party/inspector_protocol
@@ -249,7 +250,6 @@ inox_src_prepare() {
         third_party/libsrtp
         third_party/libudev
         third_party/libusb
-        third_party/libva
         third_party/libwebm
         third_party/libxml
         third_party/libyuv
@@ -263,7 +263,6 @@ inox_src_prepare() {
         third_party/node/node_modules/vulcanize/third_party/UglifyJS2
         third_party/openh264
         third_party/openmax_dl
-        third_party/opus
         third_party/ots
         third_party/pdfium
         third_party/pdfium/third_party/agg23
@@ -282,20 +281,23 @@ inox_src_prepare() {
         third_party/qcms
         third_party/sfntly
         third_party/skia
+        third_party/skia/third_party/vulkan
         third_party/smhasher
+        third_party/spirv-headers
+        third_party/spirv-tools-angle
         third_party/sqlite
         third_party/swiftshader
         third_party/swiftshader/third_party/llvm-subzero
-        third_party/swiftshader/third_party/pnacl-subzero
         third_party/swiftshader/third_party/subzero
         third_party/tcmalloc
         third_party/usrsctp
+        third_party/vulkan
+        third_party/vulkan-validation-layers
         third_party/web-animations-js
         third_party/webdriver
         third_party/webrtc
         third_party/widevine
         third_party/woff2
-        third_party/x86inc
         third_party/zlib/google
         url/third_party/mozilla
         v8/src/third_party/valgrind
@@ -370,6 +372,7 @@ inox_src_configure() {
         libpng
         libwebp
         libxslt
+        opus
         snappy
         yasm
         zlib
@@ -385,7 +388,8 @@ inox_src_configure() {
     export NM="${NM}"
 
     # Define a custom toolchain for GN
-    myconf_gn+=" custom_toolchain=\"${FILES}/toolchain:default\""
+    myconf_gn+=" custom_toolchain=\"//build/toolchain/linux/unbundle:default\""
+    myconf_gn+=" host_toolchain=\"//build/toolchain/linux/unbundle:default\""
 
     # GN needs explicit config for Debug/Release as opposed to inferring it from build directory
     myconf_gn+=" is_debug=false"
@@ -397,7 +401,7 @@ inox_src_configure() {
     myconf_gn+=" enable_nacl=false"
 
     # Trying to use gold results in linker crash
-    myconf_gn+=" use_gold=false use_sysroot=false linux_use_bundled_binutils=false"
+    myconf_gn+=" use_gold=false use_sysroot=false linux_use_bundled_binutils=false use_custom_libcxx=false"
 
     # Don't try to build with Clang for now
     myconf_gn+=" is_clang=false"
@@ -419,7 +423,6 @@ inox_src_configure() {
     myconf_gn+=" ffmpeg_branding=\"${ffmpeg_branding}\""
 
     # Options
-    # TODO: link_pulseaudio=true for GN
     myconf_gn+=" enable_widevine=true"
     myconf_gn+=" link_pulseaudio=$(option pulseaudio true false)"
     myconf_gn+=" use_cups=$(option cups true false)"
@@ -432,6 +435,9 @@ inox_src_configure() {
     # GTK3 build
     myconf_gn+=" use_gtk3=true"
 
+    # Disable deprecated
+    myconf_gn+=" use_gconf=false"
+
     # inox specific
     myconf_gn+=" enable_hangout_services_extension=false"
     myconf_gn+=" enable_remoting=false"
@@ -440,6 +446,7 @@ inox_src_configure() {
     myconf_gn+=" enable_webrtc=true" # prevents frequent crashes
     myconf_gn+=" enable_hotwording=false"
     myconf_gn+=" enable_print_preview=false"
+    myconf_gn+=" use_vaapi=true"
 
     # Update strings
     edo third_party/libaddressinput/chromium/tools/update-strings.py
@@ -454,6 +461,11 @@ inox_src_configure() {
 }
 
 inox_src_compile() {
+    # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68853
+    if cc-is-gcc && [[ "$(gcc-major-version)" > 5 ]]; then
+        append-flags -fno-delete-null-pointer-checks
+    fi
+
     if optionq suid-sandbox; then
         eninja -C out/Release chrome chrome_sandbox
     else
