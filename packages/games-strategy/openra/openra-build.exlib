@@ -40,15 +40,30 @@ DEPENDENCIES="
 WORK=${WORKBASE}/OpenRA-${SLOT}-${PV}
 
 MV_FILES=(
-    /usr/share/applications/openra.desktop
-    /usr/share/applications/openra-replays.desktop
-    /usr/share/applications/openra-join-servers.desktop
-    /usr/share/icons/hicolor/128x128/apps/openra.png
-    /usr/share/icons/hicolor/16x16/apps/openra.png
-    /usr/share/icons/hicolor/32x32/apps/openra.png
-    /usr/share/icons/hicolor/48x48/apps/openra.png
-    /usr/share/icons/hicolor/64x64/apps/openra.png
-    /usr/share/icons/hicolor/scalable/apps/openra.svg
+    /usr/share/applications/openra-cnc.desktop
+    /usr/share/applications/openra-ra.desktop
+    /usr/share/applications/openra-d2k.desktop
+    /usr/share/applications/openra-cnc-join-servers.desktop
+    /usr/share/applications/openra-ra-join-servers.desktop
+    /usr/share/applications/openra-d2k-join-servers.desktop
+
+    /usr/share/icons/hicolor/128x128/apps/openra-cnc.png
+    /usr/share/icons/hicolor/16x16/apps/openra-cnc.png
+    /usr/share/icons/hicolor/32x32/apps/openra-cnc.png
+    /usr/share/icons/hicolor/48x48/apps/openra-cnc.png
+    /usr/share/icons/hicolor/64x64/apps/openra-cnc.png
+    /usr/share/icons/hicolor/scalable/apps/openra-cnc.svg
+
+    /usr/share/icons/hicolor/16x16/apps/openra-ra.png
+    /usr/share/icons/hicolor/32x32/apps/openra-ra.png
+    /usr/share/icons/hicolor/48x48/apps/openra-ra.png
+    /usr/share/icons/hicolor/64x64/apps/openra-ra.png
+    /usr/share/icons/hicolor/scalable/apps/openra-ra.svg
+
+    /usr/share/icons/hicolor/16x16/apps/openra-d2k.png
+    /usr/share/icons/hicolor/32x32/apps/openra-d2k.png
+    /usr/share/icons/hicolor/48x48/apps/openra-d2k.png
+    /usr/share/icons/hicolor/64x64/apps/openra-d2k.png
 )
 
 openra-build_src_unpack() {
@@ -97,7 +112,7 @@ openra-build_src_prepare() {
 }
 
 openra-build_src_compile() {
-    emake VERSION="${SLOT}-${PV}" core tools
+    emake VERSION="${SLOT}-${PV}" core
 }
 
 openra-build_src_install() {
@@ -108,7 +123,7 @@ openra-build_src_install() {
         gameinstalldir="/usr/$(exhost --target)/libexec/${PN}-${SLOT}" \
         VERSION="${SLOT}-${PV}" \
         DESTDIR="${IMAGE}" \
-        install-all install-linux-scripts install-linux-mime \
+        install install-linux-scripts install-linux-mime \
         install-linux-icons install-linux-desktop install-linux-appdata
 
     exeinto /usr/$(exhost --target)/libexec/${PN}-${SLOT}
@@ -116,17 +131,17 @@ openra-build_src_install() {
 
     # fix desktop files
     edo sed -i \
-            -e "s#^Name=.*#Name=OpenRA (${SLOT})#" \
-            -e "/^Exec=/s#openra#openra-${SLOT}#" \
-            -e "s#^Icon=.*#Icon=openra-${SLOT}#" \
+            -e "/^Name=/s#\$# (${SLOT})#" \
+            -e "/^Exec=/s#\$#-${SLOT}#" \
+            -e "/^Icon=/s#\$#-${SLOT}#" \
             "${IMAGE%/}"/usr/share/applications/*.desktop
 
     # make sure slots don't have file collisions
     local i
-    for i in /usr/$(exhost --target)/bin/openra \
-             /usr/$(exhost --target)/bin/openra-server \
+    for i in /usr/$(exhost --target)/bin/openra-{ra,cnc,d2k} \
+             /usr/$(exhost --target)/bin/openra-{ra,cnc,d2k}-server \
              /usr/share/mime/packages/openra.xml \
-             /usr/share/appdata/openra.appdata.xml
+             /usr/share/appdata/openra-{ra,cnc,d2k}.appdata.xml
     do
         edo mv "${IMAGE%/}"${i} "${IMAGE%/}"${i}-${SLOT}
     done
@@ -138,11 +153,16 @@ openra-build_src_install() {
 
     # set up alternatives
     alternatives_for _openra ${SLOT} ${PV} \
-        /usr/$(exhost --target)/bin/openra{,-${SLOT}} \
-        /usr/$(exhost --target)/bin/openra-server{,-${SLOT}} \
-        /usr/share/appdata/openra.appdata.xml{,-${SLOT}} \
+        /usr/$(exhost --target)/bin/openra-cnc{,-${SLOT}} \
+        /usr/$(exhost --target)/bin/openra-cnc-server{,-${SLOT}} \
+        /usr/$(exhost --target)/bin/openra-ra{,-${SLOT}} \
+        /usr/$(exhost --target)/bin/openra-ra-server{,-${SLOT}} \
+        /usr/$(exhost --target)/bin/openra-d2k{,-${SLOT}} \
+        /usr/$(exhost --target)/bin/openra-d2k-server{,-${SLOT}} \
+        /usr/share/appdata/openra-cnc.appdata.xml{,-${SLOT}} \
+        /usr/share/appdata/openra-ra.appdata.xml{,-${SLOT}} \
+        /usr/share/appdata/openra-d2k.appdata.xml{,-${SLOT}} \
         /usr/share/mime/packages/openra.xml{,-${SLOT}}
-
 }
 
 openra-build_pkg_postinst() {
