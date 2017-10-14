@@ -16,7 +16,10 @@ MYOPTIONS="
 DEPENDENCIES="
     build:
         dev-libs/libxslt
+        sys-kernel/linux-headers[>=4.3]
         virtual/pkg-config
+    build+run:
+        sys-libs/libcap
 "
 
 BUGS_TO="hasufell@posteo.de"
