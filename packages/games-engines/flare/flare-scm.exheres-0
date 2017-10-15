@@ -1,0 +1,27 @@
+# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=clintbellanger project=flare-engine pn=flare-engine ]
+require cmake [ api=2 ]
+require gtk-icon-cache
+
+SUMMARY="Free/Libre Action Roleplaying game engine"
+
+LICENCES="CCPL-Attribution-ShareAlike-3.0 GPL-3 OFL-1.1"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/SDL:2[X]
+        media-libs/SDL_image:2
+        media-libs/SDL_mixer:2
+        media-libs/SDL_ttf:2
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DCMAKE_INSTALL_PREFIX="/usr"
+    -DBINDIR="/usr/$(exhost --target)/bin"
+    -DDATADIR=/usr/share/${PN}
+)
+
