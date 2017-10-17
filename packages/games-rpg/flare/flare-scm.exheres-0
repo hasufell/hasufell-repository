@@ -1,6 +1,7 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
+SCM_CHECKOUT_TO=flare-game
 require github [ user=clintbellanger project=flare-game pn=flare-game ]
 require cmake desktop-utils gtk-icon-cache
 
