@@ -36,10 +36,7 @@ DEPENDENCIES="
             dev-libs/libpwquality
             x11-libs/qtbase:5
         )
-        kde? (
-            kde/kdelibs:4
-            kde/kde-runtime:4
-        )
+        kde? ( kde-frameworks/kwallet:5 )
         polkit? ( sys-auth/polkit )
     run:
         providers:eudev? ( sys-apps/eudev )
