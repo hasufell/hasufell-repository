@@ -47,7 +47,7 @@ DEPENDENCIES="
     suggestion:
         gui? (
             app-admin/ktsuss [[ description = [ make pglinux use ktsuss for graphical sudo ] ]]
-            kde/kde-runtime:4 [[ description = [ make pglinux use kdesu for graphical sudo ] ]]
+            kde/kde-cli-toos:4 [[ description = [ make pglinux use kdesu for graphical sudo ] ]]
         )
 "
 
