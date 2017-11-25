@@ -42,7 +42,7 @@ LICENCES="
     BSD-3         [[ note = [ dtoa, jscre, modp_b64, v8, webkit ] ]]
     GPL-2         [[ note = [ hunspell, 'Mozilla interface to Java Plugin APIs', npapi, nspr, nss ] ]]
     LGPL-2        [[ note = [ webkit ] ]]
-    LGPL-2.1      [[ note = [ ffmpeg, hunspell, 'Mozilla interface to Java Plugin APIs', npapi, nspr,
+    LGPL-2.1      [[ note = [ hunspell, 'Mozilla interface to Java Plugin APIs', npapi, nspr,
                               nss, webkit ] ]]
     MPL-1.1       [[ note = [ hunspell, 'Mozilla interface to Java Plugin APIs', npapi, nspr, nss ] ]]
     MIT           [[ note = [ harfbuzz ] ]]
@@ -73,11 +73,8 @@ MYOPTIONS="
 
 # TODO: GN build with system speech dispatcher and libevent
 #  app-speech/speechd[>=0.8]
-#  dev-libs/icu:=
 #  dev-libs/libevent[>=1.4.13]
-#  dev-libs/libxml2:2.0[>=2.6.32]
 #  media-libs/libvpx[>=1.6.0-r1]
-#  media-libs/openh264[>=1.6.0] ( once it's written )
 DEPENDENCIES="
     build:
         dev-lang/node
@@ -98,14 +95,18 @@ DEPENDENCIES="
         dev-libs/dbus-glib:1[>=0.84]
         dev-libs/expat
         dev-libs/glib:2[>=2.26] [[ note = [ for gsettings ] ]]
+        dev-libs/icu:=[>=59]
+        dev-libs/libxml2:2.0[>=2.9.6-r1] [[ note = [ -r1 for icu support ] ]]
         dev-libs/libxslt[>=1.1.26]
         dev-libs/nspr[>=4.0]
         dev-libs/nss[>=3.12.3] [[ note = [ see base/nss_util.cc for the version requirement ] ]]
+        media/ffmpeg[>=3.0]
         media-libs/flac
         media-libs/fontconfig
         media-libs/freetype:2
         media-libs/libpng:=[>=1.2.37]
         media-libs/libwebp:=[>=0.6.0-r1]
+        media-libs/openh264[>=1.6.0]
         media-libs/opus[>=1.1-r1]
         net-libs/libsrtp
         sys-apps/dbus
@@ -117,7 +118,6 @@ DEPENDENCIES="
         x11-libs/cairo[X]
         x11-libs/gdk-pixbuf:2.0
         x11-libs/harfbuzz[>=1.4.2]
-        x11-libs/libva
         x11-libs/libX11
         x11-libs/libxcb
         x11-libs/libXScrnSaver
@@ -165,18 +165,14 @@ eninja() {
 inox_pkg_setup() {
     export V=1
 
-    # For ffmpeg's linking
-    export LD="${CXX}"
-
     exdirectory --allow /opt
 }
 
 inox_src_prepare() {
     # these ones are unneded and don't apply cleanly
-    edo rm "${WORKBASE}"/inox-patchset-${PATCHSET}/*launcher-branding.patch \
-        "${WORKBASE}"/inox-patchset-${PATCHSET}/chromium-glibc2.26-r1.patch
+    edo rm "${WORKBASE}"/inox-patchset-${PATCHSET}/*launcher-branding.patch
     # fire up the inox patches
-    expatch "${WORKBASE}"/inox-patchset-${PATCHSET}/
+    expatch "${WORKBASE}"/inox-patchset-${PATCHSET}/[0-9]*
 
     default
 
@@ -223,6 +219,7 @@ inox_src_prepare() {
         third_party/ced
         third_party/cld_2
         third_party/cld_3
+        third_party/crc32c
         third_party/cros_system_api
         third_party/devscripts
         third_party/dom_distiller_js
@@ -251,7 +248,7 @@ inox_src_prepare() {
         third_party/libudev
         third_party/libusb
         third_party/libwebm
-        third_party/libxml
+        third_party/libxml/chromium
         third_party/libyuv
         third_party/lss
         third_party/lzma_sdk
@@ -260,8 +257,7 @@ inox_src_prepare() {
         third_party/modp_b64
         third_party/mt19937ar
         third_party/node
-        third_party/node/node_modules/vulcanize/third_party/UglifyJS2
-        third_party/openh264
+        third_party/node/node_modules/polymer-bundler/lib/third_party/UglifyJS2
         third_party/openmax_dl
         third_party/ots
         third_party/pdfium
@@ -270,7 +266,7 @@ inox_src_prepare() {
         third_party/pdfium/third_party/build
         third_party/pdfium/third_party/bigint
         third_party/pdfium/third_party/freetype
-        third_party/pdfium/third_party/lcms2-2.6
+        third_party/pdfium/third_party/lcms
         third_party/pdfium/third_party/libopenjpeg20
         third_party/pdfium/third_party/libpng16
         third_party/pdfium/third_party/libtiff
@@ -281,6 +277,7 @@ inox_src_prepare() {
         third_party/qcms
         third_party/sfntly
         third_party/skia
+        third_party/skia/third_party/gif
         third_party/skia/third_party/vulkan
         third_party/smhasher
         third_party/spirv-headers
@@ -314,19 +311,12 @@ inox_src_prepare() {
         third_party/yasm/run_yasm.py
     )
 
-    # TODO: keep FFmpeg
-    keeplibs+=( third_party/ffmpeg )
-
     # TODO: package re2
     keeplibs+=( third_party/re2 )
 
     # TODO: keep libvpx (58.0.3029.81 fails to compile with the current libvpx-1.6.1)
     keeplibs+=( third_party/libvpx )
     keeplibs+=( third_party/libvpx/source/libvpx/third_party/x86inc )
-
-    # TODO: keep icu (59.0.3071.86 fails to compile with the current icu-59.1
-    keeplibs+=( third_party/icu/common )
-    keeplibs+=( third_party/icu/source )
 
     # remove some of the bundled libraries
     edo build/linux/unbundle/remove_bundled_libraries.py "${keeplibs[@]}" --do-remove
@@ -358,20 +348,22 @@ inox_src_prepare() {
 }
 
 inox_src_configure() {
-    # icu: 59.0.3071.86 https://chromium-review.googlesource.com/c/505173/
     # re2: not yet packaged
     # libevent: https://bugs.gentoo.org/593458
-    # libvpx: 58.0.3029.81 fails to compile
-    # libxml: 59.0.3071.86 https://bugs.gentoo.org/616818
-    # ffmpeg: unknown
+    # libvpx: WebRTC depends on unreleased APIs, see
+    #     https://bugs.chromium.org/p/chromium/issues/detail?id=697843
     local gn_system_libraries="
+        ffmpeg
         flac
         harfbuzz-ng
+        icu
         libdrm
         libjpeg
         libpng
         libwebp
+        libxml
         libxslt
+        openh264
         opus
         snappy
         yasm
@@ -447,13 +439,6 @@ inox_src_configure() {
     myconf_gn+=" enable_hotwording=false"
     myconf_gn+=" enable_print_preview=false"
     myconf_gn+=" use_vaapi=true"
-
-    # Update strings
-    edo third_party/libaddressinput/chromium/tools/update-strings.py
-
-    # 46.0.2490.86 fails with Exception: Failed to open test/data/webui/i18n_process_css_test.html while
-    # trying to flatten test/data/webui/i18n_process_css_test.html
-    edo touch chrome/test/data/webui/i18n_process_css_test.html
 
     # GN configure
     edo tools/gn/bootstrap/bootstrap.py -v --no-clean --gn-gen-args "${myconf_gn}"
@@ -579,9 +564,6 @@ inox_src_install() {
     insinto ${dest}
     doins -r *.pak locales resources
     doins -r *.bin
-
-    # TODO: Required by bundled icu
-    doins icudtl.dat
 
     doins libwidevinecdmadapter.so
 
