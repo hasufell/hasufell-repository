@@ -33,7 +33,7 @@ DEPENDENCIES="
         dev-python/pyparsing[>=2.2.0&<2.2.1][python_abis:*(-)?]
         python_abis:2.7? ( dev-python/futures[>=3.1][python_abis:2.7] )
     suggestion:
-        dev-python/mypy[>=0.521] [[ description = [ coconut can run mypy on the compiled python code ] ]]
+        dev-python/mypy[>=0.540] [[ description = [ coconut can run mypy on the compiled python code ] ]]
 "
 
 BUGS_TO="hasufell@posteo.de"
