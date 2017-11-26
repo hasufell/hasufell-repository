@@ -58,10 +58,6 @@ DEPENDENCIES="
         providers:libav? ( media/libav )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-Fix-wrong-jpeg-boolean-handling.patch
-)
-
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DCMAKE_DISABLE_FIND_PACKAGE_Asio=1
     -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=1
