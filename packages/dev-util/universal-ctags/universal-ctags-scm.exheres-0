@@ -1,0 +1,48 @@
+# Copyright 2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require alternatives github [ user='universal-ctags' pn='ctags' ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
+SUMMARY="Universal ctags"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="json xml yaml"
+
+DEPENDENCIES="
+    build+run:
+        json? ( dev-libs/jansson )
+        xml? ( dev-libs/libxml2:2.0 )
+        yaml? ( dev-libs/libyaml )
+    build:
+        dev-python/docutils
+        virtual/pkg-config
+"
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'json'
+    'xml'
+    'yaml'
+)
+
+src_prepare() {
+    # autogen.sh usually runs this
+    edo ./misc/dist-test-cases > makefiles/test-cases.mak
+
+    autotools_src_prepare
+}
+
+src_install() {
+    default
+
+    # alternatives collision
+    edo mv "${IMAGE}"/usr/$(exhost --target)/bin/{ctags,universal-ctags}
+    edo mv "${IMAGE}"/usr/share/man/man1/{ctags,universal-ctags}.1
+
+    alternatives_for ctags universal-ctags 500 \
+        /usr/$(exhost --target)/bin/ctags universal-ctags \
+        /usr/share/man/man1/ctags.1 universal-ctags.1
+}
+
