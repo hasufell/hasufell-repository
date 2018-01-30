@@ -1,0 +1,78 @@
+# Copyright 2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require desktop-utils
+
+SUMMARY="Faster Than Light: A spaceship simulation real-time roguelike-like game"
+HP="http://www.ftlgame.com"
+GOG_HP="https://www.gog.com/game/faster_than_light"
+HOMEPAGE="${HP} ${GOG_HP}"
+FTL_SH="ftl_advanced_edition_en_1_6_3_17917.sh"
+DOWNLOADS="manual: ${FTL_SH}"
+
+LICENCES="all-rights-reserved Boost-1.0 free-noncomm MIT FTL LGPL-2.1 ZLIB libpng"
+SLOT="0"
+PLATFORMS="-* ~amd64 ~x86"
+MYOPTIONS="
+    ( platform: amd64 x86 )
+"
+RESTRICT="fetch"
+
+DEPENDENCIES="
+    run:
+        media-libs/DevIL
+        media-libs/SDL:0[X]
+        media-libs/freetype:2
+        sys-libs/zlib
+        x11-dri/mesa
+    build:
+        virtual/unzip
+"
+
+WORK="${WORKBASE}"
+
+pkg_nofetch() {
+    local file=${FTL_SH}
+
+    einfo "Please buy & download ${file} from:"
+    einfo "  ${GOG_HP}"
+    einfo "and move it to ${FETCHEDDIR}"
+    einfo
+}
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
+
+src_unpack() {
+    unzip -qo "${FETCHEDDIR}/${FTL_SH}"
+    [[ $? -le 1 ]] || die "unpacking ${FTL_SH} failed!"
+}
+
+src_install() {
+    local dir=/opt/${PN}
+    local arch=$(option platform:amd64 "amd64" "x86")
+    local datadir=${WORKBASE}/data/noarch/game/data
+    local htmldir=${WORKBASE}/data/noarch/game
+
+    insinto "${dir}"
+    doins -r "${datadir}"/*
+
+    edo chmod +x "${IMAGE}"/${dir}/FTL.${arch}
+
+    herebin ${PN} << EOF
+#!/bin/sh
+cd "/opt/FTL"
+exec /opt/FTL/FTL.${arch} "\$@"
+EOF
+
+    install_desktop_entry "Name=Faster Than Light" \
+        "Icon=/usr/share/pixmaps/FTL.bmp"
+
+    insinto /usr/share/pixmaps
+    newins "${datadir}"/exe_icon.bmp FTL.bmp
+
+    insinto /usr/share/doc/${PNVR}/html
+    doins "${htmldir}"/${PN}_README.html
+}
+
