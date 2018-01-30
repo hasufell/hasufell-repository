@@ -7,7 +7,7 @@ SUMMARY="OAuth 2.0 client library"
 
 LICENCES="Apache-2.0"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES="
