@@ -85,7 +85,7 @@ export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:/opt/FTL/lib"
 else
 export LD_LIBRARY_PATH="/opt/FTL/lib"
 fi
-exec /opt/FTL/bin/FTL "$@"
+exec /opt/FTL/bin/FTL "\$@"
 EOF
 
     install_desktop_entry "Name=Faster Than Light" \
