@@ -74,6 +74,11 @@ src_prepare() {
             -e '/find_package(PythonLibs 2.6)/d' \
             "${CMAKE_SOURCE}"/CMakeLists.txt
 
+    # rm -Werror, fails due to -Wdeprecated
+    edo sed -i \
+            -e 's/\-Werror//' \
+            "${CMAKE_SOURCE}"/CMakeLists.txt
+
     cmake_src_prepare
 }
 
