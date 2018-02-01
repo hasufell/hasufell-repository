@@ -1,0 +1,62 @@
+# Copyright 2017-2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require python [ has_bin=true has_lib=true blacklist=2 multibuild=false ]
+require github [ user="wwmm" tag="v${PV}" ]
+require meson
+require gtk-icon-cache gsettings
+
+SUMMARY="Limiter, compressor, reverberation, equalizer and auto volume effects for Pulseaudio applications"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    build+run:
+        dev-python/gst-python:1.0[>=1.12][python_abis:*(-)?]
+        dev-python/numpy[python_abis:*(-)?]
+        dev-python/pycairo[python_abis:*(-)?]
+        dev-python/scipy[>=0.18][python_abis:*(-)?]
+        gnome-bindings/pygobject:3[python_abis:*(-)?]
+        media-libs/gstreamer:1.0[>=1.12]
+        media-plugins/gst-plugins-bad:1.0[>=1.12][gstreamer_plugins:ladspa]
+        media-plugins/gst-plugins-good:1.0[>=1.12][gstreamer_plugins:pulseaudio]
+        media-plugins/swh-plugins
+        x11-libs/gtk+:3[>=3.20]
+        python_abis:3.4? ( dev-python/configparser )
+    run:
+        media-sound/pulseaudio[equalizer]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+src_prepare() {
+    edo sed -i \
+            -e "/get_python_lib/s#prefix=\"\"#prefix=\"/usr/$(exhost --target)\"#" \
+            "${MESON_SOURCE}"/meson.build
+
+    edo sed -i \
+            -e "s:/usr/bin/env python.*$:/usr/$(exhost --target)/bin/env ${PYTHON}:" \
+            "${MESON_SOURCE}"/pulseeffects.in
+
+    meson_src_prepare
+}
+
+src_install() {
+    meson_src_install
+    gsettings_src_install
+}
+
+pkg_postinst() {
+    gsettings_pkg_postinst
+    gtk-icon-cache_pkg_postinst
+}
+
+pkg_postrm() {
+    gsettings_pkg_postrm
+    gtk-icon-cache_pkg_postrm
+}
