@@ -40,7 +40,7 @@ src_prepare() {
 
     # fix shebang
     edo sed -i \
-        -e "s:/usr/bin/env python:/usr/$(exhost --target)/bin/env ${PYTHON}:" \
+        -e "s:/usr/bin/env python.*$:/usr/$(exhost --target)/bin/env ${PYTHON}:" \
         ${PN}.py
 }
 
