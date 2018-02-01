@@ -49,6 +49,7 @@ DEPENDENCIES="
         x11-libs/libXrender
         x11-libs/libXtst
         x11-libs/libxcb
+        x11-libs/libxkbfile
         x11-libs/pango
     suggestion:
         gnome-desktop/gnome-keyring [[
