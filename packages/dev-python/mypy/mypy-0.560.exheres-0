@@ -23,7 +23,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-python/typed-ast[>=1.0.4&<1.1.0][python_abis:*(-)?]
+        dev-python/typed-ast[>=1.1.0&<1.2.0][python_abis:*(-)?]
         dev-python/psutil[>=5.4.0&<5.5.0][python_abis:*(-)?]
         python_abis:3.4? (
             dev-python/typing[>=3.5.3][python_abis:3.4]
