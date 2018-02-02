@@ -8,7 +8,7 @@ require setup-py [ import=distutils multibuild=false blacklist=3 python_opts="[t
 require sourceforge [ project=pysolfc pnv=${MY_PN}-${PV} ]
 
 SUMMARY="An exciting collection of more than 1000 solitaire card games"
-DOWNLOADS+=" mirror://sourceforge/${PN}/${MY_PN}-Cardsets-${PV}.tar.bz2"
+DOWNLOADS+=" mirror://sourceforge/${PN}/${MY_PN}-Cardsets-2.0.tar.bz2"
 
 LICENCES="GPL-3"
 SLOT="0"
@@ -19,6 +19,7 @@ DEPENDENCIES="
     run:
         dev-python/Pillow[python_abis:*(-)?]
         dev-python/pygame[python_abis:*(-)?]
+        dev-python/random2[python_abis:*(-)?]
         dev-tcl/tktable
 "
 
@@ -31,15 +32,13 @@ src_prepare() {
         -e "/pysol.desktop/d" \
         -e "s:share/icons:share/pixmaps:" \
         setup.py
-
-    edo mv docs/README{,.txt}
 }
 
 src_install() {
     setup-py_src_install
 
     insinto /usr/share/${MY_PN}
-    doins -r "${WORKBASE}"/${MY_PN}-Cardsets-${PV}/*
+    doins -r "${WORKBASE}"/${MY_PN}-Cardsets-2.0/*
 
     doman docs/*.6
 
