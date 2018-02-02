@@ -1,0 +1,13 @@
+# Copyright 2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ import=setuptools ]
+require pypi [ suffix=zip ]
+
+SUMMARY="Python 3 compatible Python 2 random Module"
+
+LICENCES="PSF-2.2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
