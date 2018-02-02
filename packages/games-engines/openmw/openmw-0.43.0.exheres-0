@@ -1,4 +1,4 @@
-# Copyright 2014-2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2014-2018 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 require gtk-icon-cache
@@ -20,7 +20,7 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         app-arch/unshield
-        dev-games/OpenSceneGraph
+        dev-games/OpenSceneGraph[>=3.3.4]
         dev-games/mygui[>=3.2.1]
         dev-libs/boost
         dev-libs/tinyxml
@@ -38,6 +38,7 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBUILD_BSATOOL=ON
     -DBUILD_DOCS=OFF
     -DBUILD_ESMTOOL=ON
+    -DBUILD_LAUNCHER=ON
     -DBUILD_NIFTEST=OFF
     -DBUILD_OPENCS=ON
     -DBUILD_OPENMW=ON
