@@ -20,7 +20,7 @@ DEPENDENCIES="
         app-crypt/qca:2[qt5]
         dev-libs/qjson
         sys-apps/file
-        sys-auth/qoauth
+        sys-auth/qoauth[>=2.0.0]
         x11-libs/qtbase:5
 "
 
