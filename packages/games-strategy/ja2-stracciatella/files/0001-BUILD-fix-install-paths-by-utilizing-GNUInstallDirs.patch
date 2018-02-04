@@ -1,7 +1,7 @@
 From f418b9530c9a1d3723d599147d6e12c630cebb51 Mon Sep 17 00:00:00 2001
 From: Julian Ospald <hasufell@posteo.de>
 Date: Fri, 2 Feb 2018 14:13:24 +0100
-Upstream: submitted, https://github.com/ja2-stracciatella/ja2-stracciatella/pull/703
+Upstream: declined, https://github.com/ja2-stracciatella/ja2-stracciatella/pull/703
 Subject: [PATCH] BUILD: fix install paths by utilizing GNUInstallDirs
 
 ---
