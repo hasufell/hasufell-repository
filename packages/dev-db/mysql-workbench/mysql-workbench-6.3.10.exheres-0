@@ -69,11 +69,6 @@ src_prepare() {
             "${CMAKE_SOURCE}"/backend/wbpublic/grtui/*.h \
             "${CMAKE_SOURCE}"/backend/wbpublic/objimpl/db.query/*.cpp
 
-    # fix python detection
-    edo sed -i \
-            -e '/find_package(PythonLibs 2.6)/d' \
-            "${CMAKE_SOURCE}"/CMakeLists.txt
-
     # rm -Werror, fails due to -Wdeprecated
     edo sed -i \
             -e 's/\-Werror//' \
