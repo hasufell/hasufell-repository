@@ -18,10 +18,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build:
-        x11-proto/xextproto
-        x11-proto/xf86dgaproto
-        x11-proto/xf86vidmodeproto
-        x11-proto/xproto
+        x11-proto/xorgproto
     build+run:
         dev-libs/d0_blind_id
         media-libs/SDL:2[X]
