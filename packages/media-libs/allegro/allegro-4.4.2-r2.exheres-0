@@ -25,10 +25,7 @@ MYOPTIONS="
 DEPENDENCIES="
     build:
         virtual/pkg-config
-        x11-proto/xextproto
-        x11-proto/xf86dgaproto
-        x11-proto/xf86vidmodeproto
-        x11-proto/xproto
+        x11-proto/xorgproto
     build+run:
         media-libs/libpng:=
         x11-libs/libX11
