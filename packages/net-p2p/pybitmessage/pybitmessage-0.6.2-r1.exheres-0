@@ -27,7 +27,7 @@ MYOPTIONS="
 DEPENDENCIES="
     run:
         dev-python/PyQt4[python_abis:*(-)?]
-        dev-python/msgpack-python[python_abis:*(-)?]
+        dev-python/msgpack[python_abis:*(-)?]
         providers:libressl? ( dev-libs/libressl )
         providers:openssl?  ( dev-libs/openssl  )
     suggestion:
