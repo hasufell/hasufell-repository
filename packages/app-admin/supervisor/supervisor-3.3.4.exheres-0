@@ -1,4 +1,4 @@
-# Copyright 2016 Julian Ospald <hasufell@posteo.de>
+# Copyright 2016-2018 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
 require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
