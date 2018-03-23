@@ -1,7 +1,7 @@
 # Copyright 2016 Julian Ospald
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=Bitmessage project=PyBitmessage tag=v${PV} ]
+require github [ user=Bitmessage project=PyBitmessage tag=${PV} ]
 require gtk-icon-cache
 require python [ blacklist=3 has_bin=true multibuild=false python_opts='[sqlite]' ]
 
@@ -31,6 +31,7 @@ DEPENDENCIES="
         providers:libressl? ( dev-libs/libressl )
         providers:openssl?  ( dev-libs/openssl  )
     suggestion:
+        dev-python/pyopencl[python_abis:*(-)?] [[ description = [ Use GPU acceleration for proof of work ] ]]
         media-sound/mpg123 [[ description = [ For playing mp3 files ] ]]
         net-misc/tor [[ description = [ For running bitmessage traffic
                                         through the tor network ] ]]
