@@ -69,26 +69,27 @@ MV_FILES=(
 openra-build_src_unpack() {
     unpack openra-${SLOT}-${PV}.tar.gz
 
-    # this is pure crapshit, but it will successfully die
-    # if upstream has added/changed files
+    edo mkdir "${WORK}"/thirdparty/download
+
     edo cd "${WORK}"/thirdparty
     edo sed -i \
-        -e 's/get()/furz()/' \
-        -e 's|curl |: |' \
+        -e 's|curl .*$|: |' \
         fetch-thirdparty-deps.sh
 
-    edo mkdir "${WORK}"/thirdparty/download
-    get() {
-        # don't add dies here
-        local archive="${1/./_}"
-        local version="${2}"
-        mkdir -p "${WORK}"/thirdparty/download/${1}
-        unzip -o -qq "${FETCHEDDIR}"/${archive}-${version}.zip \
-            -d "${WORK}"/thirdparty/download/${1}
-    }
-    export -f get
+    cat <<EOF > noget.sh
+#!/bin/sh
+
+set -e
+
+archive="\${1/./_}"
+version="\${2}"
+mkdir -p "${WORK}"/thirdparty/download/\${1}
+unzip -o -qq "${FETCHEDDIR}"/\${archive}-\${version}.zip \
+    -d "${WORK}"/thirdparty/download/\${1}
+EOF
+
     edo ./fetch-thirdparty-deps.sh
-    unset get
+
     edo cd "${WORK}"/thirdparty/download
     edo cp "${FETCHEDDIR}"/${SDL2CS##* } ./SDL2-CS.dll
     edo cp "${FETCHEDDIR}"/${Eluant##* } ./Eluant.dll
