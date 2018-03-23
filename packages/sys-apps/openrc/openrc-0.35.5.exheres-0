@@ -5,6 +5,7 @@
 #     Copyright 1999-2015 Gentoo Foundation
 #     Distributed under the terms of the GNU General Public License v2
 
+require bash-completion zsh-completion
 require github
 
 SUMMARY="A dependency-based init system that works with the system-provided init program"
@@ -61,6 +62,8 @@ DEFAULT_SRC_INSTALL_PARAMS=(
     LIBDIR=/usr/$(exhost --target)/lib
     SHLIBDIR=/usr/$(exhost --target)/lib
     LIBMODE=0755
+    BASHCOMPDIR=${BASHCOMPLETIONDIR}
+    ZSHCOMPDIR=${ZSHCOMPLETIONDIR}
 )
 
 pkg_setup() {
@@ -89,11 +92,13 @@ src_compile() {
     MAKE_ARGS="
         ${DEFAULT_SRC_COMPILE_PARAMS[@]}
         MKAUDIT=no
+        MKBASHCOMP=$(option bash-completion yes no)
         MKNET=$(option newnet yes no)
         MKPAM=$(optionv pam)
         MKSELINUX=no
         MKSTATICLIBS=no
         MKSYSVINIT=no
+        MKZSHCOMP=$(option zsh-completion yes no)
     "
 
     emake ${MAKE_ARGS}
