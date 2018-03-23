@@ -18,6 +18,7 @@ MYOPTIONS="
         sysvinit
     ) [[
         *description = [ provider for the init daemon ]
+        number-selected = exactly-one
     ]]
     ncurses
     newnet [[ description = [
@@ -152,5 +153,8 @@ pkg_postinst() {
     # update the dependency tree after touching all files #224171
     [[ "${ROOT}" = "/" ]] &&
         "${ROOT}usr/$(exhost --target)/libexec"/rc/bin/rc-depend -u
+
+    elog "Since openrc 0.35 openrc has a cgroup init.d script which"
+    elog "you'll have to add to your startup if you need cgroups."
 }
 
