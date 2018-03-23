@@ -13,6 +13,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
+# TODO: not sure what to do with lilv and libbs2b
 DEPENDENCIES="
     build:
         virtual/pkg-config
