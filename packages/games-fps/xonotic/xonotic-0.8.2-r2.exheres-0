@@ -41,8 +41,6 @@ DEPENDENCIES="
         alsa? ( sys-sound/alsa-lib )
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
-    suggestion:
-        media-libs/libtxc_dxtn [[ description = [ For opensource drivers ] ]]
 "
 
 WORK=${WORKBASE}/${MY_PN}
