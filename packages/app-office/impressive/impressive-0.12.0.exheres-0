@@ -24,6 +24,8 @@ DEPENDENCIES="
     suggestion:
         app-text/mupdf [[ description = [ Alternate PDF rendering ] ]]
         app-text/poppler [[ description = [ Alternate PDF rendering ] ]]
+        media/ffmpeg [[ description = [ load a preview image from a video file ] ]]
+        media/libav [[ description = [ load a preview image from a video file ] ]]
         media/mpv [[ description = [ For sound and video playback ] ]]
         x11-apps/xdg-utils [[ description = [ For starting web or e-mail
                                               hyperlinks from PDF documents ] ]]
