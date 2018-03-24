@@ -19,7 +19,7 @@ MYOPTIONS="
         sysvinit
     ) [[
         *description = [ provider for the init daemon ]
-        number-selected = exactly-one
+        number-selected = at-most-one
     ]]
     ncurses
     newnet [[ description = [
