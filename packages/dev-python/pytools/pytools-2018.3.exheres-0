@@ -1,0 +1,40 @@
+# Copyright 2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require pypi
+require setup-py [ import=setuptools test=pytest ]
+
+SUMMARY="A collection of tools for Python"
+DESCRIPTION="
+Pytools is a big bag of things that are “missing” from the Python standard
+library. This is mainly a dependency of my other software packages, and is
+probably of little interest to you unless you use those. If you’re curious
+nonetheless, here’s what’s on offer:
+
+    * A ton of small tool functions such as len_iterable, argmin, tuple
+      generation, permutation generation, ASCII table pretty printing, GvR’s
+      mokeypatch_xxx() hack, the elusive flatten, and much more.
+    * Michele Simionato’s decorator module
+    * A time-series logging module, pytools.log.
+    * Batch job submission, pytools.batchjob.
+    * A lexer, pytools.lex.
+"
+HOMEPAGE="https://mathema.tician.de/software/pytools/ ${HOMEPAGE}"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/appdirs[>=1.4.0][python_abis:*(-)?]
+        dev-python/decorator[>=3.2.0][python_abis:*(-)?]
+        dev-python/numpy[>=1.6.0][python_abis:*(-)?]
+        dev-python/six[>=1.8.0][python_abis:*(-)?]
+    test:
+        dev-python/pytest-runner[python_abis:*(-)?]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
