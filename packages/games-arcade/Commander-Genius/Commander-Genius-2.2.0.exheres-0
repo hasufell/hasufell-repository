@@ -1,10 +1,8 @@
 # Copyright 2016 Julian Ospald <hasufell@posteo.de>
 # Distributed under the terms of the GNU General Public License v2
 
-WORK=${WORKBASE}/${PN}-${PV//./}
-
 require cmake [ api=2 ] gtk-icon-cache
-require github [ user=gerstrong tag=v${PV//./} ]
+require github [ user=gerstrong tag=v${PV} ]
 
 SUMMARY="Open Source Commander Keen clone (needs original game files)"
 
@@ -13,7 +11,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 RESTRICT="mirror" # contains keen files, but we do not install them
 
-PY_SLOT="3.5"
+PY_SLOT="3.6"
 
 DEPENDENCIES="
     build:
@@ -23,7 +21,7 @@ DEPENDENCIES="
         dev-lang/python:${PY_SLOT}
         media-libs/SDL:2[X]
         media-libs/SDL_image:2
-        media-libs/libvorbis
+        media-libs/SDL_mixer:2
         net-misc/curl
         sys-libs/zlib
         x11-dri/mesa
