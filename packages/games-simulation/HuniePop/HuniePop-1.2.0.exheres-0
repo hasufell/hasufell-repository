@@ -1,0 +1,85 @@
+# Copyright 2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Dating simulator and puzzle game!"
+DESCRIPTION="
+HuniePop is a unique sim experience for PC, Mac and Linux. It's a gameplay
+first approach that's part dating sim, part puzzle game, with light RPG
+elements, a visual novel style of presentation, an abrasive western writing
+style and plenty of \"plot\".
+
+* 8 gorgeous girls each with their own personalities, preferences and style.
+  (Rumor has it there are several secret characters to unlock as well!)
+* Hundreds of collectables including gifts, outfits and photos that you can
+  purchase, unlock or earn as special rewards.
+* An addicting match-3 style puzzle dating system with it's own unique twists
+  including upgradeable traits/stats, the ability to move any number of
+  positions and special date gifts that have a variety of interesting effects
+  on the puzzle.
+"
+GOG_HP="https://www.gog.com/game/huniepop"
+HOMEPAGE="http://www.huniepot.com/ ${GOG_HP}"
+GOG_SH="gog_huniepop_2.0.0.3.sh"
+DOWNLOADS="manual: ${GOG_SH}"
+
+LICENCES="all-rights-reserved GOG-EULA"
+SLOT="0"
+PLATFORMS="-* ~x86"
+MYOPTIONS=""
+RESTRICT="fetch"
+
+DEPENDENCIES="
+    build:
+        virtual/unzip
+    run:
+        sys-apps/lsb-release
+        x11-dri/glu
+        x11-dri/mesa
+        x11-libs/libX11
+        x11-libs/libXcursor
+        x11-libs/libXext
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+WORK=${WORKBASE}
+
+pkg_pretend() {
+    if [[ $(exhost --target) != i686-* ]];then
+        die "${CATEGORY}/${PNVR} is i686 only, you'll have to cross compile it :("
+    fi
+}
+
+pkg_nofetch() {
+    einfo
+    einfo "Please buy & download \"${GOG_SH}\" from:"
+    einfo "  ${GOG_HP}"
+    einfo "and move/link it to \"${FETCHEDDIR}\""
+    einfo
+}
+
+pkg_setup() {
+    exdirectory --allow /opt
+}
+
+src_unpack() {
+    unzip -qo "${FETCHEDDIR}/${GOG_SH}"
+    [[ $? -le 1 ]] || die "unpacking ${GOG_SH} failed!"
+}
+
+src_install() {
+    local dir=/opt/${PN}
+
+    insinto "${dir}"
+    doins -r data/noarch/game/*
+    edo chmod +x "${IMAGE}${dir}"/HuniePop.x86
+
+    herebin ${PN} <<EOF
+#!/bin/sh
+cd "${dir}"
+exec ./HuniePop.x86 "\$@"
+EOF
+
+    install_desktop_entry "Name=HuniePop"
+}
+
