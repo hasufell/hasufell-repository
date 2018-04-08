@@ -12,7 +12,7 @@ Remmina is a remote desktop client written in GTK+, aiming to be useful for syst
 HOMEPAGE+=" http://remmina.org/"
 
 LICENCES="GPL-2"
-MYOPTIONS=""
+MYOPTIONS="ssh"
 
 DEPENDENCIES="
     build:
@@ -20,34 +20,39 @@ DEPENDENCIES="
     	sys-devel/gettext
     	virtual/pkg-config
     build+run:
+        core/json-glib
         dev-libs/glib:2
         dev-libs/libgcrypt
-        dev-libs/vte:2.91
-        net-libs/libssh
+        dev-libs/libsecret
         net-libs/libvncserver
+        net-remote/FreeRDP
         x11-libs/gtk+:3
         x11-libs/libxkbfile
+        ssh? (
+            net-libs/libssh
+            dev-libs/vte:2.91
+        )
 "
 
 BUGS_TO="hasufell@posteo.de"
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     # on
+    -DWITH_FREERDP=ON
     -DWITH_GCRYPT=ON
     -DWITH_GETTEXT=ON
     -DWITH_LIBSECRET=ON
-    -DWITH_LIBSSH=ON
+    -DWITH_LIBVNCSERVER=ON
     -DWITH_TRANSLATIONS=ON
-    -DWITH_VTE=ON
-    -DWITH_ZLIB=ON
 
     # off
     -DWITH_APPINDICATOR=OFF
     -DWITH_AVAHI=OFF
-    -DWITH_FREERDP=OFF
     -DWITH_SPICE=OFF
-    -DWITH_SURVEY=OFF
     -DWITH_TELEPATHY=OFF
 )
 
-
+CMAKE_SRC_CONFIGURE_OPTION_WITHS=(
+    "ssh LIBSSH"
+    "ssh VTE"
+)
