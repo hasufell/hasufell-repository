@@ -1,0 +1,19 @@
+# Copyright 2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Create a shadow directory of symbolic links to another directory tree"
+HOMEPAGE="http://xorg.freedesktop.org/"
+DOWNLOADS="https://www.x.org/archive/individual/util/lndir-1.0.3.tar.gz"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        x11-proto/xorgproto
+"
+
+BUGS_TO="hasufell@posteo.de"
+
