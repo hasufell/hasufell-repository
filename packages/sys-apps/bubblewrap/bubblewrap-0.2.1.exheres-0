@@ -20,11 +20,13 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         sys-libs/libcap
+        selinux? ( security/libselinux[>=2.1.9] )
 "
 
 BUGS_TO="hasufell@posteo.de"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-man
     --with-bash-completion-dir=${BASHCOMPLETIONDIR}
 )
 
