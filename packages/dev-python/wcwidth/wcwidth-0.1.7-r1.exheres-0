@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require github [ user="jquast" ]
-require pypi setup-py [ import=setuptools ]
+require pypi setup-py [ import=setuptools test=pytest ]
 
 SUMMARY="Measures number of Terminal column cells of wide-character codes"
 
