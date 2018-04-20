@@ -23,10 +23,14 @@ DEPENDENCIES="
         core/json-glib
         dev-libs/glib:2
         dev-libs/libgcrypt
-        dev-libs/libsecret
+        dev-libs/libsecret:1
+        gnome-desktop/libsoup:2.4
         net-libs/libvncserver
         net-remote/FreeRDP
+        x11-libs/cairo
+        x11-libs/gdk-pixbuf:2.0
         x11-libs/gtk+:3
+        x11-libs/libX11
         x11-libs/libxkbfile
         ssh? (
             net-libs/libssh
