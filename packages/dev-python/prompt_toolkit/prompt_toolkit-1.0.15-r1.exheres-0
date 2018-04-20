@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require github [ user="jonathanslenders" project="python-${PN/_/-}" ]
-require pypi setup-py [ import=setuptools ]
+require pypi setup-py [ import=setuptools test=pytest ]
 
 SUMMARY="Library for building powerful interactive command lines in Python"
 HOMEPAGE="https://python-prompt-toolkit.readthedocs.io ${HOMEPAGE}"
