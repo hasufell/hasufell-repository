@@ -1,8 +1,7 @@
 # Copyright 2012 Nikolay Orlyuk
 # Distributed under the terms of the GNU General Public License v2
 
-require github \
-        autotools [ supported_automake=[ 1.12 ] supported_autoconf=[ 2.5 ] ]
+require github
 
 SUMMARY="The F# compiler, core library and core tools (open source edition)"
 
@@ -20,8 +19,6 @@ DEPENDENCIES="
 
 BUGS_TO="virkony@gmail.com"
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --with-gacdir="/usr/$(exhost --target)/lib/mono/gac" )
-
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
 src_compile() {
@@ -36,6 +33,10 @@ src_install() {
     esandbox disable_net
     default
     esandbox enable_net
+
+    dodir /usr/$(exhost --target)
+    edo mv "${IMAGE}"/usr/lib "${IMAGE}"/usr/$(exhost --target)/lib
+    edo mv "${IMAGE}"/usr/bin "${IMAGE}"/usr/$(exhost --target)/bin
 
     # delete empty directories
     edo find "${IMAGE}" -type d -empty -delete
