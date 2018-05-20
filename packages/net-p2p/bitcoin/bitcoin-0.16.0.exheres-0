@@ -1,0 +1,92 @@
+# Copyright 2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ tag=v${PV} ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.16 ] ]
+require openrc-service
+require systemd-service
+
+SUMMARY="An experimental digital currency"
+HOMEPAGE="https://bitcoin.org ${HOMEPAGE}"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    gui [[ description = [ build bitcoin-qt GUI ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build:
+        dev-util/desktop-file-utils
+        virtual/pkg-config
+    build+run:
+        user/bitcoin
+        group/bitcoin
+        (
+            dev-libs/boost
+            dev-libs/libevent:=
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        ) [[ note = [ required core deps ] ]]
+        (
+            net-libs/miniupnpc [[ note = [ Firewall-jumping support ] ]]
+            sys-libs/db:4.8 [[ note = [ Wallet storage (only needed when wallet
+                                        enabled) ] ]]
+            gui? (
+                media-libs/qrencode:=
+                x11-libs/qtbase:5
+                dev-libs/protobuf:=
+            ) [[ note = [ gui deps ] ]]
+        ) [[ note = [ optional deps ] ]]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-hardening
+    --enable-wallet
+    --disable-bench
+    --disable-ccache
+    --disable-zmq
+    --with-daemon
+    --with-miniupnpc
+    --with-utils
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    'gui gui qt5'
+)
+
+DEFAULT_SRC_CONFIGURE_TESTS=(
+    '--enable-tests --disable-tests'
+    '--enable-gui-tests --disable-gui-tests'
+)
+
+src_install() {
+    default
+
+    # openrc
+    newinitd contrib/init/bitcoind.openrc bitcoind
+    newconfd contrib/init/bitcoind.openrcconf bitcoind
+    openrc_expart "${OPENRC_INITD_DIR}"/bitcoind \
+        "${OPENRC_CONFD_DIR}"/bitcoind
+
+    # systemd
+    systemd_files_doins ${SYSTEMDSYSTEMUNITDIR} contrib/init/bitcoind.service
+
+    # conf
+    insinto /etc/bitcoin
+    doins contrib/debian/examples/bitcoin.conf
+    edo chmod 600 "${IMAGE}"/etc/bitcoin/bitcoin.conf
+
+    # desktop
+    insinto /usr/share/applications
+    edo desktop-file-validate contrib/debian/bitcoin-qt.desktop
+    doins contrib/debian/bitcoin-qt.desktop
+
+    # docs
+    dodoc doc/{README,REST-interface,bips,dnsseed-policy,files,fuzzing,reduce-traffic,release-notes,tor,zmq}.md
+}
+
