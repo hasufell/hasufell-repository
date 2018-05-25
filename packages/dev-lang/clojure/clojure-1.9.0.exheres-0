@@ -1,0 +1,40 @@
+# Copyright 2018 Julian Ospald <hasufell@posteo.de>
+# Distributed under the terms of the GNU General Public License v2
+
+TOOLVER="381"
+
+SUMMARY="LISP for the JVM"
+HOMEPAGE="https://clojure.org/"
+DOWNLOADS="https://download.clojure.org/install/clojure-tools-${PV}.${TOOLVER}.tar.gz"
+
+LICENCES="EPL-1.0 Apache-2.0 BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    run:
+        virtual/jdk:*
+    suggestion:
+        app-misc/rlwrap [[ description = [ Needed to run 'clj' ] ]]
+"
+
+BUGS_TO="hasufell@posteo.de"
+
+WORK=${WORKBASE}/clojure-tools
+
+src_prepare() {
+    # adjust paths
+    edo sed -i \
+            -e 's,PREFIX,/usr/share/clojure,g' \
+            -e '/^tools_cp/s,libexec/,,' \
+            clojure
+}
+
+src_install() {
+    insinto /usr/share/clojure
+    doins deps.edn example-deps.edn clojure-tools-${PV}.${TOOLVER}.jar
+    dobin clojure clj
+    doman clojure.1 clj.1
+}
+
