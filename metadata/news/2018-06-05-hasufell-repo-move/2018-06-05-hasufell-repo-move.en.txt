@@ -1,0 +1,11 @@
+Title: hasufell repository moved from github
+Author: Julian Ospald <hasufell@posteo.de>
+Content-Type: text/plain
+Posted: 2018-06-05
+Revision: 1
+News-Item-Format: 1.0
+
+The ::hasufell repository moved from https://github.com/hasufell/hasufell-repository to https://gogs.hasufell.de/hasufell/hasufell-repository.
+
+Update your sync setting as such:
+	sync = git+https://gogs.hasufell.de/hasufell/hasufell-repository.git
